@@ -14,7 +14,7 @@ class SongUtil {
         private const val shuffle = true
 
         fun playRandomSong(context: Context, songs: List<Song>) {
-            index = (0 until (songs.size - 1)).random()
+            index = (0 until (songs.size)).random()
 
             val song = songs[index]
 
@@ -44,7 +44,7 @@ class SongUtil {
                 clear()
 
                 if (shuffle) {
-                    index = (0 until (songs.size - 1)).random()
+                    index = (0 until (songs.size)).random()
                 } else {
                     index++
                 }

@@ -44,6 +44,8 @@ class LoginActivity : AppCompatActivity() {
         binding = LoginBinding.inflate(layoutInflater)
         val view = binding.root
 
+        setContentView(view)
+
         clientDao = AppDatabase.getInstance(this).clientDao()
 
         configLinkRegister()

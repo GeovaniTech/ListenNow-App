@@ -3,6 +3,7 @@ package br.com.listennow.view
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.view.Menu
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -19,13 +20,18 @@ class SongDetailsActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        // Geovani, don't forgot to change the Entity to use Parceble.
+        // Geovani, don't forgot to change the Entity to use Parceable.
         val song = intent.getSerializableExtra("song") as Song
 
         bindSong(song)
     }
 
-    fun bindSong(song: Song) {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_search_songs, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun bindSong(song: Song) {
         val songName = findViewById<TextView>(R.id.name_song_detail)
         val artist = findViewById<TextView>(R.id.artist_song_detail)
         val album = findViewById<TextView>(R.id.album_song_detail)
