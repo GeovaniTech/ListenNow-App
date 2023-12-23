@@ -12,17 +12,15 @@ class SongUtil {
         var songs = emptyList<Song>()
         var index = 0
         private const val shuffle = true
-
-        fun playRandomSong(context: Context, songs: List<Song>) {
-            index = (0 until (songs.size)).random()
-
-            val song = songs[index]
-
-            clear()
-            readSong(context, song)
-        }
+        lateinit var actualSong: Song
 
         fun readSong(context: Context, song : Song) {
+            if(isPlaying()) {
+                clear()
+            }
+
+            actualSong = song
+
             val myUri = Uri.parse(song.path)
 
             mediaPlayer = MediaPlayer().apply {

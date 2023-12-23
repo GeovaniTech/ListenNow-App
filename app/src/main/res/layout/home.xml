@@ -59,10 +59,10 @@
             android:layout_height="43dp"
             android:layout_marginStart="96dp"
             android:background="@drawable/ic_left_arrow"
+            app:backgroundTint="@color/gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:backgroundTint="@color/gray"
             app:layout_constraintVertical_bias="0.517" />
 
         <Button
@@ -88,6 +88,26 @@
             app:layout_constraintTop_toTopOf="parent"
             app:backgroundTint="@color/gray"
             app:layout_constraintVertical_bias="0.473" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/home_card_view_song_details"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardCornerRadius="8dp">
+
+            <ImageView
+                android:id="@+id/home_thumb_song_details"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView

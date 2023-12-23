@@ -14,6 +14,7 @@ import br.com.listennow.databinding.HomeBinding
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.model.Song
 import br.com.listennow.ui.recyclerview.ListSongsAdapter
+import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,15 +39,18 @@ class HomeActivity: AppCompatActivity() {
 
         songDao = AppDatabase.getInstance(this).songDao()
 
-        var songs = songDao.getSongs()
+        val songs = songDao.getSongs()
 
         adapter = ListSongsAdapter(this, songs)
 
         SongUtil.songs = songs
 
-        if(songs.isNotEmpty()) {
-            SongUtil.playRandomSong(this, songs)
-            binding.play.setBackgroundResource(drawable.ic_pause)
+        if(SongUtil.songs.isNotEmpty()) {
+            val song = getRandomSong()
+
+            SongUtil.readSong(this, song)
+            configButtonToPause()
+            configThumbDetails(song)
         }
 
         configButtonShuffle()
@@ -54,19 +58,43 @@ class HomeActivity: AppCompatActivity() {
         configButtonSync()
         configLinkRegister()
         configButtonPlayPause()
-        configButtonNext(songs)
+        configButtonNext(SongUtil.songs)
         configSongsDetails()
+
+        val cardThumb = binding.homeCardViewSongDetails
+
+        cardThumb.setOnClickListener {
+            openSongDetails(SongUtil.actualSong)
+        }
     }
 
-    fun configSongsDetails() {
-        adapter.onItemClick = { song ->
+    private fun getRandomSong(): Song {
+        val position = (0 until (SongUtil.songs.size)).random()
+        return SongUtil.songs[position]
+    }
 
-            SongUtil.clear()
+    private fun configButtonToPause() {
+        binding.play.setBackgroundResource(drawable.ic_pause)
+    }
+
+    private fun configThumbDetails(song: Song) {
+        val thumbDetails = binding.homeThumbSongDetails
+        thumbDetails.setImageBitmap(ImageUtil.getBitmapImage(song.smallThumbBytes, 60, 60))
+    }
+
+    private fun configSongsDetails() {
+        adapter.onItemClick = { song ->
             SongUtil.readSong(this, song)
-            val intent = Intent(this, SongDetailsActivity::class.java)
-            intent.putExtra("song", song)
-            startActivity(intent)
+
+            configButtonToPause()
+            configThumbDetails(song)
         }
+    }
+
+    private fun openSongDetails(song: Song) {
+        val intent = Intent(this, SongDetailsActivity::class.java)
+        intent.putExtra("song", song)
+        startActivity(intent)
     }
 
     private fun configButtonShuffle() {
@@ -77,7 +105,11 @@ class HomeActivity: AppCompatActivity() {
 
     private fun configButtonNext(songs: List<Song>) {
         binding.next.setOnClickListener {
-            SongUtil.playRandomSong(this, songs)
+            val song = getRandomSong()
+
+            SongUtil.readSong(this, song)
+            configButtonToPause()
+            configThumbDetails(song)
         }
     }
 
