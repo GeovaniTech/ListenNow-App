@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">ListenNow</string>
+    <string name="access">Access</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="welcome">Welcome</string>
+    <string name="save_credentials">Save credentials</string>
+    <string name="register">Register</string>
+    <string name="register_here">Register Here</string>
+    <string name="password_required">Password is required</string>
+    <string name="repeat_password_required">Repeat the password is required</string>
+    <string name="email_required">Email is Required</string>
+    <string name="invalid_email">Invalid email, verify if exists @ or .com</string>
+    <string name="passwords_are_not_the_same">The passwords are not the same</string>
+    <string name="email_already_in_use">Email is already in use</string>
+    <string name="registration_successful_login">Registration successful, do your login</string>
+    <string name="select_songs">Select Songs</string>
+    <string name="song_already_add">Song Already Add</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="search">Search</string>
+    <string name="sync">Sync</string>
+    <string name="invalid_email_password">Invalid email or password</string>
+    <string name="download_started">Download Started</string>
+    <string name="download_failed">Download Failed, try again</string>
+    <string name="remove">Remove</string>
+</resources>

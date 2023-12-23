@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_editor_absoluteX="5dp"
+    tools:layout_editor_absoluteY="-660dp">
+
+    <Button
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.889"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="412dp"
+        android:layout_height="72dp"
+        android:background="#191921"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/play"
+            android:layout_width="53dp"
+            android:layout_height="51dp"
+            android:background="@drawable/ic_play"
+            app:backgroundTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/next"
+            app:layout_constraintHorizontal_bias="0.47"
+            app:layout_constraintStart_toEndOf="@+id/back"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.523" />
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="47dp"
+            android:layout_height="43dp"
+            android:layout_marginEnd="80dp"
+            android:background="@drawable/ic_right_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/shuffle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:backgroundTint="@color/gray"
+            app:layout_constraintVertical_bias="0.517" />
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="47dp"
+            android:layout_height="43dp"
+            android:layout_marginStart="96dp"
+            android:background="@drawable/ic_left_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:backgroundTint="@color/gray"
+            app:layout_constraintVertical_bias="0.517" />
+
+        <Button
+            android:id="@+id/btnSyncSongs"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:background="@drawable/data_transfer"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/shuffle"
+            app:layout_constraintHorizontal_bias="0.521"
+            app:layout_constraintStart_toEndOf="@+id/next"
+            app:backgroundTint="@color/gray"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/shuffle"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/ic_shuffle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:backgroundTint="@color/gray"
+            app:layout_constraintVertical_bias="0.473" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/songs"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="415dp"
+        android:layout_height="593dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search"
+        tools:listitem="@layout/item_list"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
