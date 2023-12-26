@@ -4,15 +4,24 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.com.listennow.R
+import br.com.listennow.database.AppDatabase
+import br.com.listennow.database.dao.SongDao
 import br.com.listennow.databinding.SongDetailsActivityBinding
 import br.com.listennow.model.Song
+import br.com.listennow.utils.ImageUtil
+import java.io.File
 
 class SongDetailsActivity : AppCompatActivity() {
     private lateinit var binding: SongDetailsActivityBinding
+    private lateinit var songDao: SongDao
+    private lateinit var song: Song
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = SongDetailsActivityBinding.inflate(layoutInflater)
@@ -20,8 +29,10 @@ class SongDetailsActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        songDao = AppDatabase.getInstance(this).songDao()
+
         // Geovani, don't forgot to change the Entity to use Parceable.
-        val song = intent.getSerializableExtra("song") as Song
+        song = intent.getSerializableExtra("song") as Song
 
         bindSong(song)
     }
@@ -31,27 +42,37 @@ class SongDetailsActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.song_detail_remove -> {
+                try {
+                    val file = File(song.path)
+                    file.delete()
+
+                    songDao.delete(song.id)
+                    finish()
+                    true
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "Failed to delete song", Toast.LENGTH_SHORT).show()
+                    false
+                }
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun bindSong(song: Song) {
-        val songName = findViewById<TextView>(R.id.name_song_detail)
-        val artist = findViewById<TextView>(R.id.artist_song_detail)
-        val album = findViewById<TextView>(R.id.album_song_detail)
-        val lyrics = findViewById<TextView>(R.id.lyrics_song_detail)
-        val thumb = findViewById<ImageView>(R.id.img_thumb_song_detail)
+        val songName = binding.nameSongDetail
+        val artist = binding.artistSongDetail
+        val album = binding.albumSongDetail
+        val lyrics = binding.lyricsSongDetail
+        val thumb = binding.imgThumbSongDetail
 
         songName.text = song.name
         artist.text = song.artist
         album.text = song.album
         lyrics.text = song.lyrics
-
-        if(song.largeThumbBytes != null) {
-            val bmp = BitmapFactory.decodeByteArray(song.largeThumbBytes, 0, song.largeThumbBytes.size)
-            if (bmp != null) {
-                thumb.setImageBitmap(Bitmap.createScaledBitmap(bmp, 120, 120, false))
-            } else {
-                thumb.setImageResource(R.drawable.icon2)
-            }
-        } else {
-            thumb.setImageResource(R.drawable.icon2)
-        }
+        thumb.setImageBitmap(ImageUtil.getBitmapImage(song.largeThumbBytes, 120, 120))
     }
 }

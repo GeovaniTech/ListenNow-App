@@ -46,11 +46,7 @@ class HomeActivity: AppCompatActivity() {
         SongUtil.songs = songs
 
         if(SongUtil.songs.isNotEmpty()) {
-            val song = getRandomSong()
-
-            SongUtil.readSong(this, song)
-            configButtonToPause()
-            configThumbDetails(song)
+            playRandomSong()
         }
 
         configButtonShuffle()
@@ -60,12 +56,23 @@ class HomeActivity: AppCompatActivity() {
         configButtonPlayPause()
         configButtonNext(SongUtil.songs)
         configSongsDetails()
+        configThumbClick()
+    }
 
+    private fun configThumbClick() {
         val cardThumb = binding.homeCardViewSongDetails
 
         cardThumb.setOnClickListener {
             openSongDetails(SongUtil.actualSong)
         }
+    }
+
+    fun playRandomSong() {
+        val song = getRandomSong()
+
+        SongUtil.readSong(this, song)
+        configButtonToPause()
+        configThumbDetails(song)
     }
 
     private fun getRandomSong(): Song {
@@ -85,7 +92,6 @@ class HomeActivity: AppCompatActivity() {
     private fun configSongsDetails() {
         adapter.onItemClick = { song ->
             SongUtil.readSong(this, song)
-
             configButtonToPause()
             configThumbDetails(song)
         }
@@ -140,6 +146,11 @@ class HomeActivity: AppCompatActivity() {
         binding.btnSyncSongs.setOnClickListener {
             syncSongs()
         }
+    }
+
+    override fun onResume() {
+        updateSongs()
+        super.onResume()
     }
 
     private fun syncSongs() {
