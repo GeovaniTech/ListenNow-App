@@ -5,6 +5,7 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import br.com.listennow.model.Song
+import br.com.listennow.view.HomeActivity
 
 class SongUtil {
     companion object {
@@ -15,9 +16,7 @@ class SongUtil {
         lateinit var actualSong: Song
 
         fun readSong(context: Context, song : Song) {
-            if(isPlaying()) {
-                clear()
-            }
+            clear()
 
             actualSong = song
 
@@ -39,8 +38,6 @@ class SongUtil {
             }
 
             mediaPlayer.setOnCompletionListener {
-                clear()
-
                 if (shuffle) {
                     index = (0 until (songs.size)).random()
                 } else {
@@ -63,7 +60,7 @@ class SongUtil {
             mediaPlayer.pause()
         }
 
-        fun clear() {
+        private fun clear() {
             mediaPlayer.stop()
             mediaPlayer.reset()
             mediaPlayer.release()

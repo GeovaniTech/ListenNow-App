@@ -41,7 +41,7 @@ class HomeActivity: AppCompatActivity() {
 
         val songs = songDao.getSongs()
 
-        adapter = ListSongsAdapter(this, songs)
+        adapter = ListSongsAdapter(songs)
 
         SongUtil.songs = songs
 

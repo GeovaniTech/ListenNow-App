@@ -12,9 +12,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import br.com.listennow.R
 import br.com.listennow.model.Song
+import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
 
-class ListSongsAdapter(private val context: Context, songs: List<Song>):
+class ListSongsAdapter(songs: List<Song>):
     RecyclerView.Adapter<ListSongsAdapter.ViewHolder>() {
 
     private val songs = songs.toMutableList()
@@ -33,7 +34,7 @@ class ListSongsAdapter(private val context: Context, songs: List<Song>):
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val song = songs[position]
 
-        holder.bind(song, context)
+        holder.bind(song)
     }
 
     fun update(songs: List<Song>) {
@@ -43,24 +44,14 @@ class ListSongsAdapter(private val context: Context, songs: List<Song>):
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        fun bind(song: Song, context: Context) {
+        fun bind(song: Song) {
             val title: TextView = itemView.findViewById(R.id.list_songs_title)
             val artist: TextView = itemView.findViewById(R.id.list_songs_artist)
             val thumb: ImageView = itemView.findViewById(R.id.list_songs_thumb)
 
             title.text = song.name
             artist.text = song.artist
-
-            if(song.largeThumbBytes != null) {
-                val bmp = BitmapFactory.decodeByteArray(song.smallThumbBytes, 0, song.smallThumbBytes.size)
-                if (bmp != null) {
-                    thumb.setImageBitmap(Bitmap.createScaledBitmap(bmp, 120, 120, false))
-                } else {
-                    thumb.setImageResource(R.drawable.icon2)
-                }
-            } else {
-                thumb.setImageResource(R.drawable.icon2)
-            }
+            thumb.setImageBitmap(ImageUtil.getBitmapImage(song.smallThumbBytes, 60, 60))
 
             itemView.setOnClickListener {
                 onItemClick?.invoke(songs[adapterPosition])
