@@ -6,7 +6,9 @@ import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -15,11 +17,12 @@ import br.com.listennow.model.Song
 import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
 
-class ListSongsAdapter(songs: List<Song>):
+class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
     RecyclerView.Adapter<ListSongsAdapter.ViewHolder>() {
 
     private val songs = songs.toMutableList()
     var onItemClick: ((Song) -> Unit)? = null
+    var onDeleteItemClick: ((Song) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
@@ -37,6 +40,22 @@ class ListSongsAdapter(songs: List<Song>):
         holder.bind(song)
     }
 
+    private fun popupMenu(view: View, song: Song) {
+        val popupMenu = PopupMenu(ctx, view)
+        popupMenu.inflate(R.menu.menu_song_options_recycler)
+
+        popupMenu.setOnMenuItemClickListener {
+            when(it.itemId) {
+                R.id.remove_song -> {
+                    onDeleteItemClick?.invoke(song)
+                    true
+                }
+                else -> true
+            }
+        }
+        popupMenu.show()
+    }
+
     fun update(songs: List<Song>) {
         this.songs.clear()
         this.songs.addAll(songs)
@@ -45,16 +64,24 @@ class ListSongsAdapter(songs: List<Song>):
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bind(song: Song) {
+
             val title: TextView = itemView.findViewById(R.id.list_songs_title)
             val artist: TextView = itemView.findViewById(R.id.list_songs_artist)
             val thumb: ImageView = itemView.findViewById(R.id.list_songs_thumb)
+            val menu: Button = itemView.findViewById(R.id.btn_popup_menu)
+
+            val songSelected = songs[adapterPosition]
+
+            menu.setOnClickListener {
+                popupMenu(itemView, songSelected)
+            }
 
             title.text = song.name
             artist.text = song.artist
             thumb.setImageBitmap(ImageUtil.getBitmapImage(song.smallThumbBytes, 60, 60))
 
             itemView.setOnClickListener {
-                onItemClick?.invoke(songs[adapterPosition])
+                onItemClick?.invoke(songSelected)
             }
         }
     }

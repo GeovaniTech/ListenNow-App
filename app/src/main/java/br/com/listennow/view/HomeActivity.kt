@@ -40,7 +40,7 @@ class HomeActivity: AppCompatActivity() {
 
         val songs = songDao.getSongs()
 
-        adapter = ListSongsAdapter(songs)
+        adapter = ListSongsAdapter(songs, this)
 
         SongUtil.songs = songs
 
@@ -56,6 +56,7 @@ class HomeActivity: AppCompatActivity() {
         configButtonNext()
         configSongsDetails()
         configThumbClick()
+        configRemoveSongFromRecyclerMenu()
     }
 
     private fun configThumbClick() {
@@ -98,6 +99,12 @@ class HomeActivity: AppCompatActivity() {
                 e.printStackTrace()
                 onRemoveSong(song)
             }
+        }
+    }
+
+    private fun configRemoveSongFromRecyclerMenu() {
+        adapter.onDeleteItemClick = { song ->
+            onRemoveSong(song)
         }
     }
 
@@ -256,8 +263,6 @@ class HomeActivity: AppCompatActivity() {
             if(SongUtil.actualSong.id == song.id) {
                 playRandomSong()
             }
-
-            Toast.makeText(this, "Song delete because we didn't find It", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             e.printStackTrace()
         }
