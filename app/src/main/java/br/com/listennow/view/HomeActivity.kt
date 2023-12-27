@@ -20,6 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.io.FileOutputStream
 import java.sql.DriverManager
 
@@ -27,8 +28,6 @@ class HomeActivity: AppCompatActivity() {
     private lateinit var binding: HomeBinding
     private lateinit var songDao: SongDao
     private lateinit var adapter: ListSongsAdapter
-    private var index = 0
-    private var shuffle = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +53,7 @@ class HomeActivity: AppCompatActivity() {
         configButtonSync()
         configLinkRegister()
         configButtonPlayPause()
-        configButtonNext(SongUtil.songs)
+        configButtonNext()
         configSongsDetails()
         configThumbClick()
     }
@@ -67,7 +66,7 @@ class HomeActivity: AppCompatActivity() {
         }
     }
 
-    fun playRandomSong() {
+    private fun playRandomSong() {
         val song = getRandomSong()
 
         SongUtil.readSong(this, song)
@@ -91,9 +90,14 @@ class HomeActivity: AppCompatActivity() {
 
     private fun configSongsDetails() {
         adapter.onItemClick = { song ->
-            SongUtil.readSong(this, song)
-            configButtonToPause()
-            configThumbDetails(song)
+            try {
+                SongUtil.readSong(this, song)
+                configButtonToPause()
+                configThumbDetails(song)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onRemoveSong(song)
+            }
         }
     }
 
@@ -104,18 +108,11 @@ class HomeActivity: AppCompatActivity() {
     }
 
     private fun configButtonShuffle() {
-        binding.shuffle.setOnClickListener {
-            shuffle = !shuffle
-        }
     }
 
-    private fun configButtonNext(songs: List<Song>) {
+    private fun configButtonNext() {
         binding.next.setOnClickListener {
-            val song = getRandomSong()
-
-            SongUtil.readSong(this, song)
-            configButtonToPause()
-            configThumbDetails(song)
+            playRandomSong()
         }
     }
 
@@ -144,6 +141,7 @@ class HomeActivity: AppCompatActivity() {
 
     private fun configButtonSync() {
         binding.btnSyncSongs.setOnClickListener {
+            binding.btnSyncSongs.isClickable = false
             syncSongs()
         }
     }
@@ -220,6 +218,8 @@ class HomeActivity: AppCompatActivity() {
                 }
 
                 connection.close()
+
+                binding.btnSyncSongs.isClickable = true
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     makeToast("Failed to sync songs")
@@ -244,5 +244,22 @@ class HomeActivity: AppCompatActivity() {
         listSongs.layoutManager = LinearLayoutManager(this)
         listSongs.setHasFixedSize(true)
         listSongs.adapter = adapter
+    }
+
+    private fun onRemoveSong(song: Song) {
+        try {
+            val file = File(song.path)
+            file.delete()
+            songDao.delete(song.id)
+            updateSongs()
+
+            if(SongUtil.actualSong.id == song.id) {
+                playRandomSong()
+            }
+
+            Toast.makeText(this, "Song delete because we didn't find It", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
