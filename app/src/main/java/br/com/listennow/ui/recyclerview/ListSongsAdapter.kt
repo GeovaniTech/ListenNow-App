@@ -1,6 +1,7 @@
 package br.com.listennow.ui.recyclerview
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import br.com.listennow.R
 import br.com.listennow.model.Song
 import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
+import br.com.listennow.view.SongDetailsActivity
 
 class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
     RecyclerView.Adapter<ListSongsAdapter.ViewHolder>() {
@@ -23,6 +25,7 @@ class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
     private val songs = songs.toMutableList()
     var onItemClick: ((Song) -> Unit)? = null
     var onDeleteItemClick: ((Song) -> Unit)? = null
+    var onDetailsSongsClick: ((Song) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
@@ -48,6 +51,11 @@ class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
             when(it.itemId) {
                 R.id.remove_song -> {
                     onDeleteItemClick?.invoke(song)
+                    true
+                }
+
+                R.id.details_song -> {
+                    onDetailsSongsClick?.invoke(song)
                     true
                 }
                 else -> true

@@ -57,10 +57,11 @@ class HomeActivity: AppCompatActivity() {
         configSongsDetails()
         configThumbClick()
         configRemoveSongFromRecyclerMenu()
-        onNextSongAutomatically()
+        configOnNextSongAutomatically()
+        configOpenSongDetailsFromRecycler()
     }
 
-    private fun onNextSongAutomatically() {
+    private fun configOnNextSongAutomatically() {
         SongUtil.onNextSong = {song ->
             SongUtil.readSong(this, song)
             configButtonToPause()
@@ -108,6 +109,12 @@ class HomeActivity: AppCompatActivity() {
                 e.printStackTrace()
                 onRemoveSong(song)
             }
+        }
+    }
+
+    private fun configOpenSongDetailsFromRecycler() {
+        adapter.onDetailsSongsClick =  { song ->
+            openSongDetails(song)
         }
     }
 
