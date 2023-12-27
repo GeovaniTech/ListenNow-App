@@ -14,6 +14,7 @@ class SongUtil {
         var index = 0
         private const val shuffle = true
         lateinit var actualSong: Song
+        var onNextSong: ((Song) -> Unit)? = null
 
         fun readSong(context: Context, song : Song) {
             clear()
@@ -38,17 +39,7 @@ class SongUtil {
             }
 
             mediaPlayer.setOnCompletionListener {
-                if (shuffle) {
-                    index = (0 until (songs.size)).random()
-                } else {
-                    index++
-                }
-
-                if (index > songs.size) {
-                    index = 0
-                }
-
-                readSong(context, songs[index])
+                onNextSong?.invoke(getRandomSong())
             }
         }
 
@@ -68,6 +59,11 @@ class SongUtil {
 
         fun isPlaying(): Boolean {
             return mediaPlayer.isPlaying
+        }
+
+        private fun getRandomSong(): Song {
+            val position = (0 until (songs.size)).random()
+            return songs[position]
         }
     }
 }

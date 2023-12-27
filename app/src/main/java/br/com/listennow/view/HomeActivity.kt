@@ -57,6 +57,15 @@ class HomeActivity: AppCompatActivity() {
         configSongsDetails()
         configThumbClick()
         configRemoveSongFromRecyclerMenu()
+        onNextSongAutomatically()
+    }
+
+    private fun onNextSongAutomatically() {
+        SongUtil.onNextSong = {song ->
+            SongUtil.readSong(this, song)
+            configButtonToPause()
+            configThumbDetails(song)
+        }
     }
 
     private fun configThumbClick() {
