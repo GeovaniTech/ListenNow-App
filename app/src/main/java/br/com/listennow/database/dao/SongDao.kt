@@ -1,6 +1,7 @@
 package br.com.listennow.database.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import br.com.listennow.model.Song
@@ -14,6 +15,6 @@ interface SongDao {
     fun getSongs(): List<Song>
 
 
-    @Query("DELETE FROM Song WHERE id = :songId")
-    fun delete(songId: Long)
+    @Delete
+    fun delete(song: Song)
 }

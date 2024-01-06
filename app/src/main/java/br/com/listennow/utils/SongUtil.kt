@@ -11,8 +11,6 @@ class SongUtil {
     companion object {
         private var mediaPlayer: MediaPlayer = MediaPlayer()
         var songs = emptyList<Song>()
-        var index = 0
-        private const val shuffle = true
         lateinit var actualSong: Song
         var onNextSong: ((Song) -> Unit)? = null
 

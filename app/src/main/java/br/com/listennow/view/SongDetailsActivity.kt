@@ -49,7 +49,7 @@ class SongDetailsActivity : AppCompatActivity() {
                     val file = File(song.path)
                     file.delete()
 
-                    songDao.delete(song.id)
+                    songDao.delete(song)
                     finish()
                     true
                 } catch (e: Exception) {

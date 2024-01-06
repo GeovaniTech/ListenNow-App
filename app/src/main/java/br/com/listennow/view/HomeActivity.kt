@@ -273,13 +273,14 @@ class HomeActivity: AppCompatActivity() {
         try {
             val file = File(song.path)
             file.delete()
-            songDao.delete(song.id)
+            songDao.delete(song)
             updateSongs()
 
             if(SongUtil.actualSong.id == song.id) {
                 playRandomSong()
             }
         } catch (e: Exception) {
+            Toast.makeText(this, "Failed to delete song", Toast.LENGTH_SHORT).show()
             e.printStackTrace()
         }
     }
