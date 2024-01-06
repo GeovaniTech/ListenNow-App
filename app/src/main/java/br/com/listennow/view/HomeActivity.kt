@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.view.Menu
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -174,6 +175,36 @@ class HomeActivity: AppCompatActivity() {
         super.onResume()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_home, menu)
+
+        val searchItem = menu?.findItem(R.id.search_songs)
+
+        if(searchItem != null) {
+            val searchView = searchItem.actionView as SearchView
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(p0: String?): Boolean {
+                    return true
+                }
+
+                override fun onQueryTextChange(p0: String?): Boolean {
+
+                    if(p0!!.isNotEmpty()) {
+                        val songs = songDao.listByFilters(p0)
+                        updateSongs(songs)
+                    } else {
+                        updateSongs()
+                    }
+
+                    return true
+                }
+
+            })
+        }
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
     private fun syncSongs() {
         val jdbc = "jdbc:postgresql://186.232.152.13:5432/listennow"
 
@@ -259,6 +290,10 @@ class HomeActivity: AppCompatActivity() {
 
     private fun updateSongs() {
         adapter.update(songDao.getSongs())
+    }
+
+    private fun updateSongs(songs: List<Song>) {
+        adapter.update(songs)
     }
 
     private fun configRecyclerSongs() {
