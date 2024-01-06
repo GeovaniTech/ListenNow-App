@@ -19,8 +19,11 @@ import java.io.File
 
 class SongDetailsActivity : AppCompatActivity() {
     private lateinit var binding: SongDetailsActivityBinding
-    private lateinit var songDao: SongDao
     private lateinit var song: Song
+
+    private val songDao by lazy {
+        AppDatabase.getInstance(this).songDao()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,10 +32,11 @@ class SongDetailsActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        songDao = AppDatabase.getInstance(this).songDao()
+        val songId = intent.getLongExtra("songId", 0L)
 
-        // Geovani, don't forgot to change the Entity to use Parceable.
-        song = intent.getSerializableExtra("song") as Song
+        if(songId > 0) {
+            song = songDao.findById(songId)!!
+        }
 
         bindSong(song)
     }
@@ -46,12 +50,17 @@ class SongDetailsActivity : AppCompatActivity() {
         return when(item.itemId) {
             R.id.song_detail_remove -> {
                 try {
-                    val file = File(song.path)
-                    file.delete()
+                    // Used to ensure that the variable is not null
+                    if(::song.isInitialized) {
+                        val file = File(song.path)
+                        file.delete()
 
-                    songDao.delete(song)
-                    finish()
-                    true
+                        songDao.delete(song)
+                        finish()
+                        true
+                    } else {
+                        false
+                    }
                 } catch (e: Exception) {
                     e.printStackTrace()
                     Toast.makeText(this, "Failed to delete song", Toast.LENGTH_SHORT).show()

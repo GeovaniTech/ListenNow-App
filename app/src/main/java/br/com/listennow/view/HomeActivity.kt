@@ -126,7 +126,7 @@ class HomeActivity: AppCompatActivity() {
 
     private fun openSongDetails(song: Song) {
         val intent = Intent(this, SongDetailsActivity::class.java)
-        intent.putExtra("song", song)
+        intent.putExtra("songId", song.id)
         startActivity(intent)
     }
 

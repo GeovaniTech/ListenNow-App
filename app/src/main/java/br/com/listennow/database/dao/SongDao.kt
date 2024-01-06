@@ -14,7 +14,9 @@ interface SongDao {
     @Query("SELECT * FROM Song")
     fun getSongs(): List<Song>
 
-
     @Delete
     fun delete(song: Song)
+
+    @Query("SELECT * FROM Song WHERE id = :id")
+    fun findById(id: Long): Song?
 }
