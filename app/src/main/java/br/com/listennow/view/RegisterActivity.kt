@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import br.com.listennow.R
 import br.com.listennow.database.AppDatabase
-import br.com.listennow.database.dao.ClientDao
+import br.com.listennow.database.dao.UserDao
 import br.com.listennow.databinding.RegisterBinding
-import br.com.listennow.model.Client
+import br.com.listennow.model.User
 import br.com.listennow.utils.EmailUtil
 import br.com.listennow.utils.EncryptionUtil
 import br.com.listennow.utils.StringUtil
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 class RegisterActivity: AppCompatActivity() {
     private lateinit var binding: RegisterBinding
-    private lateinit var clientDao: ClientDao
+    private lateinit var userDao: UserDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,14 +29,14 @@ class RegisterActivity: AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        clientDao = AppDatabase.getInstance(this).clientDao()
+        userDao = AppDatabase.getInstance(this).userDao()
 
         configButtonRegister()
     }
 
     private fun configButtonRegister() {
         binding.register.setOnClickListener {
-            lifecycleScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 register()
             }
         }
@@ -72,19 +72,19 @@ class RegisterActivity: AppCompatActivity() {
             return
         }
 
-        val clientReturned = clientDao.existsAccount(email)
+        val userReturned = userDao.existsAccount(email)
 
-        Log.i("RegisterActivity", "Client returned: " + clientReturned?.email)
+        Log.i("RegisterActivity", "User returned: " + userReturned?.email)
 
-        if(clientReturned != null && clientReturned.email!!.isNotEmpty()) {
+        if(userReturned != null && userReturned.email!!.isNotEmpty()) {
             Toast.makeText(this, R.string.email_already_in_use, Toast.LENGTH_SHORT).show()
             return
         }
 
-        val client = Client(0, email, EncryptionUtil.encryptSHA(password))
+        val user = User(0, email, EncryptionUtil.encryptSHA(password))
 
         CoroutineScope(Dispatchers.IO).launch {
-            clientDao.save(client)
+            userDao.save(user)
         }
 
         finish()

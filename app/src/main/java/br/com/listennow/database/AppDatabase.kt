@@ -4,15 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import br.com.listennow.database.dao.ClientDao
 import br.com.listennow.database.dao.SongDao
-import br.com.listennow.model.Client
+import br.com.listennow.database.dao.UserDao
 import br.com.listennow.model.Song
+import br.com.listennow.model.User
 
-@Database(entities = [Song::class, Client::class], version = 1)
+@Database(entities = [Song::class, User::class], version = 2, exportSchema = true)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun songDao(): SongDao
-    abstract  fun clientDao(): ClientDao
+    abstract fun userDao(): UserDao
 
     companion object {
         private const val DATABASE_NAME = "listennow.db"
@@ -29,7 +29,8 @@ abstract class AppDatabase : RoomDatabase() {
                         context.applicationContext,
                         AppDatabase::class.java,
                         DATABASE_NAME
-                    ).allowMainThreadQueries()
+                    ).addMigrations(MIGRATION_1_2)
+                        .allowMainThreadQueries()
                         .build()
 
                     INSTANCE = instance
