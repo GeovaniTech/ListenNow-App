@@ -7,6 +7,7 @@ import android.view.Menu
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.R
 import br.com.listennow.R.*
@@ -39,16 +40,20 @@ class HomeActivity: AppCompatActivity() {
 
         songDao = AppDatabase.getInstance(this).songDao()
 
-        val songs = songDao.getSongs()
-
+        var songs = emptyList<Song>()
         adapter = ListSongsAdapter(songs, this)
 
-        SongUtil.songs = songs
+        CoroutineScope(Dispatchers.IO).launch {
+            songs = songDao.getSongs()
 
-        if(SongUtil.songs.isNotEmpty()) {
-            playRandomSong()
+            SongUtil.songs = songs
+
+            if(SongUtil.songs.isNotEmpty()) {
+                playRandomSong()
+            }
         }
 
+        updateSongs()
         configButtonShuffle()
         configRecyclerSongs()
         configButtonSync()
@@ -190,8 +195,9 @@ class HomeActivity: AppCompatActivity() {
                 override fun onQueryTextChange(p0: String?): Boolean {
 
                     if(p0!!.isNotEmpty()) {
-                        val songs = songDao.listByFilters(p0)
-                        updateSongs(songs)
+                        CoroutineScope(Dispatchers.IO).launch {
+                            updateSongs(songDao.listByFilters(p0))
+                        }
                     } else {
                         updateSongs()
                     }
@@ -268,17 +274,16 @@ class HomeActivity: AppCompatActivity() {
 
                 withContext(Dispatchers.Main) {
                     makeToast("Syncronism finished")
-                    updateSongs()
                 }
 
-                connection.close()
+                updateSongs()
 
+                connection.close()
                 binding.btnSyncSongs.isClickable = true
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     makeToast("Failed to sync songs")
                 }
-
                 e.printStackTrace()
             }
         }
@@ -289,11 +294,19 @@ class HomeActivity: AppCompatActivity() {
     }
 
     private fun updateSongs() {
-        adapter.update(songDao.getSongs())
+        CoroutineScope(Dispatchers.IO).launch {
+            val songs = songDao.getSongs()
+
+            runOnUiThread {
+                adapter.update(songs)
+            }
+        }
     }
 
     private fun updateSongs(songs: List<Song>) {
-        adapter.update(songs)
+        runOnUiThread {
+            adapter.update(songs)
+        }
     }
 
     private fun configRecyclerSongs() {
@@ -308,7 +321,11 @@ class HomeActivity: AppCompatActivity() {
         try {
             val file = File(song.path)
             file.delete()
-            songDao.delete(song)
+
+            CoroutineScope(Dispatchers.IO).launch {
+                songDao.delete(song)
+            }
+
             updateSongs()
 
             if(SongUtil.actualSong.id == song.id) {

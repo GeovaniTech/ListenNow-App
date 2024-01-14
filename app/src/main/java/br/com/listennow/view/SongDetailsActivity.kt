@@ -10,12 +10,17 @@ import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import br.com.listennow.R
 import br.com.listennow.database.AppDatabase
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.databinding.SongDetailsActivityBinding
 import br.com.listennow.model.Song
 import br.com.listennow.utils.ImageUtil
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 
 class SongDetailsActivity : AppCompatActivity() {
@@ -36,10 +41,11 @@ class SongDetailsActivity : AppCompatActivity() {
         val songId = intent.getLongExtra("songId", 0L)
 
         if(songId > 0) {
-            song = songDao.findById(songId)!!
+            CoroutineScope(Dispatchers.IO).launch {
+                song = songDao.findById(songId)!!
+                bindSong(song)
+            }
         }
-
-        bindSong(song)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -56,7 +62,9 @@ class SongDetailsActivity : AppCompatActivity() {
                         val file = File(song.path)
                         file.delete()
 
-                        songDao.delete(song)
+                        CoroutineScope(Dispatchers.IO).launch {
+                            songDao.delete(song)
+                        }
                         finish()
                         true
                     } else {

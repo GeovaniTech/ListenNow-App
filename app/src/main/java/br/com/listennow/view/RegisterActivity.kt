@@ -72,21 +72,19 @@ class RegisterActivity: AppCompatActivity() {
             return
         }
 
-        val userReturned = userDao.existsAccount(email)
-
-        Log.i("RegisterActivity", "User returned: " + userReturned?.email)
-
-        if(userReturned != null && userReturned.email!!.isNotEmpty()) {
-            Toast.makeText(this, R.string.email_already_in_use, Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val user = User(0, email, EncryptionUtil.encryptSHA(password))
-
         CoroutineScope(Dispatchers.IO).launch {
-            userDao.save(user)
-        }
+            val userReturned = userDao.existsAccount(email)
 
-        finish()
+            Log.i("RegisterActivity", "User returned: " + userReturned?.email)
+
+            if(userReturned != null && userReturned.email!!.isNotEmpty()) {
+                Toast.makeText(this@RegisterActivity, R.string.email_already_in_use, Toast.LENGTH_SHORT).show()
+            } else {
+                val user = User(0, email, EncryptionUtil.encryptSHA(password))
+                userDao.save(user)
+            }
+
+            finish()
+        }
     }
 }
