@@ -1,10 +1,8 @@
 package br.com.listennow.view
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import br.com.listennow.R
 import br.com.listennow.database.AppDatabase
 import br.com.listennow.database.dao.UserDao
@@ -16,6 +14,7 @@ import br.com.listennow.utils.StringUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RegisterActivity: AppCompatActivity() {
     private lateinit var binding: RegisterBinding
@@ -36,9 +35,7 @@ class RegisterActivity: AppCompatActivity() {
 
     private fun configButtonRegister() {
         binding.register.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                register()
-            }
+            register()
         }
     }
 
@@ -75,16 +72,19 @@ class RegisterActivity: AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             val userReturned = userDao.existsAccount(email)
 
-            Log.i("RegisterActivity", "User returned: " + userReturned?.email)
-
-            if(userReturned != null && userReturned.email!!.isNotEmpty()) {
-                Toast.makeText(this@RegisterActivity, R.string.email_already_in_use, Toast.LENGTH_SHORT).show()
-            } else {
+            if(userReturned == null) {
                 val user = User(0, email, EncryptionUtil.encryptSHA(password))
                 userDao.save(user)
+                startLoginActivity()
+            } else {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@RegisterActivity, R.string.email_already_in_use, Toast.LENGTH_SHORT).show()
+                }
             }
-
-            finish()
         }
+    }
+
+    private fun startLoginActivity() {
+        finish()
     }
 }

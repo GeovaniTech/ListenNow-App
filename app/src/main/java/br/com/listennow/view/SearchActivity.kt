@@ -1,11 +1,9 @@
 package br.com.listennow.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.databinding.SearchBinding
-import br.com.listennow.model.Song
 import br.com.listennow.to.TOSongYTSearch
 import br.com.listennow.ui.recyclerview.ListSongsYTAdapter
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +16,7 @@ import java.net.URL
 class SearchActivity: AppCompatActivity() {
     private lateinit var binding: SearchBinding
     private lateinit var adapter: ListSongsYTAdapter
-    private var songs: List<TOSongYTSearch> = emptyList<TOSongYTSearch>()
+    private var songs: List<TOSongYTSearch> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +45,7 @@ class SearchActivity: AppCompatActivity() {
         listSongs.adapter = adapter
     }
 
-    fun search(song: String) {
+    private fun search(song: String) {
         val songs = mutableListOf<TOSongYTSearch>()
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -71,9 +69,9 @@ class SearchActivity: AppCompatActivity() {
                     val jsonArtist = jsonArtists.getJSONObject(0)
                     val artist = jsonArtist.getString("name")
 
-                    val song = TOSongYTSearch(id, title, smallThumb, artist)
+                    val ytSong = TOSongYTSearch(id, title, smallThumb, artist)
 
-                    songs.add(song)
+                    songs.add(ytSong)
                 }
 
                 withContext(Dispatchers.Main) {

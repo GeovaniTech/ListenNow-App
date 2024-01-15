@@ -9,13 +9,12 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.preferences.core.edit
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.R
-import br.com.listennow.R.*
+import br.com.listennow.R.drawable
 import br.com.listennow.database.AppDatabase
-import br.com.listennow.databinding.HomeBinding
 import br.com.listennow.database.dao.SongDao
+import br.com.listennow.databinding.HomeBinding
 import br.com.listennow.model.Song
 import br.com.listennow.preferences.dataStore
 import br.com.listennow.preferences.userKey

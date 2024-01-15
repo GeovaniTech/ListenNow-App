@@ -1,23 +1,15 @@
 package br.com.listennow.view
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
-import android.widget.SearchView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import br.com.listennow.R
 import br.com.listennow.database.AppDatabase
-import br.com.listennow.database.dao.SongDao
 import br.com.listennow.databinding.SongDetailsActivityBinding
 import br.com.listennow.model.Song
 import br.com.listennow.utils.ImageUtil
-import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
