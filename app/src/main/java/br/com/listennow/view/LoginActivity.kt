@@ -31,8 +31,6 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: LoginBinding
     private lateinit var userDao: UserDao
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = LoginBinding.inflate(layoutInflater)
@@ -46,7 +44,6 @@ class LoginActivity : AppCompatActivity() {
         configButtonLogin()
 
         requestPermission()
-        loginWithExistentCredentials()
     }
 
     private fun configButtonLogin() {
@@ -75,22 +72,6 @@ class LoginActivity : AppCompatActivity() {
     private fun startRegisterActivity() {
         val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
-    }
-
-    private fun loginWithExistentCredentials() {
-        CoroutineScope(Dispatchers.IO).launch {
-            dataStore.data.collect { preferences ->
-                preferences[userKey]?.let {
-                    loadHomeActivity()
-                }
-            }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        loginWithExistentCredentials()
     }
 
     private suspend fun login(user: User) {

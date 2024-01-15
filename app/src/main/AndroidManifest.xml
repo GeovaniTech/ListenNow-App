@@ -19,9 +19,7 @@
         android:theme="@style/Theme.ListenNow"
         tools:targetApi="31">
 
-        <activity
-            android:name=".view.LoginActivity"
-            android:exported="true">
+        <activity android:name="br.com.listennow.view.HomeActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,8 +27,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="br.com.listennow.view.LoginActivity" />
         <activity android:name="br.com.listennow.view.RegisterActivity" />
-        <activity android:name="br.com.listennow.view.HomeActivity" />
         <activity android:name="br.com.listennow.view.SearchActivity" />
         <activity android:name="br.com.listennow.view.SongDetailsActivity" />
     </application>

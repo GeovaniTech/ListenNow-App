@@ -15,6 +15,8 @@ import br.com.listennow.database.AppDatabase
 import br.com.listennow.databinding.HomeBinding
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.model.Song
+import br.com.listennow.preferences.dataStore
+import br.com.listennow.preferences.userKey
 import br.com.listennow.ui.recyclerview.ListSongsAdapter
 import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
@@ -38,6 +40,8 @@ class HomeActivity: AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        verifyUserLogged()
+
         songDao = AppDatabase.getInstance(this).songDao()
 
         var songs = emptyList<Song>()
@@ -48,7 +52,7 @@ class HomeActivity: AppCompatActivity() {
 
             SongUtil.songs = songs
 
-            if(SongUtil.songs.isNotEmpty()) {
+            if (SongUtil.songs.isNotEmpty()) {
                 playRandomSong()
             }
         }
@@ -73,6 +77,22 @@ class HomeActivity: AppCompatActivity() {
             configButtonToPause()
             configThumbDetails(song)
         }
+    }
+
+    private fun verifyUserLogged() {
+        CoroutineScope(Dispatchers.IO).launch {
+            dataStore.data.collect { preferences ->
+                if(preferences[userKey] == null) {
+                    startLoginActivity()
+                    finish()
+                }
+            }
+        }
+    }
+
+    private fun startLoginActivity() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
     }
 
     private fun configThumbClick() {
