@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.R
@@ -83,6 +85,7 @@ class HomeActivity: AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             dataStore.data.collect { preferences ->
                 if(preferences[userKey] == null) {
+                    SongUtil.pause()
                     startLoginActivity()
                     finish()
                 }
@@ -226,11 +229,24 @@ class HomeActivity: AppCompatActivity() {
 
                     return true
                 }
-
             })
         }
 
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.logout -> {
+                CoroutineScope(Dispatchers.IO).launch {
+                    dataStore.edit { preferences ->
+                        preferences.remove(userKey)
+                        verifyUserLogged()
+                    }
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun syncSongs() {

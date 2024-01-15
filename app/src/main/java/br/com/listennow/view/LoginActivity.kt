@@ -38,6 +38,8 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(view)
 
+        supportActionBar?.hide()
+
         userDao = AppDatabase.getInstance(this).userDao()
 
         configLinkRegister()

@@ -26,4 +26,5 @@
     <string name="remove">Remove</string>
     <string name="remove_song">Remove Song</string>
     <string name="song_details">Song Details</string>
+    <string name="exit">Exit</string>
 </resources>

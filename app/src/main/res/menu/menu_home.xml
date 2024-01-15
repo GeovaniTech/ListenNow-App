@@ -8,4 +8,10 @@
         android:icon="@drawable/ic_search"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always|collapseActionView"/>
+
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/ic_go_out"
+        android:title="@string/exit"
+        app:showAsAction="ifRoom" />
 </menu>
