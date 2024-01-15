@@ -101,8 +101,10 @@ class HomeActivity: AppCompatActivity() {
     }
 
     private fun configThumbDetails(song: Song) {
-        val thumbDetails = binding.homeThumbSongDetails
-        thumbDetails.setImageBitmap(ImageUtil.getBitmapImage(song.smallThumbBytes, 60, 60))
+        runOnUiThread {
+            val thumbDetails = binding.homeThumbSongDetails
+            thumbDetails.setImageBitmap(ImageUtil.getBitmapImage(song.smallThumbBytes, 60, 60))
+        }
     }
 
     private fun configSongsDetails() {

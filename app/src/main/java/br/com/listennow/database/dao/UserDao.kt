@@ -15,4 +15,7 @@ interface UserDao {
 
     @Insert
     fun save(user: User)
+
+    @Query("SELECT * FROM User WHERE id = :id")
+    fun findById(id: Long): User
 }

@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +18,8 @@ import br.com.listennow.database.AppDatabase
 import br.com.listennow.database.dao.UserDao
 import br.com.listennow.databinding.LoginBinding
 import br.com.listennow.model.User
+import br.com.listennow.preferences.dataStore
+import br.com.listennow.preferences.userKey
 import br.com.listennow.utils.EncryptionUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,12 +31,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: LoginBinding
     private lateinit var userDao: UserDao
 
-    private val loginKey = stringPreferencesKey("login")
-    private val passwordKey = stringPreferencesKey("password")
 
-    private val Context.dataStore by preferencesDataStore(
-        name = "credentials"
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,8 +79,10 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loginWithExistentCredentials() {
         CoroutineScope(Dispatchers.IO).launch {
-            if (verifyIfExistsCredentials()) {
-                loadHomeActivity()
+            dataStore.data.collect { preferences ->
+                preferences[userKey]?.let {
+                    loadHomeActivity()
+                }
             }
         }
     }
@@ -115,43 +115,31 @@ class LoginActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.MANAGE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED) {
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             requestPermissions(arrayOf(Manifest.permission.MANAGE_EXTERNAL_STORAGE), 3)
         }
 
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED) {
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
         }
 
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED) {
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 2)
         }
     }
 
-    private suspend fun verifyIfExistsCredentials(): Boolean {
-        val credentials = dataStore.data.first()
-
-        if(credentials[loginKey] != null && credentials[passwordKey] != null) {
-
-
-            val user = userDao.authenticateUser(credentials[loginKey].toString(), credentials[passwordKey].toString())
-
-            return user != null && user.email!!.isNotBlank()
-        }
-
-        return false
-    }
-
     private suspend fun saveCredentials(user: User) {
         dataStore.edit { credentials ->
-            credentials[loginKey] = user.email.toString()
-            credentials[passwordKey] = user.password.toString()
+            credentials[userKey] = user.id
         }
     }
 }
