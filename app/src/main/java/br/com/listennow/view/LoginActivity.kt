@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.core.edit
+import androidx.lifecycle.lifecycleScope
 import br.com.listennow.R
 import br.com.listennow.database.AppDatabase
 import br.com.listennow.database.dao.UserDao
@@ -15,25 +16,31 @@ import br.com.listennow.databinding.LoginBinding
 import br.com.listennow.model.User
 import br.com.listennow.preferences.dataStore
 import br.com.listennow.preferences.userKey
+import br.com.listennow.ui.activity.AbstractUserActivity
 import br.com.listennow.utils.EncryptionUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var binding: LoginBinding
-    private lateinit var userDao: UserDao
+    private val binding by lazy {
+        LoginBinding.inflate(layoutInflater)
+    }
+
+    private val userDao by lazy {
+        AppDatabase.getInstance(this).userDao()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = LoginBinding.inflate(layoutInflater)
         val view = binding.root
 
         setContentView(view)
 
         supportActionBar?.hide()
-
-        userDao = AppDatabase.getInstance(this).userDao()
 
         configLinkRegister()
         configButtonLogin()
@@ -42,16 +49,10 @@ class LoginActivity : AppCompatActivity() {
 
     private fun configButtonLogin() {
         binding.button.setOnClickListener {
-            val email = binding.editTextTextEmailAddress
-            val password = binding.editTextTextPassword
+            val email = binding.editTextTextEmailAddress.text.toString()
+            val password =  EncryptionUtil.encryptSHA(binding.editTextTextPassword.text.toString())
 
-            val user = User(
-                0,
-                email.text.toString(),
-                EncryptionUtil.encryptSHA(password.text.toString())
-            )
-
-            authenticateUser(user)
+            authenticateUser(email, password)
         }
     }
 
@@ -66,17 +67,18 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun authenticateUser(user: User) {
-        CoroutineScope(Dispatchers.IO).launch {
-            if(user.email.isNotEmpty() && user.password.isNotEmpty()) {
-                val userReturned = userDao.authenticateUser(user.email.toString(), user.password.toString())
+    private fun authenticateUser(email: String, password: String) {
+        if (email.isBlank() || password.isBlank()) {
+            showInvalidCredentialsMessage()
+            return
+        }
 
-                userReturned?.let {
-                    saveCredentials(user)
-                    loadHomeActivity()
-                } ?: {
-                    showInvalidCredentialsMessage()
-                }
+        lifecycleScope.launch {
+            val userReturned = userDao.authenticateUser(email, password).firstOrNull()
+
+            if(userReturned != null) {
+                saveCredentials(userReturned.id)
+                startHomeActivity()
             } else {
                 showInvalidCredentialsMessage()
             }
@@ -87,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
         Toast.makeText(this, R.string.invalid_email_password, Toast.LENGTH_SHORT).show()
     }
 
-    private fun loadHomeActivity() {
+    private fun startHomeActivity() {
         val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
     }
@@ -118,9 +120,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun saveCredentials(user: User) {
+    private suspend fun saveCredentials(id: Long) {
         dataStore.edit { credentials ->
-            credentials[userKey] = user.id
+            credentials[userKey] = id
         }
     }
 }

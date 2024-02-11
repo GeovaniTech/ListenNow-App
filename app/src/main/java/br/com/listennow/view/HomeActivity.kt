@@ -2,13 +2,11 @@ package br.com.listennow.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.datastore.preferences.core.edit
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.R
 import br.com.listennow.R.drawable
@@ -16,20 +14,22 @@ import br.com.listennow.database.AppDatabase
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.databinding.HomeBinding
 import br.com.listennow.model.Song
-import br.com.listennow.preferences.dataStore
-import br.com.listennow.preferences.userKey
+import br.com.listennow.ui.activity.AbstractUserActivity
 import br.com.listennow.ui.recyclerview.ListSongsAdapter
 import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.internal.wait
 import java.io.File
-import java.io.FileOutputStream
-import java.sql.DriverManager
 
-class HomeActivity: AppCompatActivity() {
+class HomeActivity: AbstractUserActivity() {
     private lateinit var binding: HomeBinding
     private lateinit var songDao: SongDao
     private lateinit var adapter: ListSongsAdapter
@@ -41,24 +41,21 @@ class HomeActivity: AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        verifyUserLogged()
-
         songDao = AppDatabase.getInstance(this).songDao()
+        adapter = ListSongsAdapter(emptyList(), this)
 
-        var songs = emptyList<Song>()
-        adapter = ListSongsAdapter(songs, this)
+        lifecycleScope.launch {
+            user.filterNotNull().collect {
+                updateSongs()
+            }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            songs = songDao.getSongs()
-
-            SongUtil.songs = songs
-
-            if (SongUtil.songs.isNotEmpty()) {
-                playRandomSong()
+            withContext(Dispatchers.Main) {
+                if (SongUtil.songs.isNotEmpty()) {
+                    playRandomSong()
+                }
             }
         }
 
-        updateSongs()
         configButtonShuffle()
         configRecyclerSongs()
         configButtonSync()
@@ -73,28 +70,11 @@ class HomeActivity: AppCompatActivity() {
     }
 
     private fun configOnNextSongAutomatically() {
-        SongUtil.onNextSong = {song ->
+        SongUtil.onNextSong = { song ->
             SongUtil.readSong(this, song)
             configButtonToPause()
             configThumbDetails(song)
         }
-    }
-
-    private fun verifyUserLogged() {
-        CoroutineScope(Dispatchers.IO).launch {
-            dataStore.data.collect { preferences ->
-                if(preferences[userKey] == null) {
-                    SongUtil.pause()
-                    startLoginActivity()
-                    finish()
-                }
-            }
-        }
-    }
-
-    private fun startLoginActivity() {
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
     }
 
     private fun configThumbClick() {
@@ -194,13 +174,13 @@ class HomeActivity: AppCompatActivity() {
 
     private fun configButtonSync() {
         binding.btnSyncSongs.setOnClickListener {
-            binding.btnSyncSongs.isClickable = false
-            syncSongs()
         }
     }
 
     override fun onResume() {
-        updateSongs()
+        lifecycleScope.launch {
+            updateSongs()
+        }
         super.onResume()
     }
 
@@ -219,11 +199,15 @@ class HomeActivity: AppCompatActivity() {
                 override fun onQueryTextChange(p0: String?): Boolean {
 
                     if(p0!!.isNotEmpty()) {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            updateSongs(songDao.listByFilters(p0))
+                        lifecycleScope.launch {
+                            songDao.listByFilters(p0).collect { songs ->
+                                updateSongs(songs)
+                            }
                         }
                     } else {
-                        updateSongs()
+                        lifecycleScope.launch {
+                            updateSongs()
+                        }
                     }
 
                     return true
@@ -237,110 +221,22 @@ class HomeActivity: AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.logout -> {
-                CoroutineScope(Dispatchers.IO).launch {
-                    dataStore.edit { preferences ->
-                        preferences.remove(userKey)
-                        verifyUserLogged()
-                    }
+                lifecycleScope.launch {
+                    logout()
                 }
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun syncSongs() {
-        val jdbc = "jdbc:postgresql://186.232.152.13:5432/listennow"
-
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                Class.forName("org.postgresql.Driver") // Load the PostgreSQL driver class
-
-                val connection = DriverManager.getConnection(jdbc, "postgres", "#Geovani5280")
-
-                if (connection.isValid(0)) {
-                    withContext(Dispatchers.Main) {
-                        makeToast("Syncronism started")
-                    }
-
-                    val query = connection.prepareStatement("select * from song")
-
-                    val result = query.executeQuery()
-
-                    while (result.next()) {
-                        val id = result.getInt("id")
-                        val videoId = result.getString("videoid")
-                        val title = result.getString("title")
-                        val artist = result.getString("artist")
-                        val album = result.getString("album")
-                        val smallThumb = result.getString("small_thumb")
-                        val largeThumb = result.getString("large_thumb")
-                        val smallThumbBytes = result.getBytes("small_thumb_bytes")
-                        val largeThumbBytes = result.getBytes("large_thumb_bytes")
-                        val fileBytes = result.getBytes("file")
-                        val path =
-                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).path + "/" + title + ".mp3"
-
-                        val fileOutputStream = FileOutputStream(path)
-                        val lyrics = result.getString("lyrics")
-
-                        fileOutputStream.write(fileBytes)
-                        fileOutputStream.close()
-
-                        val song = Song(
-                            0,
-                            videoId,
-                            title,
-                            artist,
-                            album,
-                            smallThumb,
-                            largeThumb,
-                            smallThumbBytes,
-                            largeThumbBytes,
-                            path,
-                            lyrics
-                        )
-
-                        songDao.save(song)
-
-                        val sql = StringBuilder("DELETE FROM song WHERE id = $id")
-
-                        val q = connection.prepareStatement(sql.toString())
-                        q.executeUpdate()
-                    }
-                }
-
-                withContext(Dispatchers.Main) {
-                    makeToast("Syncronism finished")
-                }
-
-                updateSongs()
-
-                connection.close()
-                binding.btnSyncSongs.isClickable = true
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    makeToast("Failed to sync songs")
-                }
-                e.printStackTrace()
-            }
+    private suspend fun updateSongs() {
+        songDao.getSongs().collect { songs ->
+            SongUtil.songs = songs
+            updateSongs(songs)
         }
     }
 
-    private fun makeToast(text: String) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun updateSongs() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val songs = songDao.getSongs()
-
-            runOnUiThread {
-                adapter.update(songs)
-            }
-        }
-    }
-
-    private fun updateSongs(songs: List<Song>) {
+    private suspend fun updateSongs(songs: List<Song>) {
         runOnUiThread {
             adapter.update(songs)
         }
@@ -359,11 +255,10 @@ class HomeActivity: AppCompatActivity() {
             val file = File(song.path)
             file.delete()
 
-            CoroutineScope(Dispatchers.IO).launch {
+            lifecycleScope.launch {
                 songDao.delete(song)
+                updateSongs()
             }
-
-            updateSongs()
 
             if(SongUtil.actualSong.id == song.id) {
                 playRandomSong()
