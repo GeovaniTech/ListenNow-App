@@ -10,8 +10,8 @@
         app:showAsAction="always|collapseActionView"/>
 
     <item
-        android:id="@+id/logout"
-        android:icon="@drawable/ic_go_out"
-        android:title="@string/exit"
+        android:id="@+id/btn_go_profile"
+        android:icon="@drawable/ic_user"
+        android:title="@string/profile"
         app:showAsAction="ifRoom" />
 </menu>

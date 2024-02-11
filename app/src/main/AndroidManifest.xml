@@ -31,5 +31,6 @@
         <activity android:name="br.com.listennow.view.RegisterActivity" />
         <activity android:name="br.com.listennow.view.SearchActivity" />
         <activity android:name="br.com.listennow.view.SongDetailsActivity" />
+        <activity android:name="br.com.listennow.view.ProfileActivity" />
     </application>
 </manifest>

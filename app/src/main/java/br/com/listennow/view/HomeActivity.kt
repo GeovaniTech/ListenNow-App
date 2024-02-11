@@ -220,13 +220,16 @@ class HomeActivity: AbstractUserActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.logout -> {
-                lifecycleScope.launch {
-                    logout()
-                }
+            R.id.btn_go_profile -> {
+                startProfileActivity()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun startProfileActivity() {
+        val intent = Intent(this, ProfileActivity::class.java)
+        startActivity(intent)
     }
 
     private suspend fun updateSongs() {
