@@ -21,8 +21,9 @@ abstract class AbstractUserActivity : AppCompatActivity() {
         AppDatabase.getInstance(this).userDao()
     }
 
-    private var _user: MutableStateFlow<User?>  = MutableStateFlow(null)
-    protected var user: StateFlow<User?>  = _user
+    private val _user: MutableStateFlow<User?>  = MutableStateFlow(null)
+    protected val user: StateFlow<User?>  = _user
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -31,8 +32,10 @@ abstract class AbstractUserActivity : AppCompatActivity() {
         }
     }
 
-    protected suspend fun findUserById(id: Long) {
-        _user.value = userDao.findById(id).firstOrNull()
+    protected suspend fun findUserById(id: Long): User? {
+        return userDao.findById(id).firstOrNull().also {
+            _user.value = it
+        }
     }
 
     protected suspend fun logout() {

@@ -2,12 +2,14 @@ package br.com.listennow.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import br.com.listennow.BuildConfig
 import br.com.listennow.R
 import br.com.listennow.R.drawable
 import br.com.listennow.database.AppDatabase
@@ -28,6 +30,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.internal.wait
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.sql.DriverManager
+import java.util.Properties
 
 class HomeActivity: AbstractUserActivity() {
     private lateinit var binding: HomeBinding
@@ -47,12 +53,7 @@ class HomeActivity: AbstractUserActivity() {
         lifecycleScope.launch {
             user.filterNotNull().collect {
                 updateSongs()
-            }
-
-            withContext(Dispatchers.Main) {
-                if (SongUtil.songs.isNotEmpty()) {
-                    playRandomSong()
-                }
+                playRandomSong()
             }
         }
 
@@ -86,11 +87,13 @@ class HomeActivity: AbstractUserActivity() {
     }
 
     private fun playRandomSong() {
-        val song = getRandomSong()
+        if(SongUtil.songs.isNotEmpty()) {
+            val song = getRandomSong()
 
-        SongUtil.readSong(this, song)
-        configButtonToPause()
-        configThumbDetails(song)
+            SongUtil.readSong(this, song)
+            configButtonToPause()
+            configThumbDetails(song)
+        }
     }
 
     private fun getRandomSong(): Song {
@@ -174,6 +177,11 @@ class HomeActivity: AbstractUserActivity() {
 
     private fun configButtonSync() {
         binding.btnSyncSongs.setOnClickListener {
+            lifecycleScope.launch {
+                user.filterNotNull().collect {user ->
+                    syncSongs(user.id)
+                }
+            }
         }
     }
 
@@ -233,9 +241,11 @@ class HomeActivity: AbstractUserActivity() {
     }
 
     private suspend fun updateSongs() {
-        songDao.getSongs().collect { songs ->
-            SongUtil.songs = songs
-            updateSongs(songs)
+        user.filterNotNull().collect { user ->
+            songDao.getSongs(user.id).collect { songs ->
+                SongUtil.songs = songs
+                updateSongs(songs)
+            }
         }
     }
 
@@ -255,20 +265,105 @@ class HomeActivity: AbstractUserActivity() {
 
     private fun onRemoveSong(song: Song) {
         try {
-            val file = File(song.path)
-            file.delete()
-
-            lifecycleScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 songDao.delete(song)
                 updateSongs()
-            }
 
-            if(SongUtil.actualSong.id == song.id) {
-                playRandomSong()
+                val file = File(song.path)
+                file.delete()
+
+                if(SongUtil.actualSong.id == song.id) {
+                    playRandomSong()
+                }
             }
         } catch (e: Exception) {
             Toast.makeText(this, "Failed to delete song", Toast.LENGTH_SHORT).show()
             e.printStackTrace()
         }
+    }
+
+    private fun syncSongs(userId: Long) {
+        val url =  BuildConfig.DB_URL
+        val username = BuildConfig.DB_USERNAME
+        val password = BuildConfig.DB_PASSWORD
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                Class.forName("org.postgresql.Driver") // Load the PostgreSQL driver class
+
+                val connection = DriverManager.getConnection(url, username, password)
+
+                if (connection.isValid(0)) {
+                    withContext(Dispatchers.Main) {
+                        makeToast("Syncronism started")
+                    }
+
+                    val query = connection.prepareStatement("select * from song WHERE user_id = $userId")
+
+                    val result = query.executeQuery()
+
+                    while (result.next()) {
+                        val id = result.getInt("id")
+                        val videoId = result.getString("videoid")
+                        val title = result.getString("title")
+                        val artist = result.getString("artist")
+                        val album = result.getString("album")
+                        val smallThumb = result.getString("small_thumb")
+                        val largeThumb = result.getString("large_thumb")
+                        val smallThumbBytes = result.getBytes("small_thumb_bytes")
+                        val largeThumbBytes = result.getBytes("large_thumb_bytes")
+                        val fileBytes = result.getBytes("file")
+                        val path =
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).path + "/" + title + ".mp3"
+
+                        val fileOutputStream = FileOutputStream(path)
+                        val lyrics = result.getString("lyrics")
+
+                        fileOutputStream.write(fileBytes)
+                        fileOutputStream.close()
+
+                        val song = Song(
+                            0,
+                            videoId,
+                            title,
+                            artist,
+                            album,
+                            smallThumb,
+                            largeThumb,
+                            smallThumbBytes,
+                            largeThumbBytes,
+                            path,
+                            lyrics,
+                            userId
+                        )
+
+                        songDao.save(song)
+
+                        val sql = StringBuilder("DELETE FROM song WHERE id = $id")
+
+                        val q = connection.prepareStatement(sql.toString())
+                        q.executeUpdate()
+                    }
+                }
+
+                withContext(Dispatchers.Main) {
+                    makeToast("Syncronism finished")
+                }
+
+                updateSongs()
+
+                connection.close()
+                binding.btnSyncSongs.isClickable = true
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    makeToast("Failed to sync songs")
+                }
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun makeToast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 }

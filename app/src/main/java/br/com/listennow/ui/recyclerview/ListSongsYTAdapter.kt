@@ -22,7 +22,7 @@ import kotlinx.coroutines.withContext
 import java.net.URL
 
 
-class ListSongsYTAdapter(private val ctx: Context, songs: List<TOSongYTSearch>): RecyclerView.Adapter<ListSongsYTAdapter.ViewHolder>() {
+class ListSongsYTAdapter(private val ctx: Context, private val userId: Long, songs: List<TOSongYTSearch>): RecyclerView.Adapter<ListSongsYTAdapter.ViewHolder>() {
     private val songs = songs.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -38,7 +38,7 @@ class ListSongsYTAdapter(private val ctx: Context, songs: List<TOSongYTSearch>):
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentSong = songs[position]
 
-        holder.bind(currentSong, ctx)
+        holder.bind(currentSong, ctx, userId)
     }
 
     fun update(songs: List<TOSongYTSearch>) {
@@ -48,7 +48,7 @@ class ListSongsYTAdapter(private val ctx: Context, songs: List<TOSongYTSearch>):
     }
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        fun bind(song: TOSongYTSearch, context: Context) {
+        fun bind(song: TOSongYTSearch, context: Context, userId: Long) {
             val thumb: ImageView = itemView.findViewById(R.id.list_songs_search_thumb)
             val title: TextView = itemView.findViewById(R.id.list_songs_search_title)
             val artist: TextView = itemView.findViewById(R.id.list_songs_search_artist)
@@ -76,7 +76,7 @@ class ListSongsYTAdapter(private val ctx: Context, songs: List<TOSongYTSearch>):
 
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
-                        val results = URL("https://api.devpree.com.br/listennow/download/${song.videoId}/Token").readText()
+                        val results = URL("https://api.devpree.com.br/listennow/download/${song.videoId}/${userId}").readText()
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
                             Toast.makeText(context, R.string.download_failed, Toast.LENGTH_SHORT).show()

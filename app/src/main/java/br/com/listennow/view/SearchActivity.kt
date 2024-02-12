@@ -2,32 +2,42 @@ package br.com.listennow.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.databinding.SearchBinding
 import br.com.listennow.to.TOSongYTSearch
+import br.com.listennow.ui.activity.AbstractUserActivity
 import br.com.listennow.ui.recyclerview.ListSongsYTAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import java.net.URL
 
-class SearchActivity: AppCompatActivity() {
-    private lateinit var binding: SearchBinding
+class SearchActivity: AbstractUserActivity() {
+    private val binding by lazy {
+        SearchBinding.inflate(layoutInflater)
+    }
+
     private lateinit var adapter: ListSongsYTAdapter
     private var songs: List<TOSongYTSearch> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = SearchBinding.inflate(layoutInflater)
 
         val view = binding.root
         setContentView(view)
 
-        adapter = ListSongsYTAdapter(this, songs)
+        lifecycleScope.launch {
+            user.filterNotNull().collect {user ->
+                adapter = ListSongsYTAdapter(this@SearchActivity, user.id, songs)
 
-        configRecyclerSongs()
+                configRecyclerSongs()
+            }
+        }
         configButtonSearch()
     }
 

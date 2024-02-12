@@ -12,7 +12,7 @@ interface UserDao {
     fun authenticateUser(email: String, password: String): Flow<User?>
 
     @Query("SELECT * FROM User WHERE email = :email")
-    fun existsAccount(email: String): Flow<User?>
+    fun existsAccount(email: String): User?
 
     @Insert
     fun save(user: User)

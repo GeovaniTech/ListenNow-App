@@ -16,5 +16,6 @@ data class Song (
     val smallThumbBytes: ByteArray,
     val largeThumbBytes: ByteArray,
     val path: String,
-    val lyrics: String
+    val lyrics: String,
+    val userId: Long? = null
 ) : Serializable

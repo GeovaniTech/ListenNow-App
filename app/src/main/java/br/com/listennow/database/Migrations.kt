@@ -8,5 +8,10 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         database.execSQL("DROP TABLE Client")
         database.execSQL("CREATE TABLE IF NOT EXISTS `User` (`id` INTEGER NOT NULL, `email` TEXT NOT NULL, `password` TEXT NOT NULL, PRIMARY KEY(`id`))")
     }
+}
 
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE Song ADD COLUMN 'userId' INTEGER")
+    }
 }
