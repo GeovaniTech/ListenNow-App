@@ -29,4 +29,7 @@
     <string name="exit">Exit</string>
     <string name="profile">Profile</string>
     <string name="id">User Id</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login">Login</string>
 </resources>

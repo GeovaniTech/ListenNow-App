@@ -16,13 +16,13 @@ interface SongDao {
     fun save(song: Song)
 
     @Query("SELECT * FROM Song WHERE userId = :userId")
-    fun getSongs(userId: Long): Flow<List<Song>>
+    fun getSongs(userId: String): Flow<List<Song>>
 
     @Delete
     fun delete(song: Song)
 
     @Query("SELECT * FROM Song WHERE id = :id")
-    fun findById(id: Long): Song?
+    fun findById(id: String): Song?
 
     @Query("SELECT * FROM Song WHERE LOWER(name) LIKE  '%' || LOWER(:text) || '%' OR artist LIKE '%' || LOWER(:text) || '%'")
     fun listByFilters(text: String): Flow<List<Song>>

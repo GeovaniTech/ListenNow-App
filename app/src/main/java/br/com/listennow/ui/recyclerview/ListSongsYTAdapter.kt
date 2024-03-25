@@ -3,7 +3,6 @@ package br.com.listennow.ui.recyclerview
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import br.com.listennow.R
 import br.com.listennow.to.TOSongYTSearch
-import br.com.listennow.utils.SongUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +20,7 @@ import kotlinx.coroutines.withContext
 import java.net.URL
 
 
-class ListSongsYTAdapter(private val ctx: Context, private val userId: Long, songs: List<TOSongYTSearch>): RecyclerView.Adapter<ListSongsYTAdapter.ViewHolder>() {
+class ListSongsYTAdapter(private val ctx: Context, private val userId: String, songs: List<TOSongYTSearch>): RecyclerView.Adapter<ListSongsYTAdapter.ViewHolder>() {
     private val songs = songs.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -48,7 +46,7 @@ class ListSongsYTAdapter(private val ctx: Context, private val userId: Long, son
     }
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        fun bind(song: TOSongYTSearch, context: Context, userId: Long) {
+        fun bind(song: TOSongYTSearch, context: Context, userId: String) {
             val thumb: ImageView = itemView.findViewById(R.id.list_songs_search_thumb)
             val title: TextView = itemView.findViewById(R.id.list_songs_search_title)
             val artist: TextView = itemView.findViewById(R.id.list_songs_search_artist)

@@ -1,20 +1,21 @@
 package br.com.listennow.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
+import java.util.UUID
 
 @Entity
 data class Song (
-    @PrimaryKey(autoGenerate = true) val id: Long = 0L,
+    @PrimaryKey
+    val id: String = UUID.randomUUID().toString(),
     val videoId: String,
     val name: String,
     val artist: String,
     val album: String,
     val smallThumb: String,
     val largeThumb: String,
-    val smallThumbBytes: ByteArray,
-    val largeThumbBytes: ByteArray,
     val path: String,
     val lyrics: String,
     val userId: Long? = null

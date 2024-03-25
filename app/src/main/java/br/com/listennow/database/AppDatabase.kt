@@ -9,7 +9,7 @@ import br.com.listennow.database.dao.UserDao
 import br.com.listennow.model.Song
 import br.com.listennow.model.User
 
-@Database(entities = [Song::class, User::class], version = 3, exportSchema = true)
+@Database(entities = [Song::class, User::class], version = 0, exportSchema = true)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun songDao(): SongDao
     abstract fun userDao(): UserDao
@@ -29,10 +29,8 @@ abstract class AppDatabase : RoomDatabase() {
                         context.applicationContext,
                         AppDatabase::class.java,
                         DATABASE_NAME
-                    ).addMigrations(
-                        MIGRATION_1_2,
-                        MIGRATION_2_3
-                    ).build()
+                    ).fallbackToDestructiveMigration()
+                    .build()
 
                     INSTANCE = instance
                 }

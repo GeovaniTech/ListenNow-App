@@ -5,7 +5,6 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
 import br.com.listennow.model.Song
-import br.com.listennow.view.HomeActivity
 
 class SongUtil {
     companion object {

@@ -10,7 +10,6 @@ import br.com.listennow.model.User
 import br.com.listennow.preferences.dataStore
 import br.com.listennow.preferences.userKey
 import br.com.listennow.utils.SongUtil
-import br.com.listennow.view.LoginActivity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -32,7 +31,7 @@ abstract class AbstractUserActivity : AppCompatActivity() {
         }
     }
 
-    protected suspend fun findUserById(id: Long): User? {
+    protected suspend fun findUserById(id: String): User? {
         return userDao.findById(id).firstOrNull().also {
             _user.value = it
         }
@@ -48,7 +47,7 @@ abstract class AbstractUserActivity : AppCompatActivity() {
     }
 
     protected fun startLoginActivity() {
-        val intent = Intent(this, LoginActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) // Close all activities
+        //val intent = Intent(this, LoginActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) // Close all activities
         startActivity(intent)
     }
 

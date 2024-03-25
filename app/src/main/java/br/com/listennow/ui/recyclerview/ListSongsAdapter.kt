@@ -86,7 +86,7 @@ class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
 
             title.text = song.name
             artist.text = song.artist
-            thumb.setImageBitmap(ImageUtil.getBitmapImage(song.smallThumbBytes, 60, 60))
+            thumb.setImageBitmap(ImageUtil.getBitmapImage(song.smallThumb, 60, 60, ctx))
 
             itemView.setOnClickListener {
                 onItemClick?.invoke(songSelected)

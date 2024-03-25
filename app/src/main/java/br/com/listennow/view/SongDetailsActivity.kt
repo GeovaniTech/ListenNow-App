@@ -30,11 +30,11 @@ class SongDetailsActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val songId = intent.getLongExtra("songId", 0L)
+        val songId = intent.getStringExtra("songId")
 
-        if(songId > 0) {
+        if(!songId.equals("")) {
             CoroutineScope(Dispatchers.IO).launch {
-                song = songDao.findById(songId)!!
+                song = songId?.let { songDao.findById(it) }!!
                 bindSong(song)
             }
         }
@@ -83,6 +83,7 @@ class SongDetailsActivity : AppCompatActivity() {
         artist.text = song.artist
         album.text = song.album
         lyrics.text = song.lyrics
-        thumb.setImageBitmap(ImageUtil.getBitmapImage(song.largeThumbBytes, 120, 120))
+
+        thumb.setImageBitmap(ImageUtil.getBitmapImage(song.largeThumb, 120, 120, this))
     }
 }

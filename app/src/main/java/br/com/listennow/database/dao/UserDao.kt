@@ -18,5 +18,5 @@ interface UserDao {
     fun save(user: User)
 
     @Query("SELECT * FROM User WHERE id = :id")
-    fun findById(id: Long): Flow<User?>
+    fun findById(id: String): Flow<User?>
 }
