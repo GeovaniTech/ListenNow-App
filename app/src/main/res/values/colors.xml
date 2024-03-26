@@ -11,4 +11,5 @@
     <color name="gray">#A3A3AB</color>
     <color name="gold">#A8CF45</color>
     <color name="light_blue">#0098DA</color>
+    <color name="background">#001822</color>
 </resources>

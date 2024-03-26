@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#001822"
+    android:background="@color/background"
     tools:context=".system.account.fragment.LoginFragment">
 
     <ImageView
@@ -72,6 +72,7 @@
                 android:layout_marginEnd="32dp"
                 android:layout_marginBottom="40dp"
                 android:hint="@string/password"
+                app:endIconMode="password_toggle"
                 app:layout_constraintBottom_toTopOf="@+id/button2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.333"
