@@ -7,7 +7,7 @@
     app:startDestination="@id/loginFragment">
 
         <fragment android:id="@+id/loginFragment"
-            android:name="br.com.listennow.system.account.fragment.LoginFragment"
+            android:name="br.com.listennow.ui.fragments.LoginFragment"
             android:label="@string/login"
             tools:layout="@layout/fragment_login" >
                 <action
@@ -19,7 +19,7 @@
         </fragment>
 
         <fragment android:id="@+id/registerFragment"
-            android:name="br.com.listennow.system.account.fragment.RegisterFragment"
+            android:name="br.com.listennow.ui.fragments.RegisterFragment"
             android:label="@string/login"
             tools:layout="@layout/fragment_register" >
                 <action
@@ -28,7 +28,7 @@
         </fragment>
 
         <fragment android:id="@+id/homeFragment"
-            android:name="br.com.listennow.system.home.fragment.HomeFragment"
+            android:name="br.com.listennow.ui.fragments.HomeFragment"
             android:label="@string/login"
             tools:layout="@layout/fragment_home">
         </fragment>

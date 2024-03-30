@@ -3,10 +3,10 @@ package br.com.listennow.view
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import br.com.listennow.databinding.ProfileBinding
-import br.com.listennow.ui.activity.AbstractUserActivity
+import br.com.listennow.ui.fragments.AbstractUserFragment
 import kotlinx.coroutines.launch
 
-class ProfileActivity: AbstractUserActivity() {
+class ProfileActivity: AbstractUserFragment() {
     private val binding by lazy {
         ProfileBinding.inflate(layoutInflater)
     }
@@ -15,7 +15,7 @@ class ProfileActivity: AbstractUserActivity() {
         super.onCreate(savedInstanceState)
 
         val view = binding.root
-        setContentView(view)
+        //setContentView(view)
 
         lifecycleScope.launch {
             configUserInformation()

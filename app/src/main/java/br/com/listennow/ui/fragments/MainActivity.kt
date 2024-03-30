@@ -1,10 +1,9 @@
-package br.com.listennow.system.main
+package br.com.listennow.ui.fragments
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
 import br.com.listennow.R
 import br.com.listennow.databinding.ActivityMainBinding
 
@@ -25,7 +24,5 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view_listennow) as NavHostFragment
         navController = navHostFragment.navController
-
-
     }
 }

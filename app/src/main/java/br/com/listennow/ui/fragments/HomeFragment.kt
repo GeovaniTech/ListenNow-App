@@ -1,4 +1,4 @@
-package br.com.listennow.system.home.fragment
+package br.com.listennow.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

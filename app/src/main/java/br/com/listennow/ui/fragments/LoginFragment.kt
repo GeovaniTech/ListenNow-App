@@ -1,16 +1,13 @@
-package br.com.listennow.system.account.fragment
+package br.com.listennow.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import br.com.listennow.R
 import br.com.listennow.databinding.FragmentLoginBinding
-import br.com.listennow.databinding.LoginBinding
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
@@ -25,5 +22,13 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        configLinkRegister()
+    }
+
+    private fun configLinkRegister() {
+        binding.linkRegister.setOnClickListener {
+            findNavController().navigate(R.id.registerFragment)
+        }
     }
 }

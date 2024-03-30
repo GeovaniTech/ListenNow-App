@@ -1,23 +1,28 @@
-package br.com.listennow.ui.activity
+package br.com.listennow.ui.fragments
 
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import br.com.listennow.R
 import br.com.listennow.database.AppDatabase
 import br.com.listennow.model.User
-import br.com.listennow.preferences.dataStore
-import br.com.listennow.preferences.userKey
 import br.com.listennow.utils.SongUtil
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
-abstract class AbstractUserActivity : AppCompatActivity() {
+abstract class AbstractUserFragment : Fragment() {
+    protected val Context.dataStore by preferencesDataStore(name = "credentials")
+    protected val userKey = stringPreferencesKey("userKey")
+
     protected val userDao by lazy {
-        AppDatabase.getInstance(this).userDao()
+        AppDatabase.getInstance(requireContext()).userDao()
     }
 
     private val _user: MutableStateFlow<User?>  = MutableStateFlow(null)
@@ -27,7 +32,7 @@ abstract class AbstractUserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
-            verifyUserLogged()
+             //verifyUserLogged()
         }
     }
 
@@ -38,24 +43,23 @@ abstract class AbstractUserActivity : AppCompatActivity() {
     }
 
     protected suspend fun logout() {
-        dataStore.edit { preferences ->
+        requireContext().dataStore.edit { preferences ->
             preferences.remove(userKey)
         }
 
         SongUtil.pause()
-        startLoginActivity()
+        startLoginFragment()
     }
 
-    protected fun startLoginActivity() {
-        //val intent = Intent(this, LoginActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) // Close all activities
-        startActivity(intent)
+    protected fun startLoginFragment() {
+        findNavController().navigate(R.id.loginFragment)
     }
 
     protected suspend fun verifyUserLogged() {
-        dataStore.data.collect { preferences ->
+        requireContext().dataStore.data.collect { preferences ->
             preferences[userKey]?.let {
-                userId -> findUserById(userId)
-            } ?: startLoginActivity()
+                userId -> findUserById(userId.toString())
+            } ?: startLoginFragment()
         }
     }
 }
