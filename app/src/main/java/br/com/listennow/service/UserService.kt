@@ -9,4 +9,7 @@ import retrofit2.http.POST
 public interface UserService {
     @POST("user/add")
     suspend fun save(@Body userRequest: UserRequest): Response<UserResponse>
+
+    @POST("user/login")
+    suspend fun login(@Body userRequest: UserRequest): Response<UserResponse>
 }

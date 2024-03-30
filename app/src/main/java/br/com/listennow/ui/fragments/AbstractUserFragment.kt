@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 abstract class AbstractUserFragment : Fragment() {
     protected val Context.dataStore by preferencesDataStore(name = "credentials")
-    protected val userKey = stringPreferencesKey("userKey")
+    protected val userKey = stringPreferencesKey("userEmailKey")
 
     protected val userDao by lazy {
         AppDatabase.getInstance(requireContext()).userDao()

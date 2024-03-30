@@ -90,7 +90,7 @@ class RegisterFragment : AbstractUserFragment() {
         val user = User(UUID.randomUUID().toString(), email, EncryptionUtil.encryptSHA(password))
 
         if(repository.save(user)) {
-            saveCredentials(user.id)
+            saveCredentials(user.email)
             findNavController().navigate(R.id.homeFragment)
             return
         }

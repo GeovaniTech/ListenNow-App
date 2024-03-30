@@ -6,6 +6,10 @@ import br.com.listennow.webclient.RetrofitInitializer
 import br.com.listennow.webclient.user.model.UserRequest
 
 class UserWebClient {
+    companion object {
+        const val TAG = "UserWebClient"
+    }
+
     private val userService by lazy {
         RetrofitInitializer().userService
     }
@@ -18,7 +22,21 @@ class UserWebClient {
                 return true
             }
         } catch (e: Exception) {
-            Log.e("UserWebService", "Error saving user on API", )
+            Log.e(TAG, "Error saving user on API", )
+        }
+
+        return false
+    }
+
+    suspend fun login(user: User): Boolean {
+        try {
+            val response = userService.login(UserRequest(user.id, user.email, user.password))
+
+            if(response.body()?.message.toString() != "Login is not valid") {
+                return true
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error trying to authenticate user" )
         }
 
         return false

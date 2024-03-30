@@ -8,4 +8,8 @@ class UserRepository(private val userDao: UserDao, private val webClient: UserWe
     suspend fun save(user: User): Boolean {
         return webClient.save(user)
     }
+
+    suspend fun login(user: User): Boolean {
+        return webClient.login(user)
+    }
 }
