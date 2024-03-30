@@ -2,6 +2,7 @@ package br.com.listennow.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -58,8 +59,15 @@ abstract class AbstractUserFragment : Fragment() {
     protected suspend fun verifyUserLogged() {
         requireContext().dataStore.data.collect { preferences ->
             preferences[userKey]?.let {
-                userId -> findUserById(userId.toString())
+                userId ->
+                findUserById(userId.toString())
             } ?: startLoginFragment()
+        }
+    }
+
+    protected suspend fun saveCredentials(id: String) {
+        requireContext().dataStore.edit { credentials ->
+            credentials[userKey] = id
         }
     }
 }

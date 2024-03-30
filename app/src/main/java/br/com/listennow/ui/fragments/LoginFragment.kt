@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import br.com.listennow.R
 import br.com.listennow.databinding.FragmentLoginBinding
 
-class LoginFragment : Fragment() {
+class LoginFragment : AbstractUserFragment() {
     private lateinit var binding: FragmentLoginBinding
     override fun onCreateView(
         inflater: LayoutInflater,

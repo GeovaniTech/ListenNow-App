@@ -14,6 +14,7 @@ import br.com.listennow.databinding.FragmentRegisterBinding
 import br.com.listennow.model.User
 import br.com.listennow.repository.user.UserRepository
 import br.com.listennow.utils.EmailUtil
+import br.com.listennow.utils.EncryptionUtil
 import br.com.listennow.utils.StringUtil
 import br.com.listennow.webclient.user.service.UserWebClient
 import kotlinx.coroutines.launch
@@ -86,15 +87,14 @@ class RegisterFragment : AbstractUserFragment() {
             return
         }
 
-        val user = User(UUID.randomUUID().toString(), email, password)
+        val user = User(UUID.randomUUID().toString(), email, EncryptionUtil.encryptSHA(password))
 
         if(repository.save(user)) {
+            saveCredentials(user.id)
             findNavController().navigate(R.id.homeFragment)
             return
         }
 
-        Toast.makeText(requireContext(), "Failed to save", Toast.LENGTH_SHORT).show()
-
-
+        Toast.makeText(requireContext(), R.string.email_already_in_use, Toast.LENGTH_SHORT).show()
     }
 }
