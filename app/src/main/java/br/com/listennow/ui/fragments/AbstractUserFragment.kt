@@ -19,8 +19,8 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 abstract class AbstractUserFragment : Fragment() {
-    protected val Context.dataStore by preferencesDataStore(name = "credentials")
-    protected val userKey = stringPreferencesKey("userEmailKey")
+    private val Context.dataStore by preferencesDataStore(name = "credentials")
+    private val userKey = stringPreferencesKey("userEmailKey")
 
     protected val userDao by lazy {
         AppDatabase.getInstance(requireContext()).userDao()
@@ -37,7 +37,7 @@ abstract class AbstractUserFragment : Fragment() {
         }
     }
 
-    protected suspend fun findUserById(id: String): User? {
+    private suspend fun findUserById(id: String): User? {
         return userDao.findById(id).firstOrNull().also {
             _user.value = it
         }
@@ -52,7 +52,7 @@ abstract class AbstractUserFragment : Fragment() {
         startLoginFragment()
     }
 
-    protected fun startLoginFragment() {
+    private fun startLoginFragment() {
         findNavController().navigate(R.id.loginFragment)
     }
 

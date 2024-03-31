@@ -35,4 +35,6 @@
     <string name="login">Login</string>
     <string name="logo">logo</string>
     <string name="repeat_password">Repeat Password</string>
+    <string name="home">Home</string>
+    <string name="search_new_songs">Search New Songs</string>
 </resources>

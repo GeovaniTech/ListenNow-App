@@ -18,4 +18,10 @@
         app:navGraph="@navigation/nav_graph"
         app:defaultNavHost="true" />
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/play_back_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/play_back_bottom_menu"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

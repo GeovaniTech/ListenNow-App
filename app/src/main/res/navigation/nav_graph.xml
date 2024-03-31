@@ -20,7 +20,7 @@
 
         <fragment android:id="@+id/registerFragment"
             android:name="br.com.listennow.ui.fragments.RegisterFragment"
-            android:label="@string/login"
+            android:label="@string/register"
             tools:layout="@layout/fragment_register" >
                 <action
                     android:id="@+id/action_registerFragment_to_loginFragment"
@@ -29,7 +29,25 @@
 
         <fragment android:id="@+id/homeFragment"
             android:name="br.com.listennow.ui.fragments.HomeFragment"
-            android:label="@string/login"
+            android:label="@string/home"
             tools:layout="@layout/fragment_home">
+                <action
+                    android:id="@+id/action_homeFragment_to_profileFragment"
+                    app:destination="@id/profileFragment" />
+                <action
+                    android:id="@+id/action_homeFragment_to_searchNewSongs"
+                    app:destination="@id/searchNewSongs" />
+        </fragment>
+
+        <fragment android:id="@+id/profileFragment"
+            android:name="br.com.listennow.ui.fragments.ProfileFragment"
+            android:label="@string/profile"
+            tools:layout="@layout/fragment_profile">
+        </fragment>
+
+        <fragment android:id="@+id/searchNewSongsFragment"
+            android:name="br.com.listennow.ui.fragments.SearchYoutubeSongsFragment"
+            android:label="@string/search_new_songs"
+            tools:layout="@layout/fragment_search_youtube_songs">
         </fragment>
 </navigation>
