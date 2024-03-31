@@ -36,7 +36,7 @@
                     app:destination="@id/profileFragment" />
                 <action
                     android:id="@+id/action_homeFragment_to_searchNewSongs"
-                    app:destination="@id/searchNewSongs" />
+                    app:destination="@id/searchNewSongsFragment" />
         </fragment>
 
         <fragment android:id="@+id/profileFragment"

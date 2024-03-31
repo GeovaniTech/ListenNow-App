@@ -18,6 +18,69 @@
         app:navGraph="@navigation/nav_graph"
         app:defaultNavHost="true" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/play_back_buttons"
+        android:layout_width="412dp"
+        android:layout_height="72dp"
+        android:background="#191921"
+        app:layout_constraintBottom_toTopOf="@+id/play_back_bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/list_songs_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/home_card_view_song_details"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/list_songs_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@+id/home_card_view_song_details"
+            app:layout_constraintTop_toBottomOf="@+id/list_songs_title"
+            tools:text="Artist" />
+
+        <Button
+            android:id="@+id/play"
+            android:layout_width="53dp"
+            android:layout_height="51dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/ic_play"
+            app:backgroundTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/home_card_view_song_details"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="28dp"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/home_thumb_song_details"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/play_back_bottom_navigation"
         android:layout_width="match_parent"
