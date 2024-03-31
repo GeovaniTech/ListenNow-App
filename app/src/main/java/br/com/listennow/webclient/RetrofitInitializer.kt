@@ -1,5 +1,6 @@
 package br.com.listennow.webclient
 
+import br.com.listennow.service.SongService
 import br.com.listennow.service.UserService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -23,4 +24,5 @@ class RetrofitInitializer {
         .build()
 
     val userService = retrofit.create(UserService::class.java)
+    val songService = retrofit.create(SongService::class.java)
 }

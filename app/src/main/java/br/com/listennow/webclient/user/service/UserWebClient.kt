@@ -36,7 +36,7 @@ class UserWebClient {
                 return true
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error trying to authenticate user" )
+            Log.e(TAG, "Error trying to authenticate user  $e" )
         }
 
         return false

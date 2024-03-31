@@ -18,6 +18,9 @@ import br.com.listennow.model.Song
 import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.view.SongDetailsActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
     RecyclerView.Adapter<ListSongsAdapter.ViewHolder>() {
@@ -65,9 +68,10 @@ class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
     }
 
     fun update(songs: List<Song>) {
+        notifyItemRangeRemoved(0, this.songs.size)
         this.songs.clear()
         this.songs.addAll(songs)
-        notifyDataSetChanged()
+        notifyItemInserted(this.songs.size)
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -86,7 +90,9 @@ class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
 
             title.text = song.name
             artist.text = song.artist
-            thumb.setImageBitmap(ImageUtil.getBitmapImage(song.smallThumb, 60, 60, ctx))
+            CoroutineScope(Dispatchers.IO).launch {
+                thumb.setImageBitmap(ImageUtil.getBitmapImage(song.smallThumb, 60, 60, ctx))
+            }
 
             itemView.setOnClickListener {
                 onItemClick?.invoke(songSelected)

@@ -15,8 +15,11 @@ interface SongDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(song: Song)
 
-    @Query("SELECT * FROM Song WHERE userId = :userId")
-    fun getSongs(userId: String): Flow<List<Song>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun save(song: List<Song>)
+
+    @Query("SELECT * FROM Song")
+    fun getSongs(): Flow<List<Song>>
 
     @Delete
     fun delete(song: Song)
