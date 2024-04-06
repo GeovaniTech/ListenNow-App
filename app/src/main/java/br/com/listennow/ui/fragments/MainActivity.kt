@@ -48,18 +48,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpBottomNavigation() {
         val menu = binding.playBackBottomNavigation
-        val playBackButtons = binding.playBackButtons
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.loginFragment || destination.id == R.id.registerFragment) {
-                menu.visibility = View.GONE
-                playBackButtons.visibility = View.GONE
-            } else {
-                menu.visibility = View.VISIBLE
-                playBackButtons.visibility = View.VISIBLE
-            }
-        }
-
         menu.setupWithNavController(navController)
     }
 }

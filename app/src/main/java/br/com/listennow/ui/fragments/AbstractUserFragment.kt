@@ -49,20 +49,6 @@ abstract class AbstractUserFragment : Fragment() {
         }
 
         SongUtil.pause()
-        startLoginFragment()
-    }
-
-    private fun startLoginFragment() {
-        findNavController().navigate(R.id.loginFragment)
-    }
-
-    protected suspend fun verifyUserLogged() {
-        requireContext().dataStore.data.collect { preferences ->
-            preferences[userKey]?.let {
-                userId ->
-                findUserById(userId.toString())
-            } ?: startLoginFragment()
-        }
     }
 
     protected suspend fun saveCredentials(id: String) {
