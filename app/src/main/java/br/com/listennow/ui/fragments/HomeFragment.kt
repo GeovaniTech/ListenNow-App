@@ -55,6 +55,7 @@ class HomeFragment : AbstractUserFragment() {
         configRecyclerSongs()
         configOnNextSongAutomatically()
         configSongClicked()
+        configPlayPause()
 
         return binding.root
     }
@@ -118,5 +119,17 @@ class HomeFragment : AbstractUserFragment() {
     private suspend fun syncSongs() {
         repository.updateAll("341176e2-e00e-4b35-af24-5516fcaa6956")
         updateSongsOnScreen()
+    }
+
+    private fun configPlayPause() {
+        mainActivity.binding.play.setOnClickListener {
+            if(SongUtil.isPlaying()) {
+                SongUtil.pause()
+                mainActivity.binding.play.setBackgroundResource(R.drawable.ic_play)
+            } else {
+                SongUtil.play()
+                mainActivity.binding.play.setBackgroundResource(R.drawable.ic_pause)
+            }
+        }
     }
 }
