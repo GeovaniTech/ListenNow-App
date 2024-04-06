@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8d0435b5b225758bd2e7df09d408ba1a",
+    "identityHash": "6742d931633c16fd448bbefbb2e23563",
     "entities": [
       {
         "tableName": "Song",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `videoId` TEXT NOT NULL, `name` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT NOT NULL, `smallThumb` TEXT NOT NULL, `largeThumb` TEXT NOT NULL, `path` TEXT NOT NULL, `lyrics` TEXT NOT NULL, `userId` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `videoId` TEXT NOT NULL, `name` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT NOT NULL, `smallThumb` TEXT NOT NULL, `largeThumb` TEXT NOT NULL, `path` TEXT NOT NULL, `file` TEXT NOT NULL, `lyrics` TEXT NOT NULL, `userId` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -53,6 +53,12 @@
           {
             "fieldPath": "path",
             "columnName": "path",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "file",
+            "columnName": "file",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -114,7 +120,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8d0435b5b225758bd2e7df09d408ba1a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6742d931633c16fd448bbefbb2e23563')"
     ]
   }
 }

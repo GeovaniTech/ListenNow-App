@@ -90,9 +90,8 @@ class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
 
             title.text = song.name
             artist.text = song.artist
-            CoroutineScope(Dispatchers.IO).launch {
-                thumb.setImageBitmap(ImageUtil.getBitmapImage(song.smallThumb, 60, 60, ctx))
-            }
+
+            thumb.setImageBitmap(ImageUtil.getBitmapImage(song.smallThumb, 60, 60, ctx))
 
             itemView.setOnClickListener {
                 onItemClick?.invoke(songSelected)

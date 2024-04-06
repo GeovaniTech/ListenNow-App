@@ -10,7 +10,8 @@ class SongResponse(
     val album: String,
     val lyrics: String,
     val large_thumb: String,
-    val small_thumb: String
+    val small_thumb: String,
+    val file: String
 ) {
     val song: Song get() = Song(
         id = song_id,
@@ -22,6 +23,7 @@ class SongResponse(
         largeThumb = large_thumb,
         path = "",
         lyrics = lyrics,
-        userId = null
+        userId = null,
+        file = file
     )
 }

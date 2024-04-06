@@ -2,16 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "79cac2a86db03fbaaf03f37b3461f535",
+    "identityHash": "6742d931633c16fd448bbefbb2e23563",
     "entities": [
       {
         "tableName": "Song",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `videoId` TEXT NOT NULL, `name` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT NOT NULL, `smallThumb` TEXT NOT NULL, `largeThumb` TEXT NOT NULL, `smallThumbBytes` BLOB NOT NULL, `largeThumbBytes` BLOB NOT NULL, `path` TEXT NOT NULL, `lyrics` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `videoId` TEXT NOT NULL, `name` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT NOT NULL, `smallThumb` TEXT NOT NULL, `largeThumb` TEXT NOT NULL, `path` TEXT NOT NULL, `file` TEXT NOT NULL, `lyrics` TEXT NOT NULL, `userId` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -51,20 +51,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "smallThumbBytes",
-            "columnName": "smallThumbBytes",
-            "affinity": "BLOB",
-            "notNull": true
-          },
-          {
-            "fieldPath": "largeThumbBytes",
-            "columnName": "largeThumbBytes",
-            "affinity": "BLOB",
-            "notNull": true
-          },
-          {
             "fieldPath": "path",
             "columnName": "path",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "file",
+            "columnName": "file",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -73,25 +67,31 @@
             "columnName": "lyrics",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "User",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `email` TEXT NOT NULL, `password` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `email` TEXT NOT NULL, `password` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -111,7 +111,7 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
@@ -120,7 +120,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '79cac2a86db03fbaaf03f37b3461f535')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6742d931633c16fd448bbefbb2e23563')"
     ]
   }
 }
