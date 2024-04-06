@@ -21,6 +21,7 @@ import br.com.listennow.view.SongDetailsActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
     RecyclerView.Adapter<ListSongsAdapter.ViewHolder>() {
@@ -91,7 +92,13 @@ class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
             title.text = song.name
             artist.text = song.artist
 
-            thumb.setImageBitmap(ImageUtil.getBitmapImage(song.smallThumb, 60, 60, ctx))
+            CoroutineScope(Dispatchers.IO).launch {
+                val bitmap = ImageUtil.getBitmapImage(song.smallThumb, 120, 120, ctx)
+
+                withContext(Dispatchers.Main) {
+                    thumb.setImageBitmap(bitmap)
+                }
+            }
 
             itemView.setOnClickListener {
                 onItemClick?.invoke(songSelected)
