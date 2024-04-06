@@ -3,7 +3,11 @@ package br.com.listennow.webclient.user.service
 import android.util.Log
 import br.com.listennow.model.Song
 import br.com.listennow.webclient.RetrofitInitializer
+import br.com.listennow.webclient.song.model.SongDownloadRequest
+import br.com.listennow.webclient.song.model.SongDownloadResponse
 import br.com.listennow.webclient.song.model.SongRequest
+import br.com.listennow.webclient.song.model.SongResponse
+import br.com.listennow.webclient.user.model.UserResponse
 
 class SongWebClient {
     companion object {
@@ -23,6 +27,15 @@ class SongWebClient {
         } catch (e: Exception) {
 
             Log.e(TAG, "Error trying to get songs from API $e")
+            null
+        }
+    }
+
+    suspend fun getDownloadedSong(songId: String): SongDownloadResponse? {
+        return try {
+            songService.getSongFile(SongDownloadRequest(songId))
+        } catch (e: Exception) {
+            Log.e(TAG, "Error trying to get song $e")
             null
         }
     }

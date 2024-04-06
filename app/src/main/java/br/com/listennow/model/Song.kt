@@ -17,7 +17,5 @@ data class Song (
     val smallThumb: String,
     val largeThumb: String,
     var path: String,
-    var file: String,
     val lyrics: String,
-    val userId: String? = null
 ) : Serializable

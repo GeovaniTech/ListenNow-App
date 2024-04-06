@@ -1,10 +1,13 @@
 package br.com.listennow.repository.song
 
 import android.os.Environment
+import android.util.Log
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.model.Song
 import br.com.listennow.webclient.user.service.SongWebClient
 import kotlinx.coroutines.flow.Flow
+import okhttp3.internal.notify
+import java.io.File
 import java.io.FileOutputStream
 import java.util.Base64
 
@@ -19,18 +22,21 @@ class SongRepository(private val songDao: SongDao, private val songWebClient: So
                 songs.map {song ->
                     val path =
                         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).path + "/" + song.name + ".mp3"
+
                     song.path = path
 
-                    val base64String = song.file
-                    val decodedBytes = Base64.getDecoder().decode(base64String)
+                    if(!File(path).exists()) {
+                        val response = songWebClient.getDownloadedSong(song.id)
 
-                    val fileOutputStream = FileOutputStream(path)
-                    fileOutputStream.write(decodedBytes)
-                    fileOutputStream.close()
-
-                    song.file = ""
-
+                        response?.let { songDownload ->
+                            val decodedBytes = Base64.getDecoder().decode(songDownload.file)
+                            val fileOutputStream = FileOutputStream(path)
+                            fileOutputStream.write(decodedBytes)
+                            fileOutputStream.close()
+                        }
+                    }
                     songDao.save(songs)
+
                 }
             }
         }

@@ -18,6 +18,7 @@ import br.com.listennow.utils.SongUtil
 import br.com.listennow.webclient.user.service.SongWebClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -43,7 +44,11 @@ class HomeFragment : AbstractUserFragment() {
         adapter = ListSongsAdapter(emptyList(), requireContext())
 
         lifecycleScope.launch {
-            updateSongs()
+            launch {
+                updateSongsOnScreen();
+                playRandomSong()
+            }
+
             syncSongs()
         }
 
@@ -82,11 +87,10 @@ class HomeFragment : AbstractUserFragment() {
         return SongUtil.songs[position]
     }
 
-    private suspend fun updateSongs() {
+    private suspend fun updateSongsOnScreen() {
         repository.getAll().collect {songs ->
             adapter.update(songs)
             SongUtil.songs = songs
-            playRandomSong()
         }
     }
 
@@ -113,6 +117,6 @@ class HomeFragment : AbstractUserFragment() {
     }
     private suspend fun syncSongs() {
         repository.updateAll("341176e2-e00e-4b35-af24-5516fcaa6956")
-        updateSongs()
+        updateSongsOnScreen()
     }
 }

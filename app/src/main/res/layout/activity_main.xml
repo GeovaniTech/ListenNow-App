@@ -7,16 +7,16 @@
     tools:context=".ui.fragments.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view_listennow"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:defaultNavHost="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/fragment_container_view_listennow"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        app:navGraph="@navigation/nav_graph"
-        app:defaultNavHost="true" />
+        app:navGraph="@navigation/nav_graph" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/play_back_buttons"
@@ -45,7 +45,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             app:layout_constraintStart_toEndOf="@+id/home_card_view_song_details"
             app:layout_constraintTop_toBottomOf="@+id/list_songs_title"
             tools:text="Artist" />

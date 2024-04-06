@@ -10,10 +10,10 @@
         android:id="@+id/songs"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="415dp"
-        android:layout_height="593dp"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toTopOf="@+id/play_back_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search"
-        tools:listitem="@layout/item_list"/>
+        tools:listitem="@layout/item_list" />
 </FrameLayout>

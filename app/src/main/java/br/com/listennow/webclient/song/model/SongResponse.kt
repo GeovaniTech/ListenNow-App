@@ -22,8 +22,6 @@ class SongResponse(
         smallThumb = small_thumb,
         largeThumb = large_thumb,
         path = "",
-        lyrics = lyrics,
-        userId = null,
-        file = file
+        lyrics = lyrics
     )
 }
