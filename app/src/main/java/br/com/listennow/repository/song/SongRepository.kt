@@ -8,6 +8,7 @@ import br.com.listennow.webclient.user.service.SongWebClient
 import kotlinx.coroutines.flow.Flow
 import okhttp3.internal.notify
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.util.Base64
 
@@ -25,7 +26,9 @@ class SongRepository(private val songDao: SongDao, private val songWebClient: So
 
                     song.path = path
 
-                    if(!File(path).exists()) {
+                    val file = File(path)
+
+                    if(!file.exists()) {
                         val response = songWebClient.getDownloadedSong(song.id)
 
                         response?.let { songDownload ->
@@ -35,9 +38,9 @@ class SongRepository(private val songDao: SongDao, private val songWebClient: So
                             fileOutputStream.close()
                         }
                     }
-                    songDao.save(songs)
-
                 }
+
+                songDao.save(songs)
             }
         }
     }

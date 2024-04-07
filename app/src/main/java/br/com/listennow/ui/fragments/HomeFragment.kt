@@ -1,6 +1,5 @@
 package br.com.listennow.ui.fragments
 
-import android.media.ThumbnailUtils
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +17,6 @@ import br.com.listennow.utils.SongUtil
 import br.com.listennow.webclient.user.service.SongWebClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -38,14 +36,14 @@ class HomeFragment : AbstractUserFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         adapter = ListSongsAdapter(emptyList(), requireContext())
 
         lifecycleScope.launch {
             launch {
-                updateSongsOnScreen();
+                updateSongsOnScreen()
                 playRandomSong()
             }
 
@@ -56,8 +54,20 @@ class HomeFragment : AbstractUserFragment() {
         configOnNextSongAutomatically()
         configSongClicked()
         configPlayPause()
+        configSwipeRefresh()
 
         return binding.root
+    }
+
+    private fun configSwipeRefresh() {
+        val swipeRefresh = binding.refreshSongs
+        swipeRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                syncSongs()
+            }
+
+
+        }
     }
 
     private fun playRandomSong() {
@@ -118,6 +128,7 @@ class HomeFragment : AbstractUserFragment() {
     }
     private suspend fun syncSongs() {
         repository.updateAll("341176e2-e00e-4b35-af24-5516fcaa6956")
+        binding.refreshSongs.isRefreshing = false
         updateSongsOnScreen()
     }
 
