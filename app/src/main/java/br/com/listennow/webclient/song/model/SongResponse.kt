@@ -14,7 +14,7 @@ class SongResponse(
     val file: String
 ) {
     val song: Song get() = Song(
-        id = song_id,
+        songId = song_id,
         videoId = video_id,
         name = title,
         artist = artist,

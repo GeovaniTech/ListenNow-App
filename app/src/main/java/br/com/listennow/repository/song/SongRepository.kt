@@ -37,7 +37,7 @@ class SongRepository(private val songDao: SongDao, private val songWebClient: So
                     val file = File(path)
 
                     if(!file.exists()) {
-                        val response = songWebClient.getDownloadedSong(song.id)
+                        val response = songWebClient.getDownloadedSong(song.songId)
 
                         response?.let { songDownload ->
                             val decodedBytes = Base64.getDecoder().decode(songDownload.file)

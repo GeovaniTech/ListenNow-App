@@ -19,6 +19,9 @@
                 <action
                     android:id="@+id/action_homeFragment_to_songDetailsFragment"
                     app:destination="@id/songDetailsFragment" />
+                <action
+                    android:id="@+id/action_homeFragment_to_playlistFragment"
+                    app:destination="@id/playlistFragment" />
         </fragment>
 
         <fragment android:id="@+id/profileFragment"
@@ -37,5 +40,38 @@
             android:name="br.com.listennow.ui.fragments.SongDetailsFragment"
             android:label="@string/song_details"
             tools:layout="@layout/fragment_song_details">
+        </fragment>
+
+        <fragment android:id="@+id/playlistFragment"
+            android:name="br.com.listennow.ui.fragments.PlaylistFragment"
+            android:label="@string/playlists"
+            tools:layout="@layout/fragment_playlist">
+                <action
+                    android:id="@+id/action_playlistFragment_to_newPlaylistFragment"
+                    app:destination="@id/newPlaylistFragment" />
+                <action
+                    android:id="@+id/action_playlistFragment_to_homePlaylistSongs"
+                    app:destination="@id/homePlaylistSongs" />
+        </fragment>
+
+        <fragment android:id="@+id/newPlaylistFragment"
+            android:name="br.com.listennow.ui.fragments.NewPlaylistFragment"
+            android:label="@string/new_playlist"
+            tools:layout="@layout/fragment_new_playlist">
+        </fragment>
+
+        <fragment android:id="@+id/homePlaylistSongs"
+            android:name="br.com.listennow.ui.fragments.PlaylistHomeSongsFragment"
+            android:label="@string/playlist_home"
+            tools:layout="@layout/fragment_playlist_home_songs">
+                <action
+                    android:id="@+id/action_homePlaylistSongs_to_selectPlaylistsSongs"
+                    app:destination="@id/selectPlaylistsSongs" />
+        </fragment>
+
+        <fragment android:id="@+id/selectPlaylistsSongs"
+            android:name="br.com.listennow.ui.fragments.PlaylistSelectSongsFragment"
+            android:label="@string/select_playlist_songs"
+            tools:layout="@layout/fragment_playlist_songs">
         </fragment>
 </navigation>

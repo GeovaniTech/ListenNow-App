@@ -13,15 +13,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.R
 import br.com.listennow.database.AppDatabase
 import br.com.listennow.databinding.FragmentHomeBinding
+import br.com.listennow.model.Playlist
 import br.com.listennow.model.Song
+import br.com.listennow.repository.playlist.PlaylistRepository
 import br.com.listennow.repository.song.SongRepository
+import br.com.listennow.ui.MainActivity
 import br.com.listennow.ui.recyclerview.ListSongsAdapter
 import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.webclient.user.service.SongWebClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -37,19 +39,21 @@ class HomeFragment : AbstractUserFragment() {
         SongRepository(AppDatabase.getInstance(requireContext()).songDao(), SongWebClient())
     }
 
+    private val playlistRepository by lazy {
+        PlaylistRepository(AppDatabase.getInstance(requireContext()).playlistDao())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-
         adapter = ListSongsAdapter(emptyList(), requireContext())
 
         lifecycleScope.launch {
             launch {
                 updateSongsOnScreen()
-                playRandomSong()
             }
 
             syncSongs()
@@ -128,7 +132,7 @@ class HomeFragment : AbstractUserFragment() {
         mainActivity.binding.playBackButtons.setOnClickListener {
             if(SongUtil.isPlaying()) {
                 val bundle = Bundle()
-                bundle.putString("song", SongUtil.actualSong.id)
+                bundle.putString("song", SongUtil.actualSong.songId)
                 findNavController().navigate(R.id.songDetailsFragment, bundle)
             }
         }

@@ -24,7 +24,7 @@ interface SongDao {
     @Delete
     fun delete(song: Song)
 
-    @Query("SELECT * FROM Song WHERE id = :id")
+    @Query("SELECT * FROM Song WHERE songId = :id")
     fun findById(id: String): Song?
 
     @Query("SELECT * FROM Song WHERE LOWER(name) LIKE  '%' || LOWER(:text) || '%' OR artist LIKE '%' || LOWER(:text) || '%'")

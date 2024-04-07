@@ -30,12 +30,18 @@
     <string name="exit">Exit</string>
     <string name="profile">Profile</string>
     <string name="id">User Id</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login">Login</string>
     <string name="logo">logo</string>
     <string name="repeat_password">Repeat Password</string>
     <string name="home">Home</string>
-    <string name="search_new_songs">Search New Songs</string>
+    <string name="search_new_songs">New Songs</string>
     <string name="title_artist_album">Song name, artist, album...</string>
+    <string name="playlists">Playlists</string>
+    <string name="new_playlist">New Playlist</string>
+    <string name="save_playlist">Save Playlist</string>
+    <string name="playlist_name">Playlist Name</string>
+    <string name="playlist_home">Playlist Home</string>
+    <string name="select_playlist_songs">Select Playlist Songs</string>
+    <string name="save_songs">Save Songs</string>
 </resources>

@@ -11,6 +11,11 @@
         android:icon="@drawable/ic_search" />
 
     <item
+        android:id="@+id/playlistFragment"
+        android:title="@string/playlists"
+        android:icon="@drawable/ic_folder" />
+
+    <item
         android:id="@+id/profileFragment"
         android:title="@string/profile"
         android:icon="@drawable/ic_user" />

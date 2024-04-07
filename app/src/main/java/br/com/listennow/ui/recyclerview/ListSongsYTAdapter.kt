@@ -9,11 +9,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import br.com.listennow.R
-import br.com.listennow.model.Song
-import br.com.listennow.to.TOSongYTSearch
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

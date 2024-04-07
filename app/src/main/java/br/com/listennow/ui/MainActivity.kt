@@ -1,4 +1,4 @@
-package br.com.listennow.ui.fragments
+package br.com.listennow.ui
 
 import android.content.Intent
 import android.net.Uri
