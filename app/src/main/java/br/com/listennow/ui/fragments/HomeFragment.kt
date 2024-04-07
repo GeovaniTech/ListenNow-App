@@ -1,9 +1,12 @@
 package br.com.listennow.ui.fragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +21,7 @@ import br.com.listennow.utils.SongUtil
 import br.com.listennow.webclient.user.service.SongWebClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -57,8 +61,35 @@ class HomeFragment : AbstractUserFragment() {
         configPlayPause()
         configSwipeRefresh()
         configToolbarClicked()
+        configSearchSongsFilter()
 
         return binding.root
+    }
+
+    private fun configSearchSongsFilter() {
+        val handlerThread = HandlerThread("Song Delay")
+        handlerThread.start()
+        val looper = handlerThread.looper
+        val handler = Handler(looper)
+
+        binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                lifecycleScope.launch {
+                    val songs = repository.getAllFiltering(p0.toString())
+                    songs.collect {songsDB ->
+                        handler.removeCallbacksAndMessages(null);
+                        handler.postDelayed(Runnable {
+                            adapter.update(songsDB)
+                        }, 400)
+                    }
+                }
+                return true
+            }
+        })
     }
 
     private fun configSwipeRefresh() {
