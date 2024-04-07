@@ -42,6 +42,11 @@ class SearchYoutubeSongsFragment : Fragment() {
     }
 
     private fun configSearchSongsFilter() {
+        val handlerThread = HandlerThread("Song Delay")
+        handlerThread.start()
+        val looper = handlerThread.looper
+        val handler = Handler(looper)
+
         binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 return false
@@ -51,7 +56,10 @@ class SearchYoutubeSongsFragment : Fragment() {
                 lifecycleScope.launch {
                     val songs = songWebClient.getYTSongs(p0.toString())
                     songs?.let {
-                        updateSongsOnScreen(songs)
+                        handler.removeCallbacksAndMessages(null);
+                        handler.postDelayed(Runnable {
+                            updateSongsOnScreen(songs)
+                        }, 700)
                     }
                 }
                 return true

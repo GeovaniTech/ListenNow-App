@@ -43,6 +43,7 @@ class ListSongsYTAdapter(private val ctx: Context, private val userId: String, s
     }
 
     fun update(songs: List<SearchYTSongResponse>) {
+        notifyItemRangeRemoved(0, this.songs.size)
         this.songs.clear()
         this.songs.addAll(songs)
         notifyItemInserted(this.songs.size)
