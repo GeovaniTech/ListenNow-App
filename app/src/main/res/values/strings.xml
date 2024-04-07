@@ -37,4 +37,5 @@
     <string name="repeat_password">Repeat Password</string>
     <string name="home">Home</string>
     <string name="search_new_songs">Search New Songs</string>
+    <string name="title_artist_album">Song name, artist, album...</string>
 </resources>

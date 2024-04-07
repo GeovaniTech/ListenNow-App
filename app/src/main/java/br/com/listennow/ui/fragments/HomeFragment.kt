@@ -65,8 +65,6 @@ class HomeFragment : AbstractUserFragment() {
             lifecycleScope.launch {
                 syncSongs()
             }
-
-
         }
     }
 

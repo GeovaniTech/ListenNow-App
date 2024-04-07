@@ -12,7 +12,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import br.com.listennow.R
+import br.com.listennow.model.Song
 import br.com.listennow.to.TOSongYTSearch
+import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,8 +22,9 @@ import kotlinx.coroutines.withContext
 import java.net.URL
 
 
-class ListSongsYTAdapter(private val ctx: Context, private val userId: String, songs: List<TOSongYTSearch>): RecyclerView.Adapter<ListSongsYTAdapter.ViewHolder>() {
+class ListSongsYTAdapter(private val ctx: Context, private val userId: String, songs: List<SearchYTSongResponse>): RecyclerView.Adapter<ListSongsYTAdapter.ViewHolder>() {
     private val songs = songs.toMutableList()
+    var onDownloadClicked: ((SearchYTSongResponse) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_list_search, parent, false)
@@ -39,14 +42,14 @@ class ListSongsYTAdapter(private val ctx: Context, private val userId: String, s
         holder.bind(currentSong, ctx, userId)
     }
 
-    fun update(songs: List<TOSongYTSearch>) {
+    fun update(songs: List<SearchYTSongResponse>) {
         this.songs.clear()
         this.songs.addAll(songs)
-        notifyDataSetChanged()
+        notifyItemInserted(this.songs.size)
     }
 
-    class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        fun bind(song: TOSongYTSearch, context: Context, userId: String) {
+    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        fun bind(song: SearchYTSongResponse, context: Context, userId: String) {
             val thumb: ImageView = itemView.findViewById(R.id.list_songs_search_thumb)
             val title: TextView = itemView.findViewById(R.id.list_songs_search_title)
             val artist: TextView = itemView.findViewById(R.id.list_songs_search_artist)
@@ -55,7 +58,7 @@ class ListSongsYTAdapter(private val ctx: Context, private val userId: String, s
             artist.text = song.artist
             try {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val url = URL(song.smallThumb)
+                    val url = URL(song.thumb)
                     val image = BitmapFactory.decodeStream(url.openConnection().getInputStream())
 
                     withContext(Dispatchers.Main) {
@@ -70,17 +73,7 @@ class ListSongsYTAdapter(private val ctx: Context, private val userId: String, s
             val buttonDownload = itemView.findViewById<Button>(R.id.list_songs_search_sync)
 
             buttonDownload.setOnClickListener {
-                Toast.makeText(context, R.string.download_started, Toast.LENGTH_SHORT).show()
-
-                CoroutineScope(Dispatchers.IO).launch {
-                    try {
-                        val results = URL("https://api.devpree.com.br/listennow/download/${song.videoId}/${userId}").readText()
-                    } catch (e: Exception) {
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(context, R.string.download_failed, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
+                onDownloadClicked?.invoke(song)
             }
         }
     }
