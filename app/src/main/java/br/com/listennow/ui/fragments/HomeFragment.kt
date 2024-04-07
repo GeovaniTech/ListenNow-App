@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.R
 import br.com.listennow.database.AppDatabase
@@ -55,6 +56,7 @@ class HomeFragment : AbstractUserFragment() {
         configSongClicked()
         configPlayPause()
         configSwipeRefresh()
+        configToolbarClicked()
 
         return binding.root
     }
@@ -88,6 +90,16 @@ class HomeFragment : AbstractUserFragment() {
         adapter.onItemClick = { song ->
             SongUtil.readSong(requireContext(), song)
             configSongToolbar(song)
+        }
+    }
+
+    private fun configToolbarClicked() {
+        mainActivity.binding.playBackButtons.setOnClickListener {
+            if(SongUtil.isPlaying()) {
+                val bundle = Bundle()
+                bundle.putString("song", SongUtil.actualSong.id)
+                findNavController().navigate(R.id.songDetailsFragment, bundle)
+            }
         }
     }
 

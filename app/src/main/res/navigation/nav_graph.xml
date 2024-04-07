@@ -16,6 +16,9 @@
                 <action
                     android:id="@+id/action_homeFragment_to_searchNewSongs"
                     app:destination="@id/searchNewSongsFragment" />
+                <action
+                    android:id="@+id/action_homeFragment_to_songDetailsFragment"
+                    app:destination="@id/songDetailsFragment" />
         </fragment>
 
         <fragment android:id="@+id/profileFragment"
@@ -28,5 +31,11 @@
             android:name="br.com.listennow.ui.fragments.SearchYoutubeSongsFragment"
             android:label="@string/search_new_songs"
             tools:layout="@layout/fragment_search_youtube_songs">
+        </fragment>
+
+        <fragment android:id="@+id/songDetailsFragment"
+            android:name="br.com.listennow.ui.fragments.SongDetailsFragment"
+            android:label="@string/song_details"
+            tools:layout="@layout/fragment_song_details">
         </fragment>
 </navigation>

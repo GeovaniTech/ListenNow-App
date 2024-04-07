@@ -1,6 +1,8 @@
 package br.com.listennow.ui.fragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +23,6 @@ import kotlinx.coroutines.withContext
 class SearchYoutubeSongsFragment : Fragment() {
     private lateinit var binding: FragmentSearchYoutubeSongsBinding
     private lateinit var adapter: ListSongsYTAdapter
-
     private val songWebClient by lazy {
         SongWebClient()
     }
@@ -55,7 +56,6 @@ class SearchYoutubeSongsFragment : Fragment() {
                 }
                 return true
             }
-
         })
     }
 

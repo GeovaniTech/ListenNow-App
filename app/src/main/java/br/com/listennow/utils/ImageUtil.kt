@@ -8,11 +8,6 @@ import java.net.URL
 
 class ImageUtil {
     companion object {
-        fun getBitmapImage(bytes: ByteArray, width: Int, height: Int): Bitmap {
-            val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-            return Bitmap.createScaledBitmap(bmp, width, height, false)
-        }
-
         fun getBitmapImage(urlThumb: String, width: Int, height: Int, ctx: Context): Bitmap {
             try {
                 val url = URL(urlThumb)

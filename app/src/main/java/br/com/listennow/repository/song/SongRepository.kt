@@ -13,8 +13,12 @@ import java.io.FileOutputStream
 import java.util.Base64
 
 class SongRepository(private val songDao: SongDao, private val songWebClient: SongWebClient) {
-    suspend fun getAll(): Flow<List<Song>> {
+    fun getAll(): Flow<List<Song>> {
         return songDao.getSongs()
+    }
+
+    fun findSongById(id: String): Song? {
+        return songDao.findById(id)
     }
 
     suspend fun updateAll(userId: String?) {
