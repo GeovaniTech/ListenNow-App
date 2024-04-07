@@ -4,9 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.com.listennow.R
@@ -22,8 +20,6 @@ class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
 
     private val songs = songs.toMutableList()
     var onItemClick: ((Song) -> Unit)? = null
-    var onDeleteItemClick: ((Song) -> Unit)? = null
-    var onDetailsSongsClick: ((Song) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
@@ -41,27 +37,6 @@ class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
         holder.bind(song)
     }
 
-    private fun popupMenu(view: View, song: Song) {
-        val popupMenu = PopupMenu(ctx, view)
-        popupMenu.inflate(R.menu.menu_song_options_recycler)
-
-        popupMenu.setOnMenuItemClickListener {
-            when(it.itemId) {
-                R.id.remove_song -> {
-                    onDeleteItemClick?.invoke(song)
-                    true
-                }
-
-                R.id.details_song -> {
-                    onDetailsSongsClick?.invoke(song)
-                    true
-                }
-                else -> true
-            }
-        }
-        popupMenu.show()
-    }
-
     fun update(songs: List<Song>) {
         notifyItemRangeRemoved(0, this.songs.size)
         this.songs.clear()
@@ -75,13 +50,8 @@ class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
             val title: TextView = itemView.findViewById(R.id.list_songs_title)
             val artist: TextView = itemView.findViewById(R.id.list_songs_artist)
             val thumb: ImageView = itemView.findViewById(R.id.list_songs_thumb)
-            val menu: Button = itemView.findViewById(R.id.btn_popup_menu)
 
             val songSelected = songs[adapterPosition]
-
-            menu.setOnClickListener {
-                popupMenu(itemView, songSelected)
-            }
 
             title.text = song.name
             artist.text = song.artist
