@@ -14,14 +14,23 @@ import br.com.listennow.database.AppDatabase
 import br.com.listennow.databinding.FragmentPlaylistHomeSongsBinding
 import br.com.listennow.model.Song
 import br.com.listennow.repository.playlistsong.PlaylistSongRepository
+import br.com.listennow.ui.MainActivity
 import br.com.listennow.ui.recyclerview.ListSongsAdapter
+import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PlaylistHomeSongsFragment : Fragment() {
     private lateinit var binding: FragmentPlaylistHomeSongsBinding
     private lateinit var adapter: ListSongsAdapter
     private lateinit var playlistId: String
+
+    private val mainActivity by lazy {
+        activity as MainActivity
+    }
 
     private val playlistSongRepository by lazy {
         PlaylistSongRepository(AppDatabase.getInstance(requireContext()).playlistSongDao())
@@ -48,6 +57,8 @@ class PlaylistHomeSongsFragment : Fragment() {
 
         configRecyclerSongs()
         onAddSongsClicked()
+        configSongClicked()
+        configOnNextSongAutomatically()
 
         return binding.root
     }
@@ -71,5 +82,33 @@ class PlaylistHomeSongsFragment : Fragment() {
     private fun updateSongsOnScreen(songs: List<Song>) {
         adapter.update(songs)
         SongUtil.songs = songs
+    }
+
+    private fun configOnNextSongAutomatically() {
+        SongUtil.onNextSong = { song ->
+            SongUtil.readSong(requireContext(), song)
+            configSongToolbar(song)
+        }
+    }
+
+    private fun configSongClicked() {
+        adapter.onItemClick = { song ->
+            SongUtil.readSong(requireContext(), song)
+            configSongToolbar(song)
+        }
+    }
+
+    private fun configSongToolbar(song: Song) {
+        mainActivity.binding.listSongsTitle.text = song.name
+        mainActivity.binding.listSongsArtist.text = song.artist
+        mainActivity.binding.play.setBackgroundResource(R.drawable.ic_pause)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val bitmap = ImageUtil.getBitmapImage(song.smallThumb, 120, 120, requireContext())
+
+            withContext(Dispatchers.Main) {
+                mainActivity.binding.homeThumbSongDetails.setImageBitmap(bitmap)
+            }
+        }
     }
 }

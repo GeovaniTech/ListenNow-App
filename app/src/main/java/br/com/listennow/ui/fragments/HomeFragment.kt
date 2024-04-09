@@ -39,10 +39,6 @@ class HomeFragment : AbstractUserFragment() {
         SongRepository(AppDatabase.getInstance(requireContext()).songDao(), SongWebClient())
     }
 
-    private val playlistRepository by lazy {
-        PlaylistRepository(AppDatabase.getInstance(requireContext()).playlistDao())
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -105,15 +101,6 @@ class HomeFragment : AbstractUserFragment() {
         }
     }
 
-    private fun playRandomSong() {
-        if(SongUtil.songs.isNotEmpty()) {
-            val song = getRandomSong()
-
-            SongUtil.readSong(requireContext(), song)
-            configSongToolbar(song)
-        }
-    }
-
     private fun configOnNextSongAutomatically() {
         SongUtil.onNextSong = { song ->
             SongUtil.readSong(requireContext(), song)
@@ -136,11 +123,6 @@ class HomeFragment : AbstractUserFragment() {
                 findNavController().navigate(R.id.songDetailsFragment, bundle)
             }
         }
-    }
-
-    private fun getRandomSong(): Song {
-        val position = (0 until (SongUtil.songs.size)).random()
-        return SongUtil.songs[position]
     }
 
     private suspend fun updateSongsOnScreen() {
@@ -171,6 +153,7 @@ class HomeFragment : AbstractUserFragment() {
             }
         }
     }
+
     private suspend fun syncSongs() {
         repository.updateAll("341176e2-e00e-4b35-af24-5516fcaa6956")
         binding.refreshSongs.isRefreshing = false
