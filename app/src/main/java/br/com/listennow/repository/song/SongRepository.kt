@@ -40,10 +40,16 @@ class SongRepository(private val songDao: SongDao, private val songWebClient: So
                         val response = songWebClient.getDownloadedSong(song.songId)
 
                         response?.let { songDownload ->
-                            val decodedBytes = Base64.getDecoder().decode(songDownload.file)
-                            val fileOutputStream = FileOutputStream(path)
-                            fileOutputStream.write(decodedBytes)
-                            fileOutputStream.close()
+                            val result = runCatching {
+                                val decodedBytes = Base64.getDecoder().decode(songDownload.file)
+                                val fileOutputStream = FileOutputStream(path)
+                                fileOutputStream.write(decodedBytes)
+                                fileOutputStream.close()
+                            }
+
+                            if(result.isFailure) {
+                                Log.e("SongRepository", "updateAll: Failed to download song, verify the song name", )
+                            }
                         }
                     }
                 }
