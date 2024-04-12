@@ -2,19 +2,17 @@ package br.com.listennow.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import br.com.listennow.R
 import br.com.listennow.database.AppDatabase
 import br.com.listennow.databinding.FragmentSongDetailsBinding
 import br.com.listennow.model.Song
 import br.com.listennow.repository.song.SongRepository
 import br.com.listennow.utils.ImageUtil
-import br.com.listennow.webclient.user.service.SongWebClient
+import br.com.listennow.webclient.song.service.SongWebClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

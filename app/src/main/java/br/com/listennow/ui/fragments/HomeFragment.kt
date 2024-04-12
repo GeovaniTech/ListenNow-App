@@ -24,7 +24,7 @@ import br.com.listennow.ui.MainActivity
 import br.com.listennow.ui.recyclerview.ListSongsAdapter
 import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
-import br.com.listennow.webclient.user.service.SongWebClient
+import br.com.listennow.webclient.song.service.SongWebClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

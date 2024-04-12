@@ -4,11 +4,9 @@ import android.os.Environment
 import android.util.Log
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.model.Song
-import br.com.listennow.webclient.user.service.SongWebClient
+import br.com.listennow.webclient.song.service.SongWebClient
 import kotlinx.coroutines.flow.Flow
-import okhttp3.internal.notify
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.util.Base64
 

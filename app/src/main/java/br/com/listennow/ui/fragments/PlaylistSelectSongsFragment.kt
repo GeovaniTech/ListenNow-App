@@ -12,13 +12,11 @@ import br.com.listennow.R
 import br.com.listennow.database.AppDatabase
 import br.com.listennow.databinding.FragmentPlaylistSongsBinding
 import br.com.listennow.model.PlaylistSong
-import br.com.listennow.repository.playlist.PlaylistRepository
 import br.com.listennow.repository.playlistsong.PlaylistSongRepository
 import br.com.listennow.repository.song.SongRepository
 import br.com.listennow.to.TOSong
 import br.com.listennow.ui.recyclerview.ListSelectSongsToPlaylistAdapter
-import br.com.listennow.utils.SongUtil
-import br.com.listennow.webclient.user.service.SongWebClient
+import br.com.listennow.webclient.song.service.SongWebClient
 import kotlinx.coroutines.launch
 
 class PlaylistSelectSongsFragment : Fragment() {

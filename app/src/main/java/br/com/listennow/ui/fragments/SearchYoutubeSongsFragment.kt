@@ -15,10 +15,8 @@ import br.com.listennow.R
 import br.com.listennow.databinding.FragmentSearchYoutubeSongsBinding
 import br.com.listennow.ui.recyclerview.ListSongsYTAdapter
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
-import br.com.listennow.webclient.user.service.SongWebClient
-import kotlinx.coroutines.Dispatchers
+import br.com.listennow.webclient.song.service.SongWebClient
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SearchYoutubeSongsFragment : Fragment() {
     private lateinit var binding: FragmentSearchYoutubeSongsBinding

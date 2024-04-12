@@ -1,4 +1,4 @@
-package br.com.listennow.webclient.user.service
+package br.com.listennow.webclient.song.service
 
 import android.util.Log
 import br.com.listennow.model.Song
@@ -9,8 +9,6 @@ import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import br.com.listennow.webclient.song.model.SongDownloadRequest
 import br.com.listennow.webclient.song.model.SongDownloadResponse
 import br.com.listennow.webclient.song.model.SongRequest
-import br.com.listennow.webclient.song.model.SongResponse
-import br.com.listennow.webclient.user.model.UserResponse
 
 class SongWebClient {
     companion object {
