@@ -42,7 +42,7 @@ class SongUtil {
                 }
             } catch (e: Exception) {
                 Log.e("SongUtil", "readSong: Failed to read song", )
-                readSong(context, getRandomSong())
+                onNextSong?.invoke(getRandomSong())
             }
         }
 

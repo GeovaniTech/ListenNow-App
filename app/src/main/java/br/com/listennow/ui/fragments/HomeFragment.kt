@@ -1,28 +1,24 @@
 package br.com.listennow.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.IntentFilter
+import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
-import androidx.constraintlayout.motion.widget.OnSwipe
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import br.com.listennow.R
 import br.com.listennow.database.AppDatabase
 import br.com.listennow.databinding.FragmentHomeBinding
-import br.com.listennow.model.Playlist
 import br.com.listennow.model.Song
-import br.com.listennow.repository.playlist.PlaylistRepository
+import br.com.listennow.receiver.HeadsetStateReceiver
 import br.com.listennow.repository.song.SongRepository
 import br.com.listennow.ui.MainActivity
 import br.com.listennow.ui.recyclerview.ListSongsAdapter
@@ -33,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 
 class HomeFragment : AbstractUserFragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -70,6 +67,7 @@ class HomeFragment : AbstractUserFragment() {
         configToolbarClicked()
         configSearchSongsFilter()
         onToolbarRightSwiped()
+        configPhoneDisconnectedReceiver()
 
         return binding.root
     }
@@ -224,5 +222,15 @@ class HomeFragment : AbstractUserFragment() {
     private fun getRandomSong(): Song {
         val position = (0 until (SongUtil.songs.size)).random()
         return SongUtil.songs[position]
+    }
+
+
+    private fun configPhoneDisconnectedReceiver() {
+        val receiver = HeadsetStateReceiver()
+        val receiverFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
+
+        receiver.button = mainActivity.binding.play
+
+        mainActivity.registerReceiver(receiver, receiverFilter)
     }
 }
