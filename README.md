@@ -9,4 +9,4 @@ Mobile Music Player where we can also download songs from Youtube Music. The son
 + ViewModels
 + Repository
 + Room
-+ Weblient using Retrofit - Connetion with [My API](https://github.com/GeovaniTech/Listennow-Api)
++ Weblient using Retrofit - Connection with [My API](https://github.com/GeovaniTech/Listennow-Api)
