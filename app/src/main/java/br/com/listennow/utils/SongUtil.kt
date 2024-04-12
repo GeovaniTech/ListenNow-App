@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
+import android.util.Log
 import br.com.listennow.model.Song
 
 class SongUtil {
@@ -14,29 +15,34 @@ class SongUtil {
         var onNextSong: ((Song) -> Unit)? = null
 
         fun readSong(context: Context, song : Song) {
-            clear()
+            try {
+                clear()
 
-            actualSong = song
+                actualSong = song
 
-            val myUri = Uri.parse(song.path)
+                val myUri = Uri.parse(song.path)
 
-            mediaPlayer = MediaPlayer().apply {
-                setAudioAttributes(
-                    AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                        .setUsage(AudioAttributes.USAGE_MEDIA)
-                        .build()
-                )
-            }
+                mediaPlayer = MediaPlayer().apply {
+                    setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+                    )
+                }
 
-            mediaPlayer.setDataSource(context, myUri)
-            mediaPlayer.prepareAsync()
-            mediaPlayer.setOnPreparedListener {
-                mediaPlayer.start()
-            }
+                mediaPlayer.setDataSource(context, myUri)
+                mediaPlayer.prepareAsync()
+                mediaPlayer.setOnPreparedListener {
+                    mediaPlayer.start()
+                }
 
-            mediaPlayer.setOnCompletionListener {
-                onNextSong?.invoke(getRandomSong())
+                mediaPlayer.setOnCompletionListener {
+                    onNextSong?.invoke(getRandomSong())
+                }
+            } catch (e: Exception) {
+                Log.e("SongUtil", "readSong: Failed to read song", )
+                readSong(context, getRandomSong())
             }
         }
 

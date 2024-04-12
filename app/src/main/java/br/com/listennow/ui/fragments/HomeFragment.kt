@@ -1,15 +1,22 @@
 package br.com.listennow.ui.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.constraintlayout.motion.widget.OnSwipe
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import br.com.listennow.R
 import br.com.listennow.database.AppDatabase
 import br.com.listennow.databinding.FragmentHomeBinding
@@ -62,6 +69,7 @@ class HomeFragment : AbstractUserFragment() {
         configSwipeRefresh()
         configToolbarClicked()
         configSearchSongsFilter()
+        onToolbarRightSwiped()
 
         return binding.root
     }
@@ -170,5 +178,51 @@ class HomeFragment : AbstractUserFragment() {
                 mainActivity.binding.play.setBackgroundResource(R.drawable.ic_pause)
             }
         }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun onToolbarRightSwiped() {
+        val handlerThread = HandlerThread("Song Delay")
+        handlerThread.start()
+        val looper = handlerThread.looper
+        val handler = Handler(looper)
+
+        val buttons = mainActivity.binding.playBackButtons
+
+        buttons.setOnTouchListener { v, event ->
+            when (event?.action) {
+                MotionEvent.ACTION_MOVE -> {
+                    playRandomSong()?.let {
+                        handler.removeCallbacksAndMessages(null)
+                        handler.postDelayed(Runnable {
+                            lifecycleScope.launch {
+                                withContext(Dispatchers.Main) {
+                                    configSongToolbar(it)
+                                }
+                            }
+                        }, 200)
+                    }
+                }
+            }
+
+            v?.onTouchEvent(event) ?: true
+        }
+    }
+
+    private fun playRandomSong(): Song? {
+        if(SongUtil.songs.isNotEmpty()) {
+            val song = getRandomSong()
+
+            SongUtil.readSong(requireContext(), song)
+
+            return song
+        }
+
+        return null
+    }
+
+    private fun getRandomSong(): Song {
+        val position = (0 until (SongUtil.songs.size)).random()
+        return SongUtil.songs[position]
     }
 }
