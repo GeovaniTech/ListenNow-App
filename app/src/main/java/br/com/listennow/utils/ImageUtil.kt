@@ -17,8 +17,19 @@ class ImageUtil {
                 e.printStackTrace()
             }
 
-            val listenIcon = BitmapFactory.decodeResource(ctx.resources, R.drawable.icon)
+            val listenIcon = BitmapFactory.decodeResource(ctx.resources,R.drawable.icon)
             return Bitmap.createScaledBitmap(listenIcon, width, height, false)
+        }
+
+        fun getBitmapImage(urlThumb: String, width: Int, height: Int): Bitmap? {
+            try {
+                val url = URL(urlThumb)
+                val image = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+                return Bitmap.createScaledBitmap(image, width, height, false)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return null
         }
     }
 }
