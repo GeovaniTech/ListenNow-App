@@ -75,7 +75,7 @@ class PlaylistSelectSongsFragment : Fragment() {
 
     private fun updateSongsOnScreen() {
         lifecycleScope.launch {
-            songsRepository.getAll().collect {songs ->
+            songsRepository.getAll().observe(viewLifecycleOwner) {songs ->
                 val convertedSongs = mutableListOf<TOSong>()
 
                 songs.forEach { song ->

@@ -11,6 +11,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +23,8 @@ import br.com.listennow.receiver.HeadsetStateReceiver
 import br.com.listennow.repository.song.SongRepository
 import br.com.listennow.ui.MainActivity
 import br.com.listennow.ui.recyclerview.ListSongsAdapter
+import br.com.listennow.ui.viewmodel.HomeViewModel
+import br.com.listennow.ui.viewmodel.factory.HomeViewModelFactory
 import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.webclient.song.service.SongWebClient
@@ -39,8 +42,8 @@ class HomeFragment : AbstractUserFragment() {
         activity as MainActivity
     }
 
-    private val repository by lazy {
-        SongRepository(AppDatabase.getInstance(requireContext()).songDao(), SongWebClient())
+    private val viewModel: HomeViewModel by viewModels {
+        HomeViewModelFactory(SongRepository(AppDatabase.getInstance(requireContext()).songDao(), SongWebClient()))
     }
 
     override fun onCreateView(
@@ -51,14 +54,8 @@ class HomeFragment : AbstractUserFragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         adapter = ListSongsAdapter(emptyList(), requireContext())
 
-        lifecycleScope.launch {
-            launch {
-                updateSongsOnScreen()
-            }
-
-            syncSongs()
-        }
-
+        loadSongs()
+        configSelectedSong()
         configRecyclerSongs()
         configOnNextSongAutomatically()
         configSongClicked()
@@ -70,6 +67,22 @@ class HomeFragment : AbstractUserFragment() {
         configPhoneDisconnectedReceiver()
 
         return binding.root
+    }
+
+    private fun configSelectedSong() {
+        viewModel.actualSong.value?.let {
+            configSongToolbar(it)
+        }
+    }
+
+    private fun loadSongs() {
+        lifecycleScope.launch {
+            launch {
+                updateSongsOnScreen()
+            }
+
+            syncSongs()
+        }
     }
 
     private fun configSearchSongsFilter() {
@@ -85,14 +98,14 @@ class HomeFragment : AbstractUserFragment() {
 
             override fun onQueryTextChange(p0: String?): Boolean {
                 lifecycleScope.launch {
-                    val songs = repository.getAllFiltering(p0.toString())
-                    songs.collect {songsDB ->
+                    viewModel.getSongsFiltering(p0.toString()).observe(viewLifecycleOwner) { songs ->
                         handler.removeCallbacksAndMessages(null);
                         handler.postDelayed(Runnable {
-                            adapter.update(songsDB)
+                            adapter.update(songs)
                         }, 400)
                     }
                 }
+
                 return true
             }
         })
@@ -131,8 +144,8 @@ class HomeFragment : AbstractUserFragment() {
         }
     }
 
-    private suspend fun updateSongsOnScreen() {
-        repository.getAll().collect {songs ->
+    private fun updateSongsOnScreen() {
+        viewModel.getSongs().observe(viewLifecycleOwner) {songs ->
             adapter.update(songs)
             SongUtil.songs = songs
         }
@@ -147,6 +160,7 @@ class HomeFragment : AbstractUserFragment() {
     }
 
     private fun configSongToolbar(song: Song) {
+        viewModel.actualSong.value = song
         mainActivity.binding.listSongsTitle.text = song.name
         mainActivity.binding.listSongsArtist.text = song.artist
         mainActivity.binding.play.setBackgroundResource(R.drawable.ic_pause)
@@ -161,7 +175,7 @@ class HomeFragment : AbstractUserFragment() {
     }
 
     private suspend fun syncSongs() {
-        repository.updateAll("341176e2-e00e-4b35-af24-5516fcaa6956")
+        viewModel.updateAll("341176e2-e00e-4b35-af24-5516fcaa6956")
         binding.refreshSongs.isRefreshing = false
         updateSongsOnScreen()
     }

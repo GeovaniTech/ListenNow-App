@@ -2,6 +2,8 @@ package br.com.listennow.repository.song
 
 import android.os.Environment
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.model.Song
 import br.com.listennow.webclient.song.service.SongWebClient
@@ -11,16 +13,20 @@ import java.io.FileOutputStream
 import java.util.Base64
 
 class SongRepository(private val songDao: SongDao, private val songWebClient: SongWebClient) {
-    fun getAll(): Flow<List<Song>> {
-        return songDao.getSongs()
+    private val listSongs = MutableLiveData<List<Song>>()
+
+    fun getAll(): LiveData<List<Song>> {
+        listSongs.value = songDao.getSongs()
+        return listSongs
     }
 
     fun findSongById(id: String): Song? {
         return songDao.findById(id)
     }
 
-    fun getAllFiltering(searchFor: String): Flow<List<Song>> {
-        return songDao.listByFilters(searchFor)
+    fun getAllFiltering(searchFor: String): LiveData<List<Song>> {
+        listSongs.value = songDao.listByFilters(searchFor)
+        return listSongs
     }
 
     suspend fun updateAll(userId: String?) {

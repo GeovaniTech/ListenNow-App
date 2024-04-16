@@ -19,7 +19,7 @@ interface SongDao {
     fun save(song: List<Song>)
 
     @Query("SELECT * FROM Song")
-    fun getSongs(): Flow<List<Song>>
+    fun getSongs(): List<Song>
 
     @Delete
     fun delete(song: Song)
@@ -28,5 +28,5 @@ interface SongDao {
     fun findById(id: String): Song?
 
     @Query("SELECT * FROM Song WHERE LOWER(name) LIKE  '%' || LOWER(:text) || '%' OR artist LIKE '%' || LOWER(:text) || '%'")
-    fun listByFilters(text: String): Flow<List<Song>>
+    fun listByFilters(text: String): List<Song>
 }
