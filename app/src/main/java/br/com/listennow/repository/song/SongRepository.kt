@@ -32,8 +32,13 @@ class SongRepository(private val songDao: SongDao, private val songWebClient: So
         userId?.let {
             songWebClient.getAll(it)?.let { songs ->
                 songs.map {song ->
+
+                    val regexNoSpecialCharacters =  Regex("[^A-Za-z0-9 ]")
+
+                    val songNameWithoutSpecialCharacters = regexNoSpecialCharacters.replace(song.name, "")
+
                     val path =
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).path + "/" + song.name + ".mp3"
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).path + "/" + songNameWithoutSpecialCharacters + ".mp3"
 
                     song.path = path
 

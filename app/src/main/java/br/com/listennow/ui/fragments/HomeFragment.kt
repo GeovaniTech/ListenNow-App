@@ -118,7 +118,7 @@ class HomeFragment : AbstractUserFragment() {
     private fun configSwipeRefresh() {
         val swipeRefresh = binding.refreshSongs
         swipeRefresh.setOnRefreshListener {
-            lifecycleScope.launch {
+            viewLifecycleOwner.lifecycleScope.launch {
                 syncSongs()
             }
         }
