@@ -54,6 +54,12 @@ class HomeFragment : AbstractUserFragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         adapter = ListSongsAdapter(emptyList(), requireContext())
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         loadSongs()
         configSelectedSong()
         configRecyclerSongs()
@@ -65,8 +71,6 @@ class HomeFragment : AbstractUserFragment() {
         configSearchSongsFilter()
         onToolbarRightSwiped()
         configPhoneDisconnectedReceiver()
-
-        return binding.root
     }
 
     private fun configSelectedSong() {
@@ -76,7 +80,7 @@ class HomeFragment : AbstractUserFragment() {
     }
 
     private fun loadSongs() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             launch {
                 updateSongsOnScreen()
             }
