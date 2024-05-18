@@ -102,12 +102,12 @@ class HomeFragment : AbstractUserFragment() {
 
             override fun onQueryTextChange(p0: String?): Boolean {
                 lifecycleScope.launch {
-                    viewModel.getSongsFiltering(p0.toString()).observe(viewLifecycleOwner) { songs ->
-                        handler.removeCallbacksAndMessages(null);
-                        handler.postDelayed(Runnable {
-                            adapter.update(songs)
-                        }, 400)
-                    }
+                    handler.removeCallbacksAndMessages(null);
+                    handler.postDelayed(Runnable {
+                        p0?.let {
+                            adapter.update(viewModel.getSongsFiltering(p0))
+                        }
+                    }, 400)
                 }
 
                 return true

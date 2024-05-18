@@ -13,7 +13,7 @@ class HomeViewModel(private val songRepository: SongRepository) : ViewModel() {
         return songRepository.getAll()
     }
 
-    fun getSongsFiltering(filter: String): LiveData<List<Song>> {
+    fun getSongsFiltering(filter: String): List<Song> {
         return songRepository.getAllFiltering(filter)
     }
 

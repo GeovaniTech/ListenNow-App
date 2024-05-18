@@ -24,9 +24,8 @@ class SongRepository(private val songDao: SongDao, private val songWebClient: So
         return songDao.findById(id)
     }
 
-    fun getAllFiltering(searchFor: String): LiveData<List<Song>> {
-        listSongs.value = songDao.listByFilters(searchFor)
-        return listSongs
+    fun getAllFiltering(searchFor: String): List<Song> {
+        return songDao.listByFilters(searchFor)
     }
 
     suspend fun updateAll(userId: String?) {
