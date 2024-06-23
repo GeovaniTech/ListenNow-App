@@ -21,6 +21,9 @@ interface SongDao {
     @Query("SELECT * FROM Song")
     fun getSongs(): List<Song>
 
+    @Query("SELECT * FROM Song WHERE NOT EXISTS (SELECT 1 FROM Song SongSub JOIN PlaylistSong on SongSub.songId = PlaylistSong.songId WHERE PlaylistSong.playlistId = :playlistId AND Song.songId = SongSub.songId)")
+    fun getSongsToAdd(playlistId: String): List<Song>
+
     @Delete
     fun delete(song: Song)
 
