@@ -37,13 +37,12 @@ class SongRepository(private val songDao: SongDao, private val songWebClient: So
         userId?.let {
             songWebClient.getAll(it)?.let { songs ->
                 songs.map {song ->
-
                     val regexNoSpecialCharacters =  Regex("[^A-Za-z0-9 ]")
 
                     val songNameWithoutSpecialCharacters = regexNoSpecialCharacters.replace(song.name, "")
+                    val artistNameWithoutSpecialCharacters = regexNoSpecialCharacters.replace(song.artist,  "")
 
-                    val path =
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).path + "/" + songNameWithoutSpecialCharacters + ".mp3"
+                    val path = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).path}/ $songNameWithoutSpecialCharacters - $artistNameWithoutSpecialCharacters.mp3"
 
                     song.path = path
 
@@ -61,12 +60,11 @@ class SongRepository(private val songDao: SongDao, private val songWebClient: So
                             }
 
                             if(result.isFailure) {
-                                Log.e("SongRepository", "updateAll: Failed to download song, verify the song name", )
+                                Log.e("SongRepository", "updateAll: Failed to download song, verify the song name ${result.exceptionOrNull()}}", )
                             }
                         }
                     }
                 }
-
                 songDao.save(songs)
             }
         }
