@@ -1,9 +1,9 @@
-package br.com.listennow.ui.viewmodel.factory
+package br.com.listennow.viewmodel.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import br.com.listennow.repository.song.SongRepository
-import br.com.listennow.ui.viewmodel.HomeViewModel
+import br.com.listennow.repository.SongRepository
+import br.com.listennow.viewmodel.HomeViewModel
 
 class HomeViewModelFactory(private val repository: SongRepository) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")

@@ -1,21 +1,13 @@
-package br.com.listennow.ui.recyclerview
+package br.com.listennow.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.com.listennow.R
 import br.com.listennow.model.Playlist
-import br.com.listennow.model.Song
-import br.com.listennow.utils.ImageUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ListPlaylistsAdapter(playlists: List<Playlist>, private val ctx: Context):
     RecyclerView.Adapter<ListPlaylistsAdapter.ViewHolder>() {

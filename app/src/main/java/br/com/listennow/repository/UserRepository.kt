@@ -1,4 +1,4 @@
-package br.com.listennow.repository.user
+package br.com.listennow.repository
 
 import br.com.listennow.database.dao.UserDao
 import br.com.listennow.model.User

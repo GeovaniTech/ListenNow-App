@@ -28,7 +28,7 @@
         </receiver>
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".fragments.MainActivity"
             android:exported="true">
 
             <intent-filter>

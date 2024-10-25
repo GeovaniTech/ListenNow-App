@@ -1,10 +1,10 @@
-package br.com.listennow.ui.viewmodel
+package br.com.listennow.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.listennow.model.Song
-import br.com.listennow.repository.song.SongRepository
+import br.com.listennow.repository.SongRepository
 
 class HomeViewModel(private val songRepository: SongRepository) : ViewModel() {
     val actualSong = MutableLiveData<Song>()

@@ -1,7 +1,6 @@
-package br.com.listennow.ui.recyclerview
+package br.com.listennow.adapter
 
 import android.content.Context
-import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View

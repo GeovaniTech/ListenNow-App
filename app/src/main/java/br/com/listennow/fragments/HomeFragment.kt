@@ -1,4 +1,4 @@
-package br.com.listennow.ui.fragments
+package br.com.listennow.fragments
 
 import android.annotation.SuppressLint
 import android.content.IntentFilter
@@ -20,11 +20,10 @@ import br.com.listennow.database.AppDatabase
 import br.com.listennow.databinding.FragmentHomeBinding
 import br.com.listennow.model.Song
 import br.com.listennow.receiver.HeadsetStateReceiver
-import br.com.listennow.repository.song.SongRepository
-import br.com.listennow.ui.MainActivity
-import br.com.listennow.ui.recyclerview.ListSongsAdapter
-import br.com.listennow.ui.viewmodel.HomeViewModel
-import br.com.listennow.ui.viewmodel.factory.HomeViewModelFactory
+import br.com.listennow.repository.SongRepository
+import br.com.listennow.adapter.ListSongsAdapter
+import br.com.listennow.viewmodel.HomeViewModel
+import br.com.listennow.viewmodel.factory.HomeViewModelFactory
 import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.webclient.song.service.SongWebClient

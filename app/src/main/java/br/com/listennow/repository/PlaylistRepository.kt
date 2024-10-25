@@ -1,4 +1,4 @@
-package br.com.listennow.repository.playlist
+package br.com.listennow.repository
 
 import br.com.listennow.database.dao.PlaylistDao
 import br.com.listennow.model.Playlist

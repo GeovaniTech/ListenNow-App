@@ -1,4 +1,4 @@
-package br.com.listennow.ui.fragments
+package br.com.listennow.fragments
 
 import android.os.Bundle
 import android.os.Handler
@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.R
 import br.com.listennow.databinding.FragmentSearchYoutubeSongsBinding
-import br.com.listennow.ui.recyclerview.ListSongsYTAdapter
+import br.com.listennow.adapter.ListSongsYTAdapter
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import br.com.listennow.webclient.song.service.SongWebClient
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package br.com.listennow.repository.song
+package br.com.listennow.repository
 
 import android.os.Environment
 import android.util.Log
@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.model.Song
 import br.com.listennow.webclient.song.service.SongWebClient
-import kotlinx.coroutines.flow.Flow
 import java.io.File
 import java.io.FileOutputStream
 import java.util.Base64
