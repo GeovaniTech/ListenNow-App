@@ -6,6 +6,8 @@ import br.com.listennow.database.dao.SongDao
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.service.SongService
 import br.com.listennow.webclient.song.service.SongWebClient
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -57,9 +59,13 @@ object ListenNowHiltModule {
             .addInterceptor(logging)
             .build()
 
+        val moshi = Moshi.Builder()
+            .addLast(KotlinJsonAdapterFactory())
+            .build()
+
         return Retrofit.Builder()
             .baseUrl("https://api.devpree.com.br/listennow/")
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(client)
             .build()
     }
