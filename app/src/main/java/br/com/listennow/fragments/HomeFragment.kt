@@ -143,8 +143,8 @@ class HomeFragment : AbstractUserFragment() {
 
     private fun configToolbarClicked() {
         mainActivity.binding.playBackButtons.setOnClickListener {
-            if(SongUtil.isPlaying()) {
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSongDetailsFragment(SongUtil.actualSong.songId))
+            if(SongUtil.actualSong != null && !SongUtil.actualSong!!.songId.isNullOrEmpty()) {
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSongDetailsFragment(SongUtil.actualSong!!.songId))
             }
         }
     }

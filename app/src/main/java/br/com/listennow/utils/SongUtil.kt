@@ -11,7 +11,7 @@ class SongUtil {
     companion object {
         private var mediaPlayer: MediaPlayer = MediaPlayer()
         var songs = emptyList<Song>()
-        lateinit var actualSong: Song
+        var actualSong: Song? = null
         var onNextSong: ((Song) -> Unit)? = null
 
         fun readSong(context: Context, song : Song) {
