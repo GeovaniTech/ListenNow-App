@@ -64,6 +64,8 @@ class HomeSongsAdapter(songs: List<Song>, private val ctx: Context):
                 }
             }
 
+            itemView.isSelected = true
+
             itemView.setOnClickListener {
                 onItemClick?.invoke(songSelected)
             }
