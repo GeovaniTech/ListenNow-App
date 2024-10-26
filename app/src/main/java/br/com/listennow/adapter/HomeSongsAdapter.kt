@@ -15,14 +15,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ListSongsAdapter(songs: List<Song>, private val ctx: Context):
-    RecyclerView.Adapter<ListSongsAdapter.ViewHolder>() {
+class HomeSongsAdapter(songs: List<Song>, private val ctx: Context):
+    RecyclerView.Adapter<HomeSongsAdapter.ViewHolder>() {
 
     private val songs = songs.toMutableList()
     var onItemClick: ((Song) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_list, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.fragment_song_item, parent, false)
 
         return ViewHolder(itemView)
     }

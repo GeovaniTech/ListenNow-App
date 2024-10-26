@@ -21,7 +21,7 @@ import br.com.listennow.databinding.FragmentHomeBinding
 import br.com.listennow.model.Song
 import br.com.listennow.receiver.HeadsetStateReceiver
 import br.com.listennow.repository.SongRepository
-import br.com.listennow.adapter.ListSongsAdapter
+import br.com.listennow.adapter.HomeSongsAdapter
 import br.com.listennow.viewmodel.HomeViewModel
 import br.com.listennow.viewmodel.factory.HomeViewModelFactory
 import br.com.listennow.utils.ImageUtil
@@ -35,7 +35,7 @@ import kotlinx.coroutines.withContext
 
 class HomeFragment : AbstractUserFragment() {
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var adapter: ListSongsAdapter
+    private lateinit var adapter: HomeSongsAdapter
 
     private val mainActivity by lazy {
         activity as MainActivity
@@ -51,7 +51,7 @@ class HomeFragment : AbstractUserFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        adapter = ListSongsAdapter(emptyList(), requireContext())
+        adapter = HomeSongsAdapter(emptyList(), requireContext())
 
         return binding.root
     }

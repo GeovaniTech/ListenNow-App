@@ -19,11 +19,6 @@ class SongRepository(private val songDao: SongDao, private val songWebClient: So
         return listSongs
     }
 
-    fun getAllToAdd(playlistId: String): LiveData<List<Song>> {
-        listSongs.value = songDao.getSongsToAdd(playlistId)
-        return listSongs
-    }
-
     fun findSongById(id: String): Song? {
         return songDao.findById(id)
     }

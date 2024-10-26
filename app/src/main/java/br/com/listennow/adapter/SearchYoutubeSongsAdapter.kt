@@ -19,12 +19,12 @@ import kotlinx.coroutines.withContext
 import java.net.URL
 
 
-class ListSongsYTAdapter(private val ctx: Context, private val userId: String, songs: List<SearchYTSongResponse>): RecyclerView.Adapter<ListSongsYTAdapter.ViewHolder>() {
+class SearchYoutubeSongsAdapter(private val ctx: Context, private val userId: String, songs: List<SearchYTSongResponse>): RecyclerView.Adapter<SearchYoutubeSongsAdapter.ViewHolder>() {
     private val songs = songs.toMutableList()
     var onDownloadClicked: ((SearchYTSongResponse) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_list_search, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.fragment_search_youtube_songs_item, parent, false)
 
         return ViewHolder(itemView)
     }

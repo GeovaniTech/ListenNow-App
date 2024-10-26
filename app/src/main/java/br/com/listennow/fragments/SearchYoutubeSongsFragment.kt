@@ -13,14 +13,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.R
 import br.com.listennow.databinding.FragmentSearchYoutubeSongsBinding
-import br.com.listennow.adapter.ListSongsYTAdapter
+import br.com.listennow.adapter.SearchYoutubeSongsAdapter
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import br.com.listennow.webclient.song.service.SongWebClient
 import kotlinx.coroutines.launch
 
 class SearchYoutubeSongsFragment : Fragment() {
     private lateinit var binding: FragmentSearchYoutubeSongsBinding
-    private lateinit var adapter: ListSongsYTAdapter
+    private lateinit var adapter: SearchYoutubeSongsAdapter
     private val songWebClient by lazy {
         SongWebClient()
     }
@@ -30,7 +30,7 @@ class SearchYoutubeSongsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchYoutubeSongsBinding.inflate(inflater, container, false)
-        adapter = ListSongsYTAdapter(requireContext(), "341176e2-e00e-4b35-af24-5516fcaa6956", emptyList())
+        adapter = SearchYoutubeSongsAdapter(requireContext(), "341176e2-e00e-4b35-af24-5516fcaa6956", emptyList())
 
         configRecyclerView()
         configSearchSongsFilter()
