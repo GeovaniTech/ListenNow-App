@@ -56,7 +56,8 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
         configSearchSongsFilterListener()
 
         mainActivity.binding.playBackButtons.setOnClickListener {
-            if(SongUtil.actualSong != null && !SongUtil.actualSong!!.songId.isNullOrEmpty()) {
+            // TODO - Need to change this to open the song even when it is not playing
+            if(SongUtil.isPlaying()) {
                 findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSongDetailsFragment(SongUtil.actualSong!!.songId))
             }
         }
