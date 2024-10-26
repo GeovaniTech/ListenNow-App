@@ -57,10 +57,9 @@
                     android:text="@{homeViewModel.actualSong.name}"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Blank Space Blank Space Blank Space Blank Space" />
+                    tools:text="Iris" />
 
                 <TextView
                     android:id="@+id/list_songs_artist"
