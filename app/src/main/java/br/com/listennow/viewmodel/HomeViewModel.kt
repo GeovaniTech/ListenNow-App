@@ -5,8 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.listennow.model.Song
 import br.com.listennow.repository.SongRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class HomeViewModel(private val songRepository: SongRepository) : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor (
+    private val songRepository: SongRepository
+) : ViewModel() {
     val actualSong = MutableLiveData<Song>()
 
     fun getSongs(): LiveData<List<Song>> {

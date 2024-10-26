@@ -1,28 +1,39 @@
 package br.com.listennow.fragments
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.R
-import br.com.listennow.databinding.FragmentSearchYoutubeSongsBinding
 import br.com.listennow.adapter.SearchYoutubeSongsAdapter
-import br.com.listennow.webclient.song.model.SearchYTSongResponse
-import br.com.listennow.webclient.song.service.SongWebClient
+import br.com.listennow.databinding.FragmentSearchYoutubeSongsBinding
+import br.com.listennow.viewmodel.SearchYoutubeSongsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-class SearchYoutubeSongsFragment : Fragment() {
+@AndroidEntryPoint
+class SearchYoutubeSongsFragment : AbstractUserFragment() {
     private lateinit var binding: FragmentSearchYoutubeSongsBinding
     private lateinit var adapter: SearchYoutubeSongsAdapter
-    private val songWebClient by lazy {
-        SongWebClient()
+
+    private val viewModel: SearchYoutubeSongsViewModel by viewModels()
+    override fun loadNavParams() {
+    }
+
+    override fun setViewModelObservers() {
+        viewModel.songs.observe(viewLifecycleOwner) {songs ->
+            songs?.let {
+                adapter.update(it)
+            }
+        }
+    }
+
+    override fun loadData() {
     }
 
     override fun onCreateView(
@@ -40,24 +51,15 @@ class SearchYoutubeSongsFragment : Fragment() {
     }
 
     private fun configSearchSongsFilter() {
-        val handlerThread = HandlerThread("Song Delay")
-        handlerThread.start()
-        val looper = handlerThread.looper
-        val handler = Handler(looper)
-
         binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 return false
             }
 
-            override fun onQueryTextChange(p0: String?): Boolean {
+            override fun onQueryTextChange(filter: String?): Boolean {
                 lifecycleScope.launch {
-                    val songs = songWebClient.getYTSongs(p0.toString())
-                    songs?.let {
-                        handler.removeCallbacksAndMessages(null);
-                        handler.postDelayed(Runnable {
-                            updateSongsOnScreen(songs)
-                        }, 700)
+                    filter?.let {
+                        viewModel.loadYoutubeSongs(it)
                     }
                 }
                 return true
@@ -73,15 +75,11 @@ class SearchYoutubeSongsFragment : Fragment() {
         listSongs.adapter = adapter
     }
 
-    private fun updateSongsOnScreen(songs: List<SearchYTSongResponse>) {
-        adapter.update(songs)
-    }
-
     private fun configDownloadSong() {
         adapter.onDownloadClicked = { song ->
             Toast.makeText(requireContext(), R.string.download_started, Toast.LENGTH_SHORT).show()
             lifecycleScope.launch {
-                songWebClient.downloadSong(song.videoId, "341176e2-e00e-4b35-af24-5516fcaa6956")
+                viewModel.downloadSong(song.videoId, "341176e2-e00e-4b35-af24-5516fcaa6956")
             }
         }
     }

@@ -10,8 +10,12 @@ import br.com.listennow.webclient.song.service.SongWebClient
 import java.io.File
 import java.io.FileOutputStream
 import java.util.Base64
+import javax.inject.Inject
 
-class SongRepository(private val songDao: SongDao, private val songWebClient: SongWebClient) {
+class SongRepository @Inject constructor (
+    private val songDao: SongDao,
+    private val songWebClient: SongWebClient
+) {
     private val listSongs = MutableLiveData<List<Song>>()
 
     fun getAll(): LiveData<List<Song>> {

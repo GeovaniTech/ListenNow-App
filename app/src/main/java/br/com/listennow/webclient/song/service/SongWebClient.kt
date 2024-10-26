@@ -2,7 +2,7 @@ package br.com.listennow.webclient.song.service
 
 import android.util.Log
 import br.com.listennow.model.Song
-import br.com.listennow.webclient.RetrofitInitializer
+import br.com.listennow.service.SongService
 import br.com.listennow.webclient.song.model.SearchDownloadSongRequest
 import br.com.listennow.webclient.song.model.SearchYTSongRequest
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
@@ -10,12 +10,11 @@ import br.com.listennow.webclient.song.model.SongDownloadRequest
 import br.com.listennow.webclient.song.model.SongDownloadResponse
 import br.com.listennow.webclient.song.model.SongRequest
 
-class SongWebClient {
+class SongWebClient(
+    private val songService: SongService
+) {
     companion object {
         const val TAG = "SongWebClient"
-    }
-    private val songService by lazy {
-        RetrofitInitializer().songService
     }
 
     suspend fun getAll(userId: String): List<Song>? {

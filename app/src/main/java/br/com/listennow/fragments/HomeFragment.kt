@@ -16,23 +16,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.R
-import br.com.listennow.database.AppDatabase
+import br.com.listennow.adapter.HomeSongsAdapter
 import br.com.listennow.databinding.FragmentHomeBinding
 import br.com.listennow.model.Song
 import br.com.listennow.receiver.HeadsetStateReceiver
-import br.com.listennow.repository.SongRepository
-import br.com.listennow.adapter.HomeSongsAdapter
-import br.com.listennow.viewmodel.HomeViewModel
-import br.com.listennow.viewmodel.factory.HomeViewModelFactory
 import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
-import br.com.listennow.webclient.song.service.SongWebClient
+import br.com.listennow.viewmodel.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
+@AndroidEntryPoint
 class HomeFragment : AbstractUserFragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapter: HomeSongsAdapter
@@ -41,9 +38,7 @@ class HomeFragment : AbstractUserFragment() {
         activity as MainActivity
     }
 
-    private val viewModel: HomeViewModel by viewModels {
-        HomeViewModelFactory(SongRepository(AppDatabase.getInstance(requireContext()).songDao(), SongWebClient()))
-    }
+    private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,6 +65,15 @@ class HomeFragment : AbstractUserFragment() {
         configSearchSongsFilter()
         onToolbarRightSwiped()
         configPhoneDisconnectedReceiver()
+    }
+
+    override fun loadNavParams() {
+    }
+
+    override fun setViewModelObservers() {
+    }
+
+    override fun loadData() {
     }
 
     private fun configSelectedSong() {
@@ -140,9 +144,7 @@ class HomeFragment : AbstractUserFragment() {
     private fun configToolbarClicked() {
         mainActivity.binding.playBackButtons.setOnClickListener {
             if(SongUtil.isPlaying()) {
-                val bundle = Bundle()
-                bundle.putString("song", SongUtil.actualSong.songId)
-                findNavController().navigate(R.id.songDetailsFragment, bundle)
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSongDetailsFragment(SongUtil.actualSong.songId))
             }
         }
     }

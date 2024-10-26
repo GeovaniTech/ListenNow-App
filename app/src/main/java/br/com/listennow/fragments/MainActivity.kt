@@ -16,8 +16,9 @@ import androidx.navigation.ui.setupWithNavController
 import br.com.listennow.BuildConfig
 import br.com.listennow.R
 import br.com.listennow.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController

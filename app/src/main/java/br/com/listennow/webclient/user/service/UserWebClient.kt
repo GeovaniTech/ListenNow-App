@@ -2,16 +2,14 @@ package br.com.listennow.webclient.user.service
 
 import android.util.Log
 import br.com.listennow.model.User
-import br.com.listennow.webclient.RetrofitInitializer
+import br.com.listennow.service.UserService
 import br.com.listennow.webclient.user.model.UserRequest
 
-class UserWebClient {
+class UserWebClient(
+    private val userService: UserService
+) {
     companion object {
         const val TAG = "UserWebClient"
-    }
-
-    private val userService by lazy {
-        RetrofitInitializer().userService
     }
 
     suspend fun save(user: User): Boolean {
