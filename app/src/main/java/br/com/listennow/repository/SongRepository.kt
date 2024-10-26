@@ -16,18 +16,15 @@ class SongRepository @Inject constructor (
     private val songDao: SongDao,
     private val songWebClient: SongWebClient
 ) {
-    private val listSongs = MutableLiveData<List<Song>>()
-
-    fun getAll(): LiveData<List<Song>> {
-        listSongs.value = songDao.getSongs()
-        return listSongs
+    suspend fun getAll(): List<Song> {
+        return songDao.getSongs()
     }
 
-    fun findSongById(id: String): Song? {
+    suspend fun findSongById(id: String): Song? {
         return songDao.findById(id)
     }
 
-    fun getAllFiltering(searchFor: String): List<Song> {
+    suspend fun getAllFiltering(searchFor: String): List<Song> {
         return songDao.listByFilters(searchFor)
     }
 

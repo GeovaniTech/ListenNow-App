@@ -22,8 +22,19 @@ class SongDetailsFragment : AbstractUserFragment() {
 
     private val viewModel: SongDetailsViewModel by viewModels()
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentSongDetailsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun loadNavParams() {
         viewModel.songId = SongDetailsFragmentArgs.fromBundle(requireArguments()).songId
+    }
+
+    override fun setViewListeners() {
     }
 
     override fun setViewModelObservers() {
@@ -38,14 +49,6 @@ class SongDetailsFragment : AbstractUserFragment() {
         lifecycleScope.launch {
             viewModel.loadSong()
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentSongDetailsBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     private fun bindSong(song: Song) {

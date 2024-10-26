@@ -11,7 +11,6 @@ class SongResponse(
     val lyrics: String,
     val large_thumb: String,
     val small_thumb: String,
-    val file: String
 ) {
     val song: Song get() = Song(
         songId = song_id,

@@ -26,11 +26,13 @@ abstract class AbstractUserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         loadNavParams()
+        setViewListeners()
         setViewModelObservers()
         loadData()
     }
 
     abstract fun loadNavParams()
+    abstract fun setViewListeners()
     abstract fun setViewModelObservers()
     abstract fun loadData()
 

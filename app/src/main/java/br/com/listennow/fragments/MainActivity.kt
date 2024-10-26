@@ -2,7 +2,9 @@ package br.com.listennow.fragments
 
 import android.Manifest
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +18,7 @@ import androidx.navigation.ui.setupWithNavController
 import br.com.listennow.BuildConfig
 import br.com.listennow.R
 import br.com.listennow.databinding.ActivityMainBinding
+import br.com.listennow.receiver.HeadsetStateReceiver
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,6 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         setUpBottomNavigation()
         askPermissions()
+        configPhoneDisconnectedReceiver()
     }
 
     private fun askPermissions() {
@@ -81,5 +85,14 @@ class MainActivity : AppCompatActivity() {
     private fun setUpBottomNavigation() {
         val menu = binding.playBackBottomNavigation
         menu.setupWithNavController(navController)
+    }
+
+    private fun configPhoneDisconnectedReceiver() {
+        val receiver = HeadsetStateReceiver()
+        val receiverFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
+
+        receiver.button = binding.play
+
+        registerReceiver(receiver, receiverFilter)
     }
 }

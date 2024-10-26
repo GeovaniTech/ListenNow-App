@@ -11,20 +11,20 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SongDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(song: Song)
+    suspend fun save(song: Song)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(song: List<Song>)
+    suspend fun save(song: List<Song>)
 
     @Query("SELECT * FROM Song")
-    fun getSongs(): List<Song>
+    suspend fun getSongs(): List<Song>
 
     @Delete
-    fun delete(song: Song)
+    suspend fun delete(song: Song)
 
     @Query("SELECT * FROM Song WHERE songId = :id")
-    fun findById(id: String): Song?
+    suspend fun findById(id: String): Song?
 
     @Query("SELECT * FROM Song WHERE LOWER(name) LIKE  '%' || LOWER(:text) || '%' OR artist LIKE '%' || LOWER(:text) || '%'")
-    fun listByFilters(text: String): List<Song>
+    suspend fun listByFilters(text: String): List<Song>
 }

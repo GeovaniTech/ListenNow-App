@@ -36,7 +36,7 @@
     <string name="repeat_password">Repeat Password</string>
     <string name="home">Home</string>
     <string name="search_new_songs">New Songs</string>
-    <string name="title_artist_album">Song name, artist, album...</string>
+    <string name="title_artist_album">Search for song name or artist</string>
     <string name="playlists">Playlists</string>
     <string name="new_playlist">New Playlist</string>
     <string name="save_playlist">Save Playlist</string>

@@ -1,8 +1,6 @@
 package br.com.listennow.fragments
 
 import android.annotation.SuppressLint
-import android.content.IntentFilter
-import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -19,7 +17,6 @@ import br.com.listennow.R
 import br.com.listennow.adapter.HomeSongsAdapter
 import br.com.listennow.databinding.FragmentHomeBinding
 import br.com.listennow.model.Song
-import br.com.listennow.receiver.HeadsetStateReceiver
 import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.HomeViewModel
@@ -51,121 +48,113 @@ class HomeFragment : AbstractUserFragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        loadSongs()
-        configSelectedSong()
-        configRecyclerSongs()
-        configOnNextSongAutomatically()
-        configSongClicked()
-        configPlayPause()
-        configSwipeRefresh()
-        configToolbarClicked()
-        configSearchSongsFilter()
-        onToolbarRightSwiped()
-        configPhoneDisconnectedReceiver()
-    }
-
     override fun loadNavParams() {
     }
 
+    override fun setViewListeners() {
+        onToolbarRightSwiped()
+        configSearchSongsFilterListener()
+
+        mainActivity.binding.playBackButtons.setOnClickListener {
+            if(SongUtil.actualSong != null && !SongUtil.actualSong!!.songId.isNullOrEmpty()) {
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSongDetailsFragment(SongUtil.actualSong!!.songId))
+            }
+        }
+
+        binding.refreshSongs.setOnRefreshListener {
+            syncSongs()
+        }
+
+        mainActivity.binding.play.setOnClickListener {
+            if(SongUtil.isPlaying()) {
+                SongUtil.pause()
+                mainActivity.binding.play.setBackgroundResource(R.drawable.ic_play)
+            } else {
+                SongUtil.play()
+                mainActivity.binding.play.setBackgroundResource(R.drawable.ic_pause)
+            }
+        }
+
+        SongUtil.onNextSong = { song ->
+            SongUtil.readSong(requireContext(), song)
+            viewModel.updateActualSong(song)
+        }
+
+        adapter.onItemClick = { song ->
+            SongUtil.readSong(requireContext(), song)
+            viewModel.updateActualSong(song)
+        }
+    }
+
     override fun setViewModelObservers() {
+        viewModel.songs.observe(viewLifecycleOwner) { songs ->
+            SongUtil.songs = songs
+            updateSongsOnScreen(songs)
+
+        }
+
+        viewModel.filteredSongs.observe(viewLifecycleOwner) { songs ->
+            updateSongsOnScreen(songs)
+        }
+
+        viewModel.actualSong.observe(viewLifecycleOwner) { song ->
+            song?.let {
+                configSongToolbar(it)
+            }
+        }
+
+        viewModel.syncing.observe(viewLifecycleOwner) {
+            binding.refreshSongs.isRefreshing = it.get()
+        }
     }
 
     override fun loadData() {
-    }
+        configRecyclerSongs()
 
-    private fun configSelectedSong() {
-        viewModel.actualSong.value?.let {
-            configSongToolbar(it)
-        }
-    }
-
-    private fun loadSongs() {
         viewLifecycleOwner.lifecycleScope.launch {
-            launch {
-                updateSongsOnScreen()
-            }
-
-            syncSongs()
+            viewModel.loadSongs()
+            viewModel.loadActualSong()
         }
     }
 
-    private fun configSearchSongsFilter() {
+    private fun updateSongsOnScreen(songs: List<Song>) {
+        adapter.update(songs)
+    }
+
+    private fun configSearchSongsFilterListener() {
         val handlerThread = HandlerThread("Song Delay")
         handlerThread.start()
         val looper = handlerThread.looper
         val handler = Handler(looper)
 
         binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
-                lifecycleScope.launch {
                     handler.removeCallbacksAndMessages(null);
                     handler.postDelayed(Runnable {
                         p0?.let {
-                            adapter.update(viewModel.getSongsFiltering(p0))
+                            viewLifecycleOwner.lifecycleScope.launch {
+                                viewModel.loadSongsFiltering(p0)
+                            }
                         }
                     }, 400)
-                }
 
                 return true
             }
         })
     }
 
-    private fun configSwipeRefresh() {
-        val swipeRefresh = binding.refreshSongs
-        swipeRefresh.setOnRefreshListener {
-            viewLifecycleOwner.lifecycleScope.launch {
-                syncSongs()
-            }
-        }
-    }
-
-    private fun configOnNextSongAutomatically() {
-        SongUtil.onNextSong = { song ->
-            SongUtil.readSong(requireContext(), song)
-            configSongToolbar(song)
-        }
-    }
-
-    private fun configSongClicked() {
-        adapter.onItemClick = { song ->
-            SongUtil.readSong(requireContext(), song)
-            configSongToolbar(song)
-        }
-    }
-
-    private fun configToolbarClicked() {
-        mainActivity.binding.playBackButtons.setOnClickListener {
-            if(SongUtil.actualSong != null && !SongUtil.actualSong!!.songId.isNullOrEmpty()) {
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSongDetailsFragment(SongUtil.actualSong!!.songId))
-            }
-        }
-    }
-
-    private fun updateSongsOnScreen() {
-        viewModel.getSongs().observe(viewLifecycleOwner) {songs ->
-            adapter.update(songs)
-            SongUtil.songs = songs
-        }
-    }
-
     private fun configRecyclerSongs() {
-        val listSongs = binding.songs
-
-        listSongs.layoutManager = LinearLayoutManager(requireContext())
-        listSongs.setHasFixedSize(true)
-        listSongs.adapter = adapter
+        binding.songs.layoutManager = LinearLayoutManager(requireContext())
+        binding.songs.setHasFixedSize(true)
+        binding.songs.adapter = adapter
     }
 
     private fun configSongToolbar(song: Song) {
-        viewModel.actualSong.value = song
         mainActivity.binding.listSongsTitle.text = song.name
         mainActivity.binding.listSongsArtist.text = song.artist
         mainActivity.binding.play.setBackgroundResource(R.drawable.ic_pause)
@@ -179,21 +168,11 @@ class HomeFragment : AbstractUserFragment() {
         }
     }
 
-    private suspend fun syncSongs() {
-        viewModel.updateAll("341176e2-e00e-4b35-af24-5516fcaa6956")
-        binding.refreshSongs.isRefreshing = false
-        updateSongsOnScreen()
-    }
-
-    private fun configPlayPause() {
-        mainActivity.binding.play.setOnClickListener {
-            if(SongUtil.isPlaying()) {
-                SongUtil.pause()
-                mainActivity.binding.play.setBackgroundResource(R.drawable.ic_play)
-            } else {
-                SongUtil.play()
-                mainActivity.binding.play.setBackgroundResource(R.drawable.ic_pause)
-            }
+    private fun syncSongs() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.syncSongs(
+                userId = "341176e2-e00e-4b35-af24-5516fcaa6956"
+            )
         }
     }
 
@@ -209,47 +188,14 @@ class HomeFragment : AbstractUserFragment() {
         buttons.setOnTouchListener { v, event ->
             when (event?.action) {
                 MotionEvent.ACTION_MOVE -> {
-                    playRandomSong()?.let {
-                        handler.removeCallbacksAndMessages(null)
-                        handler.postDelayed(Runnable {
-                            lifecycleScope.launch {
-                                withContext(Dispatchers.Main) {
-                                    configSongToolbar(it)
-                                }
-                            }
-                        }, 200)
-                    }
+                    handler.removeCallbacksAndMessages(null)
+                    handler.postDelayed(Runnable {
+                         SongUtil.playRandomSong()
+                    }, 200)
                 }
             }
 
             v?.onTouchEvent(event) ?: true
         }
-    }
-
-    private fun playRandomSong(): Song? {
-        if(SongUtil.songs.isNotEmpty()) {
-            val song = getRandomSong()
-
-            SongUtil.readSong(requireContext(), song)
-
-            return song
-        }
-
-        return null
-    }
-
-    private fun getRandomSong(): Song {
-        val position = (0 until (SongUtil.songs.size)).random()
-        return SongUtil.songs[position]
-    }
-
-
-    private fun configPhoneDisconnectedReceiver() {
-        val receiver = HeadsetStateReceiver()
-        val receiverFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
-
-        receiver.button = mainActivity.binding.play
-
-        mainActivity.registerReceiver(receiver, receiverFilter)
     }
 }

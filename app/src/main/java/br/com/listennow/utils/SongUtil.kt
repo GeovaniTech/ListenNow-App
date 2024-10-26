@@ -68,5 +68,12 @@ class SongUtil {
             val position = (0 until (songs.size)).random()
             return songs[position]
         }
+
+        fun playRandomSong(){
+            if(songs.isNotEmpty()) {
+                val song = getRandomSong()
+                onNextSong?.invoke(song)
+            }
+        }
     }
 }

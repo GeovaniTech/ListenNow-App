@@ -22,19 +22,6 @@ class SearchYoutubeSongsFragment : AbstractUserFragment() {
     private lateinit var adapter: SearchYoutubeSongsAdapter
 
     private val viewModel: SearchYoutubeSongsViewModel by viewModels()
-    override fun loadNavParams() {
-    }
-
-    override fun setViewModelObservers() {
-        viewModel.songs.observe(viewLifecycleOwner) {songs ->
-            songs?.let {
-                adapter.update(it)
-            }
-        }
-    }
-
-    override fun loadData() {
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,14 +30,13 @@ class SearchYoutubeSongsFragment : AbstractUserFragment() {
         binding = FragmentSearchYoutubeSongsBinding.inflate(inflater, container, false)
         adapter = SearchYoutubeSongsAdapter(requireContext(), "341176e2-e00e-4b35-af24-5516fcaa6956", emptyList())
 
-        configRecyclerView()
-        configSearchSongsFilter()
-        configDownloadSong()
-
         return binding.root
     }
 
-    private fun configSearchSongsFilter() {
+    override fun loadNavParams() {
+    }
+
+    override fun setViewListeners() {
         binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 return false
@@ -65,6 +51,25 @@ class SearchYoutubeSongsFragment : AbstractUserFragment() {
                 return true
             }
         })
+
+        adapter.onDownloadClicked = { song ->
+            Toast.makeText(requireContext(), R.string.download_started, Toast.LENGTH_SHORT).show()
+            lifecycleScope.launch {
+                viewModel.downloadSong(song.videoId, "341176e2-e00e-4b35-af24-5516fcaa6956")
+            }
+        }
+    }
+
+    override fun setViewModelObservers() {
+        viewModel.songs.observe(viewLifecycleOwner) {songs ->
+            songs?.let {
+                adapter.update(it)
+            }
+        }
+    }
+
+    override fun loadData() {
+        configRecyclerView()
     }
 
     private fun configRecyclerView() {
@@ -73,14 +78,5 @@ class SearchYoutubeSongsFragment : AbstractUserFragment() {
         listSongs.layoutManager = LinearLayoutManager(requireContext())
         listSongs.setHasFixedSize(true)
         listSongs.adapter = adapter
-    }
-
-    private fun configDownloadSong() {
-        adapter.onDownloadClicked = { song ->
-            Toast.makeText(requireContext(), R.string.download_started, Toast.LENGTH_SHORT).show()
-            lifecycleScope.launch {
-                viewModel.downloadSong(song.videoId, "341176e2-e00e-4b35-af24-5516fcaa6956")
-            }
-        }
     }
 }
