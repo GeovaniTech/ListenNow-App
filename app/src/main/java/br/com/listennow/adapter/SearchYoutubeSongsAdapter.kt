@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 import java.net.URL
 
 
-class SearchYoutubeSongsAdapter(private val ctx: Context, private val userId: String, songs: List<SearchYTSongResponse>): RecyclerView.Adapter<SearchYoutubeSongsAdapter.ViewHolder>() {
+class SearchYoutubeSongsAdapter(songs: List<SearchYTSongResponse>): RecyclerView.Adapter<SearchYoutubeSongsAdapter.ViewHolder>() {
     private val songs = songs.toMutableList()
     var onDownloadClicked: ((SearchYTSongResponse) -> Unit)? = null
 
@@ -36,7 +36,7 @@ class SearchYoutubeSongsAdapter(private val ctx: Context, private val userId: St
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentSong = songs[position]
 
-        holder.bind(currentSong, ctx, userId)
+        holder.bind(currentSong)
     }
 
     fun update(songs: List<SearchYTSongResponse>) {
@@ -47,7 +47,7 @@ class SearchYoutubeSongsAdapter(private val ctx: Context, private val userId: St
     }
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        fun bind(song: SearchYTSongResponse, context: Context, userId: String) {
+        fun bind(song: SearchYTSongResponse) {
             val thumb: ImageView = itemView.findViewById(R.id.list_songs_search_thumb)
             val title: TextView = itemView.findViewById(R.id.list_songs_search_title)
             val artist: TextView = itemView.findViewById(R.id.list_songs_search_artist)

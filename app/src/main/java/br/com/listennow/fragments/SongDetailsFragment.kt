@@ -17,10 +17,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
-class SongDetailsFragment : AbstractUserFragment() {
+class SongDetailsFragment : CommonFragment<SongDetailsViewModel>() {
     private lateinit var binding: FragmentSongDetailsBinding
 
-    private val viewModel: SongDetailsViewModel by viewModels()
+    override val viewModel: SongDetailsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

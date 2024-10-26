@@ -17,18 +17,18 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SearchYoutubeSongsFragment : AbstractUserFragment() {
+class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>() {
     private lateinit var binding: FragmentSearchYoutubeSongsBinding
     private lateinit var adapter: SearchYoutubeSongsAdapter
 
-    private val viewModel: SearchYoutubeSongsViewModel by viewModels()
+    override val viewModel: SearchYoutubeSongsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchYoutubeSongsBinding.inflate(inflater, container, false)
-        adapter = SearchYoutubeSongsAdapter(requireContext(), "341176e2-e00e-4b35-af24-5516fcaa6956", emptyList())
+        adapter = SearchYoutubeSongsAdapter(emptyList())
 
         return binding.root
     }
@@ -55,7 +55,7 @@ class SearchYoutubeSongsFragment : AbstractUserFragment() {
         adapter.onDownloadClicked = { song ->
             Toast.makeText(requireContext(), R.string.download_started, Toast.LENGTH_SHORT).show()
             lifecycleScope.launch {
-                viewModel.downloadSong(song.videoId, "341176e2-e00e-4b35-af24-5516fcaa6956")
+                viewModel.downloadSong(song.videoId)
             }
         }
     }

@@ -8,15 +8,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
-    @Query("SELECT * FROM User WHERE email = :email AND password = :password")
-    fun authenticateUser(email: String, password: String): Flow<User?>
-
-    @Query("SELECT * FROM User WHERE email = :email")
-    fun existsAccount(email: String): User?
+    @Query("SELECT * FROM User LIMIT 1")
+    suspend fun existsUserInDevice(): User?
 
     @Insert
-    fun save(user: User)
-
-    @Query("SELECT * FROM User WHERE id = :id")
-    fun findById(id: String): Flow<User?>
+    suspend fun save(user: User)
 }

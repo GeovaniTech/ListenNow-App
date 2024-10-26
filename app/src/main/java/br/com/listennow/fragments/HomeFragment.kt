@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
-class HomeFragment : AbstractUserFragment() {
+class HomeFragment : CommonFragment<HomeViewModel>() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapter: HomeSongsAdapter
 
@@ -35,7 +35,7 @@ class HomeFragment : AbstractUserFragment() {
         activity as MainActivity
     }
 
-    private val viewModel: HomeViewModel by viewModels()
+    override val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -170,9 +170,7 @@ class HomeFragment : AbstractUserFragment() {
 
     private fun syncSongs() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.syncSongs(
-                userId = "341176e2-e00e-4b35-af24-5516fcaa6956"
-            )
+            viewModel.syncSongs()
         }
     }
 

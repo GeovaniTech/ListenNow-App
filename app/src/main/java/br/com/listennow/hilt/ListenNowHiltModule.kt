@@ -3,7 +3,9 @@ package br.com.listennow.hilt
 import android.content.Context
 import br.com.listennow.database.AppDatabase
 import br.com.listennow.database.dao.SongDao
+import br.com.listennow.database.dao.UserDao
 import br.com.listennow.repository.SongRepository
+import br.com.listennow.repository.UserRepository
 import br.com.listennow.service.SongService
 import br.com.listennow.webclient.song.service.SongWebClient
 import com.squareup.moshi.Moshi
@@ -68,5 +70,19 @@ object ListenNowHiltModule {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(client)
             .build()
+    }
+
+    @Provides
+    fun provideUserDao(
+        @ApplicationContext context: Context
+    ): UserDao {
+        return AppDatabase.getInstance(context).userDao()
+    }
+
+    @Provides
+    fun provideUserRepository(
+        userDao: UserDao
+    ): UserRepository  {
+        return UserRepository(userDao)
     }
 }

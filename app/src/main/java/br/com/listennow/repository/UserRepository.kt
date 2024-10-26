@@ -2,14 +2,16 @@ package br.com.listennow.repository
 
 import br.com.listennow.database.dao.UserDao
 import br.com.listennow.model.User
-import br.com.listennow.webclient.user.service.UserWebClient
+import javax.inject.Inject
 
-class UserRepository(private val userDao: UserDao, private val webClient: UserWebClient) {
-    suspend fun save(user: User): Boolean {
-        return webClient.save(user)
+class UserRepository @Inject constructor(
+    private val userDao: UserDao
+) {
+    suspend fun findUser(): User? {
+        return userDao.existsUserInDevice()
     }
 
-    suspend fun login(user: User): Boolean {
-        return webClient.login(user)
+    suspend fun saveUser(user: User) {
+        userDao.save(user)
     }
 }
