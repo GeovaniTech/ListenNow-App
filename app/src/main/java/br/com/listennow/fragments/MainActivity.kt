@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import br.com.listennow.BuildConfig
 import br.com.listennow.R
 import br.com.listennow.databinding.ActivityMainBinding
@@ -23,9 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var navController: NavController
-
     val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -38,9 +34,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view_listennow) as NavHostFragment
-        navController = navHostFragment.navController
 
-        setUpBottomNavigation()
+        setUpBottomNavigation(navHostFragment.navController)
         askPermissions()
         configPhoneDisconnectedReceiver()
     }
@@ -82,9 +77,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpBottomNavigation() {
+    private fun setUpBottomNavigation(navController: NavController) {
         val menu = binding.playBackBottomNavigation
-        menu.setupWithNavController(navController)
+        menu.setOnItemSelectedListener {
+            when(it.itemId) {
+                R.id.homeFragment -> {
+                    navController.navigate(R.id.homeFragment)
+                    true
+                }
+                R.id.searchNewSongsFragment -> {
+                    navController.navigate(R.id.searchNewSongsFragment)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun configPhoneDisconnectedReceiver() {
