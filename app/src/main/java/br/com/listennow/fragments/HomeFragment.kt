@@ -63,6 +63,7 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
                 startShimmer()
                 viewLifecycleOwner.lifecycleScope.launch {
                     p0?.let {
+                        viewModel.songFilter = it
                         viewModel.loadSongsFiltering(it)
                     }
                 }
@@ -128,7 +129,13 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
             binding.refreshSongs.isRefreshing = it.get()
 
             if(!it.get()) {
-                loadData()
+                viewModel.songFilter?.let {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        viewModel.loadSongsFiltering(it)
+                    }
+                }?: {
+                    loadData()
+                }
             }
         }
     }

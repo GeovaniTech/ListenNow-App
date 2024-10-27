@@ -29,6 +29,8 @@ class HomeViewModel @Inject constructor (
     private var _syncing: MutableLiveData<AtomicBoolean> = MutableLiveData(AtomicBoolean(false))
     val syncing: LiveData<AtomicBoolean> get() = _syncing
 
+    var songFilter: String? = null
+
     suspend fun loadSongs() {
         _songs.postValue(songRepository.getAll())
     }
