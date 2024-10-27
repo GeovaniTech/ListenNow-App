@@ -1,6 +1,8 @@
 package br.com.listennow.fragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,26 +41,13 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
     }
 
     override fun setViewListeners() {
+        configSearchSongs()
+
         mainActivity.binding.playBackButtons.setOnClickListener {
             if(SongUtil.actualSong != null && SongUtil.actualSong!!.songId.isNotEmpty()) {
                 findNavController().navigate(SearchYoutubeSongsFragmentDirections.actionSearchNewSongsFragmentSongDetailsFragment(SongUtil.actualSong!!.songId))
             }
         }
-
-        binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(filter: String?): Boolean {
-                lifecycleScope.launch {
-                    filter?.let {
-                        viewModel.loadYoutubeSongs(it)
-                    }
-                }
-                return true
-            }
-        })
 
         adapter.onDownloadClicked = { song ->
             Toast.makeText(requireContext(), R.string.download_started, Toast.LENGTH_SHORT).show()
@@ -66,6 +55,32 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
                 viewModel.downloadSong(song.videoId)
             }
         }
+    }
+
+    private fun configSearchSongs() {
+        val handlerThread = HandlerThread("Song Delay")
+        handlerThread.start()
+        val looper = handlerThread.looper
+        val handler = Handler(looper)
+
+        binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(filter: String?): Boolean {
+                handler.removeCallbacksAndMessages(null);
+                handler.postDelayed(Runnable {
+                    filter?.let {
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            viewModel.loadYoutubeSongs(it)
+                        }
+                    }
+                }, 500)
+
+                return true
+            }
+        })
     }
 
     override fun setViewModelObservers() {
