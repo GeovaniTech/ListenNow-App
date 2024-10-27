@@ -44,4 +44,7 @@
     <string name="playlist_home">Playlist Home</string>
     <string name="select_playlist_songs">Select Playlist Songs</string>
     <string name="save_songs">Save Songs</string>
+    <string name="not_results_found_try_start_searching_something">No results found, try search for something</string>
+    <string name="not_results_found_try_download_a_new_song">No songs found, try to download a new song</string>
+    <string name="find_a_new_song">Find a New Song</string>
 </resources>

@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
             android:focusable="true"
+            android:focusedByDefault="true"
             app:iconifiedByDefault="false"
             app:queryHint="@string/title_artist_album"
             app:searchHintIcon="@drawable/ic_search"
@@ -42,5 +43,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_search_songs"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:listitem="@layout/fragment_search_youtube_songs_item"/>
+        tools:listitem="@layout/fragment_search_youtube_songs_item"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/fragment_search_youtube_songs_empty_image"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:src="@drawable/empty_results"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_search_youtube_songs_empty_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_search_songs"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <TextView
+        android:id="@+id/fragment_search_youtube_songs_empty_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/not_results_found_try_start_searching_something"
+        android:textSize="16dp"
+        android:layout_marginBottom="155dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_search_youtube_songs_empty_image"
+        app:layout_constraintVertical_chainStyle="packed"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

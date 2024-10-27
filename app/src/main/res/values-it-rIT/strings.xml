@@ -45,4 +45,7 @@
     <string name="playlist_home">Home della Playlist</string>
     <string name="select_playlist_songs">Seleziona Canzoni della Playlist</string>
     <string name="save_songs">Salva Canzoni</string>
+    <string name="not_results_found_try_start_searching_something">Nessun risultato trovato, prova a cercare qualcosa</string>
+    <string name="not_results_found_try_download_a_new_song">Nessuna canzone trovata, prova a scaricare una nuova canzone</string>
+    <string name="find_a_new_song">Trova una Nuova Canzone</string>
 </resources>

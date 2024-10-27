@@ -75,6 +75,10 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
             }
         }
 
+        binding.fragmentHomeButtonFindNewSong.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchNewSongs())
+        }
+
         SongUtil.onNextSong = { song ->
             SongUtil.readSong(requireContext(), song)
             viewModel.updateActualSong(song)
@@ -91,8 +95,20 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
     override fun setViewModelObservers() {
         viewModel.songs.observe(viewLifecycleOwner) { songs ->
             SongUtil.songs = songs
-            updateSongsOnScreen(songs)
 
+            if (songs.isEmpty()) {
+                binding.fragmentHomeEmptyImage.visibility = View.VISIBLE
+                binding.fragmentHomeEmptyText.visibility = View.VISIBLE
+                binding.fragmentHomeButtonFindNewSong.visibility = View.VISIBLE
+                binding.songs.visibility = View.GONE
+            } else {
+                binding.fragmentHomeEmptyImage.visibility = View.GONE
+                binding.fragmentHomeEmptyText.visibility = View.GONE
+                binding.fragmentHomeButtonFindNewSong.visibility = View.GONE
+                binding.songs.visibility = View.VISIBLE
+
+                updateSongsOnScreen(songs)
+            }
         }
 
         viewModel.filteredSongs.observe(viewLifecycleOwner) { songs ->

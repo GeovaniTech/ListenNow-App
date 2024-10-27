@@ -63,6 +63,8 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
         val looper = handlerThread.looper
         val handler = Handler(looper)
 
+        showSoftKeyboard(binding.searchYtSongs)
+
         binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 return false
@@ -86,6 +88,9 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
     override fun setViewModelObservers() {
         viewModel.songs.observe(viewLifecycleOwner) {songs ->
             songs?.let {
+                binding.fragmentSearchYoutubeSongsEmptyImage.visibility = View.GONE
+                binding.fragmentSearchYoutubeSongsEmptyText.visibility = View.GONE
+                binding.listSongsYT.visibility = View.VISIBLE
                 adapter.update(it)
             }
         }
