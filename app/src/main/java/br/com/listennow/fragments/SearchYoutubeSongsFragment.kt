@@ -58,11 +58,6 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
     }
 
     private fun configSearchSongs() {
-        val handlerThread = HandlerThread("Song Delay")
-        handlerThread.start()
-        val looper = handlerThread.looper
-        val handler = Handler(looper)
-
         showSoftKeyboard(binding.searchYtSongs)
 
         binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -71,27 +66,38 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
             }
 
             override fun onQueryTextChange(filter: String?): Boolean {
-                handler.removeCallbacksAndMessages(null);
-                handler.postDelayed(Runnable {
-                    filter?.let {
-                        viewLifecycleOwner.lifecycleScope.launch {
-                            viewModel.loadYoutubeSongs(it)
-                        }
+                startShimmer()
+                filter?.let {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        viewModel.loadYoutubeSongs(it)
                     }
-                }, 500)
-
+                }
                 return true
             }
         })
     }
 
+    private fun startShimmer() {
+        binding.listSongsYT.visibility = View.GONE
+        binding.shimmerList.visibility = View.VISIBLE
+        binding.shimmerList.startShimmer()
+    }
+
     override fun setViewModelObservers() {
         viewModel.songs.observe(viewLifecycleOwner) {songs ->
-            songs?.let {
+            binding.shimmerList.stopShimmer()
+            binding.shimmerList.visibility = View.GONE
+
+            if (songs.isNullOrEmpty()) {
+                binding.fragmentSearchYoutubeSongsEmptyImage.visibility = View.VISIBLE
+                binding.fragmentSearchYoutubeSongsEmptyText.visibility = View.VISIBLE
+                binding.listSongsYT.visibility = View.GONE
+            } else {
                 binding.fragmentSearchYoutubeSongsEmptyImage.visibility = View.GONE
                 binding.fragmentSearchYoutubeSongsEmptyText.visibility = View.GONE
                 binding.listSongsYT.visibility = View.VISIBLE
-                adapter.update(it)
+
+                adapter.update(songs)
             }
         }
     }
