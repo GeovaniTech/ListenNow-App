@@ -38,7 +38,10 @@ class SongDetailsFragment : CommonFragment<SongDetailsViewModel>() {
 
     override fun setViewListeners() {
         mainActivity.binding.playBackButtons.setOnClickListener {
-            loadData()
+            SongUtil.actualSong?.songId?.let {
+                viewModel.songId = it
+                loadData()
+            }
         }
     }
 
