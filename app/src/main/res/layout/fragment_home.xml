@@ -15,7 +15,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/gold">
+        android:background="@color/gold"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintBottom_toTopOf="@+id/refresh_songs">
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/search_yt_songs"
@@ -31,16 +34,18 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh_songs"
-        android:layout_width="412dp"
-        android:layout_height="568dp"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="155dp"
         app:layout_constraintTop_toBottomOf="@+id/card_search_songs">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/songs"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="415dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toTopOf="@+id/play_back_buttons"
             app:layout_constraintEnd_toEndOf="parent"
