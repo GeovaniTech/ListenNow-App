@@ -26,6 +26,7 @@ import br.com.listennow.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.abs
@@ -53,24 +54,7 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
 
     override fun setViewListeners() {
         configToolbar()
-
-        binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(p0: String?): Boolean {
-                startShimmer()
-                viewLifecycleOwner.lifecycleScope.launch {
-                    p0?.let {
-                        viewModel.songFilter = it
-                        viewModel.loadSongsFiltering(it)
-                    }
-                }
-
-                return true
-            }
-        })
+        configSearchView()
 
         mainActivity.binding.playBackButtons.setOnClickListener {
             if(SongUtil.actualSong != null && SongUtil.actualSong!!.songId.isNotEmpty()) {
@@ -109,6 +93,35 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
         }
     }
 
+    private fun configSearchView() {
+        val handlerThread = HandlerThread("Song Delay")
+        handlerThread.start()
+        val looper = handlerThread.looper
+        val handler = Handler(looper)
+
+        binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(filter: String?): Boolean {
+                startShimmer()
+
+                handler.removeCallbacksAndMessages(null);
+                handler.postDelayed(Runnable {
+                    filter?.let {
+                        viewModel.songFilter = filter
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            viewModel.loadSongsFiltering(it)
+                        }
+                    }
+                }, 700)
+
+                return true
+            }
+        })
+    }
+
     override fun setViewModelObservers() {
         viewModel.songs.observe(viewLifecycleOwner) { songs ->
             SongUtil.songs = songs
@@ -129,13 +142,7 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
             binding.refreshSongs.isRefreshing = it.get()
 
             if(!it.get()) {
-                viewModel.songFilter?.let {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        viewModel.loadSongsFiltering(it)
-                    }
-                }?: {
-                    loadData()
-                }
+                loadData()
             }
         }
     }
@@ -164,7 +171,11 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
         startShimmer()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.loadSongs()
+            if (viewModel.songFilter.isNullOrEmpty()) {
+                viewModel.loadSongs()
+            } else {
+                viewModel.loadSongsFiltering(viewModel.songFilter!!)
+            }
             viewModel.loadActualSong()
         }
     }
@@ -175,6 +186,8 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
 
     private fun startShimmer() {
         binding.songs.visibility = View.GONE
+        binding.fragmentHomeEmptyImage.visibility = View.GONE
+        binding.fragmentHomeEmptyText.visibility = View.GONE
         binding.shimmerList.visibility = View.VISIBLE
         binding.shimmerList.startShimmer()
     }

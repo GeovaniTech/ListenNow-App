@@ -58,20 +58,29 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
     }
 
     private fun configSearchSongs() {
+        val handlerThread = HandlerThread("Song Delay")
+        handlerThread.start()
+        val looper = handlerThread.looper
+        val handler = Handler(looper)
+
         showSoftKeyboard(binding.searchYtSongs)
 
         binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(filter: String?): Boolean {
                 startShimmer()
-                filter?.let {
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        viewModel.loadYoutubeSongs(it)
+                handler.removeCallbacksAndMessages(null);
+                handler.postDelayed(Runnable {
+                    filter?.let {
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            viewModel.loadYoutubeSongs(it)
+                        }
                     }
-                }
+                }, 700)
                 return true
             }
         })
@@ -79,6 +88,8 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
 
     private fun startShimmer() {
         binding.listSongsYT.visibility = View.GONE
+        binding.fragmentSearchYoutubeSongsEmptyText.visibility = View.GONE
+        binding.fragmentSearchYoutubeSongsEmptyImage.visibility = View.GONE
         binding.shimmerList.visibility = View.VISIBLE
         binding.shimmerList.startShimmer()
     }

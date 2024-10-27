@@ -8,6 +8,7 @@ import br.com.listennow.model.Song
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import java.security.PrivateKey
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
