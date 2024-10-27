@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import br.com.listennow.databinding.FragmentSongDetailsBinding
 import br.com.listennow.model.Song
 import br.com.listennow.utils.ImageUtil
+import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.SongDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -35,6 +37,9 @@ class SongDetailsFragment : CommonFragment<SongDetailsViewModel>() {
     }
 
     override fun setViewListeners() {
+        mainActivity.binding.playBackButtons.setOnClickListener {
+            loadData()
+        }
     }
 
     override fun setViewModelObservers() {

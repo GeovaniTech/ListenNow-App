@@ -35,10 +35,6 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapter: HomeSongsAdapter
 
-    private val mainActivity by lazy {
-        activity as MainActivity
-    }
-
     override val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
@@ -82,11 +78,13 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
         SongUtil.onNextSong = { song ->
             SongUtil.readSong(requireContext(), song)
             viewModel.updateActualSong(song)
+            configSongToolbar(song)
         }
 
         adapter.onItemClick = { song ->
             SongUtil.readSong(requireContext(), song)
             viewModel.updateActualSong(song)
+            configSongToolbar(song)
         }
     }
 

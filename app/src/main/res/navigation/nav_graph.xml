@@ -22,7 +22,12 @@
         <fragment android:id="@+id/searchNewSongsFragment"
             android:name="br.com.listennow.fragments.SearchYoutubeSongsFragment"
             android:label="@string/search_new_songs"
-            tools:layout="@layout/fragment_search_youtube_songs" />
+            tools:layout="@layout/fragment_search_youtube_songs">
+
+                <action
+                    android:id="@+id/action_searchNewSongsFragment_songDetailsFragment"
+                    app:destination="@id/songDetailsFragment"/>
+        </fragment>
 
         <fragment android:id="@+id/songDetailsFragment"
             android:name="br.com.listennow.fragments.SongDetailsFragment"

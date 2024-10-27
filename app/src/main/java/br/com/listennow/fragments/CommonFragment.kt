@@ -12,6 +12,10 @@ import kotlinx.coroutines.launch
 abstract class CommonFragment<ViewModel: CommonViewModel>() : Fragment() {
     protected abstract val viewModel: ViewModel
 
+    protected val mainActivity by lazy {
+        activity as MainActivity
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

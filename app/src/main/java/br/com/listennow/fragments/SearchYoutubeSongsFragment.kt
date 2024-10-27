@@ -8,10 +8,12 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.R
 import br.com.listennow.adapter.SearchYoutubeSongsAdapter
 import br.com.listennow.databinding.FragmentSearchYoutubeSongsBinding
+import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.SearchYoutubeSongsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -37,6 +39,12 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
     }
 
     override fun setViewListeners() {
+        mainActivity.binding.playBackButtons.setOnClickListener {
+            if(SongUtil.actualSong != null && SongUtil.actualSong!!.songId.isNotEmpty()) {
+                findNavController().navigate(SearchYoutubeSongsFragmentDirections.actionSearchNewSongsFragmentSongDetailsFragment(SongUtil.actualSong!!.songId))
+            }
+        }
+
         binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 return false
