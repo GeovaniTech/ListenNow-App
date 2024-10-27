@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
+import android.view.GestureDetector
+import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.R
 import br.com.listennow.adapter.HomeSongsAdapter
 import br.com.listennow.databinding.FragmentHomeBinding
+import br.com.listennow.listener.OnSwipeTouchListener
 import br.com.listennow.model.Song
 import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
@@ -25,6 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.abs
 
 @AndroidEntryPoint
 class HomeFragment : CommonFragment<HomeViewModel>() {
@@ -52,12 +56,11 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
     }
 
     override fun setViewListeners() {
-        onToolbarRightSwiped()
+        configToolbar()
         configSearchSongsFilterListener()
 
         mainActivity.binding.playBackButtons.setOnClickListener {
-            // TODO - Need to change this to open the song even when it is not playing
-            if(SongUtil.isPlaying()) {
+            if(SongUtil.actualSong != null && SongUtil.actualSong!!.songId.isNotEmpty()) {
                 findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSongDetailsFragment(SongUtil.actualSong!!.songId))
             }
         }
@@ -176,25 +179,14 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun onToolbarRightSwiped() {
-        val handlerThread = HandlerThread("Song Delay")
-        handlerThread.start()
-        val looper = handlerThread.looper
-        val handler = Handler(looper)
-
+    private fun configToolbar() {
         val buttons = mainActivity.binding.playBackButtons
 
-        buttons.setOnTouchListener { v, event ->
-            when (event?.action) {
-                MotionEvent.ACTION_MOVE -> {
-                    handler.removeCallbacksAndMessages(null)
-                    handler.postDelayed(Runnable {
-                         SongUtil.playRandomSong()
-                    }, 200)
-                }
+        buttons.setOnTouchListener(object: OnSwipeTouchListener(requireContext()) {
+            // Here I could create a feature to play the previous and next songs depending of the swipe
+            override fun onSwipeRight() {
+                SongUtil.playRandomSong()
             }
-
-            v?.onTouchEvent(event) ?: true
-        }
+        })
     }
 }
