@@ -104,11 +104,11 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
                 binding.fragmentSearchYoutubeSongsEmptyText.visibility = View.VISIBLE
                 binding.listSongsYT.visibility = View.GONE
             } else {
+                adapter.update(songs)
+
                 binding.fragmentSearchYoutubeSongsEmptyImage.visibility = View.GONE
                 binding.fragmentSearchYoutubeSongsEmptyText.visibility = View.GONE
                 binding.listSongsYT.visibility = View.VISIBLE
-
-                adapter.update(songs)
             }
         }
     }

@@ -4,10 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import android.view.GestureDetector
-import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
@@ -26,10 +23,8 @@ import br.com.listennow.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.math.abs
 
 @AndroidEntryPoint
 class HomeFragment : CommonFragment<HomeViewModel>() {
@@ -157,12 +152,12 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
             binding.fragmentHomeButtonFindNewSong.visibility = View.VISIBLE
             binding.songs.visibility = View.GONE
         } else {
+            updateSongsOnScreen(songs)
+
             binding.fragmentHomeEmptyImage.visibility = View.GONE
             binding.fragmentHomeEmptyText.visibility = View.GONE
             binding.fragmentHomeButtonFindNewSong.visibility = View.GONE
             binding.songs.visibility = View.VISIBLE
-
-            updateSongsOnScreen(songs)
         }
     }
 
