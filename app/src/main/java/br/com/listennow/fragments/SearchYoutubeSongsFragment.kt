@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.R
@@ -76,7 +77,7 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
                 handler.removeCallbacksAndMessages(null);
                 handler.postDelayed(Runnable {
                     filter?.let {
-                        viewLifecycleOwner.lifecycleScope.launch {
+                        viewModel.viewModelScope.launch {
                             viewModel.loadYoutubeSongs(it)
                         }
                     }

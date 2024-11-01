@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.listennow.R
@@ -106,7 +107,7 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
                 handler.postDelayed(Runnable {
                     filter?.let {
                         viewModel.songFilter = filter
-                        viewLifecycleOwner.lifecycleScope.launch {
+                        viewModel.viewModelScope.launch {
                             viewModel.loadSongsFiltering(it)
                         }
                     }
@@ -165,7 +166,7 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
         configRecyclerSongs()
         startShimmer()
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        viewModel.viewModelScope.launch {
             if (viewModel.songFilter.isNullOrEmpty()) {
                 viewModel.loadSongs()
             } else {
