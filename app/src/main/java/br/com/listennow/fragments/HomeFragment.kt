@@ -184,6 +184,7 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
         binding.songs.visibility = View.GONE
         binding.fragmentHomeEmptyImage.visibility = View.GONE
         binding.fragmentHomeEmptyText.visibility = View.GONE
+        binding.fragmentHomeButtonFindNewSong.visibility = View.GONE
         binding.shimmerList.visibility = View.VISIBLE
         binding.shimmerList.startShimmer()
     }
