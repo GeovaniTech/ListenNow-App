@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="playBackButtonsColor" type="color">#FFFFFF</item>
+    <item name="iconColor" type="color">#001822</item>
+</resources>

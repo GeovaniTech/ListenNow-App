@@ -12,4 +12,6 @@
     <color name="gold">#A8CF45</color>
     <color name="light_blue">#0098DA</color>
     <color name="background">#001822</color>
+    <color name="playBackButtonsColor">#191921</color>
+    <color name="iconColor">#FFFFFF</color>
 </resources>
