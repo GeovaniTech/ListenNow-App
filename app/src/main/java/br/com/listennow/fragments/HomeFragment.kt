@@ -119,9 +119,10 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
     }
 
     override fun setViewModelObservers() {
-        viewModel.songs.observe(viewLifecycleOwner) { songs ->
-            SongUtil.songs = songs
-            setViewState(songs)
+        viewModel.songsPaging.observe(viewLifecycleOwner) { songs ->
+            lifecycleScope.launch {
+                adapter.submitData(songs)
+            }
         }
 
         viewModel.filteredSongs.observe(viewLifecycleOwner) { songs ->
@@ -153,8 +154,6 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
             binding.fragmentHomeButtonFindNewSong.visibility = View.VISIBLE
             binding.songs.visibility = View.GONE
         } else {
-            updateSongsOnScreen(songs)
-
             binding.fragmentHomeEmptyImage.visibility = View.GONE
             binding.fragmentHomeEmptyText.visibility = View.GONE
             binding.fragmentHomeButtonFindNewSong.visibility = View.GONE
@@ -163,6 +162,12 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
     }
 
     override fun loadData() {
+        binding.shimmerList.stopShimmer()
+        configRecyclerSongs()
+        binding.songs.visibility = View.VISIBLE
+        binding.shimmerList.visibility = View.GONE
+
+/**
         configRecyclerSongs()
         startShimmer()
 
@@ -174,6 +179,8 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
             }
             viewModel.loadActualSong()
         }
+
+        **/
     }
 
     private fun updateSongsOnScreen(songs: List<Song>) {

@@ -16,8 +16,12 @@ class SongRepository @Inject constructor (
     private val songDao: SongDao,
     private val songWebClient: SongWebClient
 ) {
-    suspend fun getAll(): List<Song> {
-        return songDao.getSongs()
+    suspend fun getSongs(
+        start: Int,
+        pageSize: Int,
+        filter: String?
+    ): List<Song> {
+        return songDao.getSongs(start, pageSize, filter)
     }
 
     suspend fun findSongById(id: String): Song? {

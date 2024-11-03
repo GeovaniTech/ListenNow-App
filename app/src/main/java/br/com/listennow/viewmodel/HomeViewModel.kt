@@ -2,7 +2,11 @@ package br.com.listennow.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import br.com.listennow.model.Song
+import br.com.listennow.pagingsource.SongPagingSource
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,9 +32,9 @@ class HomeViewModel @Inject constructor (
 
     var songFilter: String? = null
 
-    suspend fun loadSongs() {
-        _songs.postValue(songRepository.getAll())
-    }
+    val songsPaging = Pager(PagingConfig(50)) {
+        SongPagingSource(songRepository)
+    }.flow.asLiveData()
 
     fun loadActualSong() {
         _actualSong.postValue(_actualSong.value)

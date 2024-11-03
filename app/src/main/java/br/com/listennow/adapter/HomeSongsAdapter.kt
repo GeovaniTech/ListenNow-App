@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import br.com.listennow.R
 import br.com.listennow.model.Song
@@ -16,7 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HomeSongsAdapter(songs: List<Song>, private val ctx: Context):
-    RecyclerView.Adapter<HomeSongsAdapter.ViewHolder>() {
+    PagingDataAdapter<Song, HomeSongsAdapter.ViewHolder>(differCallback) {
 
     private val songs = songs.toMutableList()
     var onItemClick: ((Song) -> Unit)? = null
@@ -27,14 +29,9 @@ class HomeSongsAdapter(songs: List<Song>, private val ctx: Context):
         return ViewHolder(itemView)
     }
 
-    override fun getItemCount(): Int {
-        return songs.size
-    }
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val song = songs[position]
-
-        holder.bind(song)
+        holder.bind(getItem(position)!!)
+        holder.setIsRecyclable(false)
     }
 
     fun update(songs: List<Song>) {
@@ -51,8 +48,6 @@ class HomeSongsAdapter(songs: List<Song>, private val ctx: Context):
             val artist: TextView = itemView.findViewById(R.id.list_songs_artist)
             val thumb: ImageView = itemView.findViewById(R.id.list_songs_thumb)
 
-            val songSelected = songs[adapterPosition]
-
             title.text = song.name
             artist.text = song.artist
 
@@ -67,7 +62,19 @@ class HomeSongsAdapter(songs: List<Song>, private val ctx: Context):
             itemView.isSelected = true
 
             itemView.setOnClickListener {
-                onItemClick?.invoke(songSelected)
+                onItemClick?.invoke(song)
+            }
+        }
+    }
+
+    companion object {
+         private val differCallback = object : DiffUtil.ItemCallback<Song>() {
+            override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean {
+                return oldItem.songId == newItem.songId
             }
         }
     }

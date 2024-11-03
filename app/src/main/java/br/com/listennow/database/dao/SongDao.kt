@@ -16,8 +16,12 @@ interface SongDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(song: List<Song>)
 
-    @Query("SELECT * FROM Song")
-    suspend fun getSongs(): List<Song>
+    @Query("SELECT * FROM Song WHERE LOWER(name) LIKE  '%' || LOWER(:filter) || '%' OR artist LIKE '%' || LOWER(:filter) || '%' LIMIT :pageSize OFFSET :start")
+    suspend fun getSongs(
+        start: Int,
+        pageSize: Int,
+        filter: String?
+    ): List<Song>
 
     @Delete
     suspend fun delete(song: Song)
