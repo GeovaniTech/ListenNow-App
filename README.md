@@ -10,7 +10,7 @@ Mobile Music Player where we can also download songs from Youtube Music. The son
 + Repository
 + Room
 + Dependency Injection with Hilt
-+ Weblient using Retrofit - Connection with [My API](https://github.com/GeovaniTech/Listennow-Api)
++ Retrofit - Connection with [My API](https://github.com/GeovaniTech/Listennow-Api)
 
 ### Home - Songs already added
 ![Home - Songs Already Synced](https://github.com/user-attachments/assets/0362086c-ee7b-414e-b503-f79ac9ea6c07)
