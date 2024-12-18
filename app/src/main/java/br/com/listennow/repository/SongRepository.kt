@@ -44,7 +44,7 @@ class SongRepository @Inject constructor (
                     val file = File(path)
 
                     if(!file.exists()) {
-                        val response = songWebClient.getDownloadedSong(song.songId)
+                        val response = songWebClient.getDownloadedSong(song.videoId)
 
                         response?.let { songDownload ->
                             val result = runCatching {

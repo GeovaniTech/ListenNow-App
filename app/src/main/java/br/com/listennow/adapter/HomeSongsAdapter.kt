@@ -57,7 +57,7 @@ class HomeSongsAdapter(songs: List<Song>, private val ctx: Context):
             artist.text = song.artist
 
             CoroutineScope(Dispatchers.IO).launch {
-                val bitmap = ImageUtil.getBitmapImage(song.smallThumb, 120, 120, ctx)
+                val bitmap = ImageUtil.getBitmapImage(song.thumb, 120, 120, ctx)
 
                 withContext(Dispatchers.Main) {
                     thumb.setImageBitmap(bitmap)

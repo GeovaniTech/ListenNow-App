@@ -22,7 +22,7 @@ interface SongDao {
     @Delete
     suspend fun delete(song: Song)
 
-    @Query("SELECT * FROM Song WHERE songId = :id")
+    @Query("SELECT * FROM Song WHERE videoId = :id")
     suspend fun findById(id: String): Song?
 
     @Query("SELECT * FROM Song WHERE LOWER(name) LIKE  '%' || LOWER(:text) || '%' OR artist LIKE '%' || LOWER(:text) || '%'")

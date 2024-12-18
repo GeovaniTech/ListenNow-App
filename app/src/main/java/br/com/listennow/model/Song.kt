@@ -9,13 +9,11 @@ import java.util.UUID
 @Entity
 data class Song (
     @PrimaryKey
-    val songId: String = UUID.randomUUID().toString(),
     val videoId: String,
     val name: String,
     val artist: String,
     val album: String,
-    val smallThumb: String,
-    val largeThumb: String,
+    val thumb: String,
     var path: String,
     val lyrics: String
 )

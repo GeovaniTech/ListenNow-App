@@ -7,6 +7,8 @@ import br.com.listennow.database.dao.UserDao
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
 import br.com.listennow.service.SongService
+import br.com.listennow.service.UserService
+import br.com.listennow.webclient.client.service.UserWebClient
 import br.com.listennow.webclient.song.service.SongWebClient
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -80,9 +82,20 @@ object ListenNowHiltModule {
     }
 
     @Provides
-    fun provideUserRepository(
-        userDao: UserDao
-    ): UserRepository  {
-        return UserRepository(userDao)
+    fun provideUserWebClient(
+        retrofit: Retrofit
+    ): UserWebClient {
+        return UserWebClient(
+            retrofit.create(UserService::class.java)
+        )
     }
+
+    @Provides
+    fun provideUserRepository(
+        userDao: UserDao,
+        userWebClient: UserWebClient
+    ): UserRepository  {
+        return UserRepository(userDao, userWebClient)
+    }
+
 }

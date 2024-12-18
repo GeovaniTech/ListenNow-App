@@ -45,8 +45,8 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
         configSearchSongs()
 
         mainActivity.binding.playBackButtons.setOnClickListener {
-            if(SongUtil.actualSong != null && SongUtil.actualSong!!.songId.isNotEmpty()) {
-                findNavController().navigate(SearchYoutubeSongsFragmentDirections.actionSearchNewSongsFragmentSongDetailsFragment(SongUtil.actualSong!!.songId))
+            if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
+                findNavController().navigate(SearchYoutubeSongsFragmentDirections.actionSearchNewSongsFragmentSongDetailsFragment(SongUtil.actualSong!!.videoId))
             }
         }
 

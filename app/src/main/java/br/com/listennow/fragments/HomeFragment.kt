@@ -53,8 +53,8 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
         configSearchView()
 
         mainActivity.binding.playBackButtons.setOnClickListener {
-            if(SongUtil.actualSong != null && SongUtil.actualSong!!.songId.isNotEmpty()) {
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSongDetailsFragment(SongUtil.actualSong!!.songId))
+            if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSongDetailsFragment(SongUtil.actualSong!!.videoId))
             }
         }
 
@@ -201,7 +201,7 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
         mainActivity.binding.play.setBackgroundResource(R.drawable.ic_pause)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val bitmap = ImageUtil.getBitmapImage(song.smallThumb, 120, 120, requireContext())
+            val bitmap = ImageUtil.getBitmapImage(song.thumb, 120, 120, requireContext())
 
             withContext(Dispatchers.Main) {
                 mainActivity.binding.homeThumbSongDetails.setImageBitmap(bitmap)

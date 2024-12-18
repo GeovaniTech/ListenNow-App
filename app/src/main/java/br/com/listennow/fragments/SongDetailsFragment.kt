@@ -38,7 +38,7 @@ class SongDetailsFragment : CommonFragment<SongDetailsViewModel>() {
 
     override fun setViewListeners() {
         mainActivity.binding.playBackButtons.setOnClickListener {
-            SongUtil.actualSong?.songId?.let {
+            SongUtil.actualSong?.videoId?.let {
                 viewModel.songId = it
                 loadData()
             }
@@ -67,7 +67,7 @@ class SongDetailsFragment : CommonFragment<SongDetailsViewModel>() {
         binding.lyricsSongDetail.text = song.lyrics
 
         CoroutineScope(Dispatchers.IO).launch {
-            val bitmap = ImageUtil.getBitmapImage(song.smallThumb, 120, 120, requireContext())
+            val bitmap = ImageUtil.getBitmapImage(song.thumb, 120, 120, requireContext())
 
             withContext(Dispatchers.Main) {
                 binding.imgThumbSongDetail.setImageBitmap(bitmap)
