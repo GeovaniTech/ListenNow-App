@@ -23,4 +23,7 @@ interface SongService {
 
     @POST("download/song")
     suspend fun downloadSong(@Body searchDownloadSongRequest: SearchDownloadSongRequest): Response<Void>
+
+    @POST("songs/find")
+    suspend fun findSongById(@Body searchSongDownloadRequest: SongDownloadRequest): SongResponse?
 }

@@ -23,7 +23,7 @@
     <string name="sync">Sync</string>
     <string name="invalid_email_password">Invalid email or password</string>
     <string name="download_started">Download Started</string>
-    <string name="download_failed">Download Failed, try again</string>
+    <string name="download_failed">Download Failed, try again...</string>
     <string name="remove">Remove</string>
     <string name="remove_song">Remove Song</string>
     <string name="song_details">Song Details</string>
@@ -47,4 +47,6 @@
     <string name="not_results_found_try_start_searching_something">No results found, try search for something</string>
     <string name="not_results_found_try_download_a_new_song">No songs found, try to download a new song</string>
     <string name="find_a_new_song">Find a New Song</string>
+    <string name="download_resquest_has_started">Download has started successfully</string>
+    <string name="download_completed">Download Completed Successfully!</string>
 </resources>

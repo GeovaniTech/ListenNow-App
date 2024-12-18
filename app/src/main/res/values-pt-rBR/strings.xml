@@ -48,4 +48,5 @@
     <string name="not_results_found_try_start_searching_something">Nenhum resultado encontrado, tente buscar por algo</string>
     <string name="not_results_found_try_download_a_new_song">Nenhuma música encontrada, tente baixar uma nova música</string>
     <string name="find_a_new_song">Encontrar uma Nova Música</string>
+    <string name="download_resquest_has_started">Il download è iniziato correttamente</string>
 </resources>

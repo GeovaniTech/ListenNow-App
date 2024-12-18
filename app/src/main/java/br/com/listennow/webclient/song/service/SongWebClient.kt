@@ -9,6 +9,7 @@ import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import br.com.listennow.webclient.song.model.SongDownloadRequest
 import br.com.listennow.webclient.song.model.SongDownloadResponse
 import br.com.listennow.webclient.song.model.SongRequest
+import br.com.listennow.webclient.song.model.SongResponse
 
 class SongWebClient(
     private val songService: SongService
@@ -55,5 +56,9 @@ class SongWebClient(
         } catch (e: Exception) {
             Log.e(TAG, "Error trying to start downloading on Server $e")
         }
+    }
+
+    suspend fun findSongById(videoId: String): SongResponse? {
+        return songService.findSongById(SongDownloadRequest(videoId))
     }
 }

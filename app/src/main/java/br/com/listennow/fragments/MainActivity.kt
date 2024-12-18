@@ -1,6 +1,9 @@
 package br.com.listennow.fragments
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
@@ -38,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         setUpBottomNavigation(navHostFragment.navController)
         askPermissions()
         configPhoneDisconnectedReceiver()
+        createNotificationChannel()
     }
 
     private fun askPermissions() {
@@ -101,5 +105,24 @@ class MainActivity : AppCompatActivity() {
         receiver.button = binding.play
 
         registerReceiver(receiver, receiverFilter)
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.app_name)
+            val descriptionText = getString(R.string.download_started)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(DOWNLAOD_SONG_NOTIFICATION_CHANNEl, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system.
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    companion object {
+        const val DOWNLAOD_SONG_NOTIFICATION_CHANNEl = "DownloadSongNotification"
     }
 }

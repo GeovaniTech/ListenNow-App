@@ -1,5 +1,7 @@
 package br.com.listennow.fragments
 
+import android.app.NotificationManager
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -8,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
@@ -18,8 +22,13 @@ import br.com.listennow.adapter.SearchYoutubeSongsAdapter
 import br.com.listennow.databinding.FragmentSearchYoutubeSongsBinding
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.SearchYoutubeSongsViewModel
+import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.internal.notify
 
 @AndroidEntryPoint
 class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>() {
@@ -52,11 +61,64 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
 
         adapter.onDownloadClicked = { song ->
             Toast.makeText(requireContext(), R.string.download_started, Toast.LENGTH_SHORT).show()
+
+            var notificationBuilder = getNotificationBuilder(song)
+
+            notificationBuilder.setProgress(0,  0, true)
+
+            NotificationManagerCompat.from(requireContext()).apply {
+                val manager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+                viewModel.notificationId += 1
+
+                manager.notify(viewModel.notificationId, notificationBuilder.build())
+
+                Thread(Runnable {
+                    val retries = 10
+                    var attempts = 0
+                    val notificationId = viewModel.notificationId
+                    val song = song
+
+                    viewModel.viewModelScope.launch {
+                        withContext(Dispatchers.IO) {
+                            while (attempts < retries) {
+                                if (viewModel.songSynchronizedSuccessfully(song.videoId)) {
+                                    notificationBuilder = getNotificationBuilder(song)
+                                    notificationBuilder.setContentText(getString(R.string.download_completed))
+                                    manager.notify(notificationId, notificationBuilder.build())
+                                    break
+                                }
+
+                                attempts += 1
+                                delay(5000)
+                            }
+
+                            if (attempts == retries) {
+                                notificationBuilder = getNotificationBuilder(song)
+                                notificationBuilder.setContentText(getString(R.string.download_failed))
+                                manager.notify(notificationId, notificationBuilder.build())
+                            }
+                        }
+                    }
+                }).start()
+            }
+
             lifecycleScope.launch {
                 viewModel.downloadSong(song.videoId)
             }
         }
     }
+
+    private fun getNotificationBuilder(song: SearchYTSongResponse) =
+        NotificationCompat.Builder(
+            requireContext(),
+            MainActivity.DOWNLAOD_SONG_NOTIFICATION_CHANNEl
+        )
+            .setSmallIcon(R.drawable.ic_notification_icon, 2)
+            .setContentTitle("${song.title} - ${song.artist}")
+            .setContentText(getString(R.string.download_resquest_has_started))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
 
     private fun configSearchSongs() {
         val handlerThread = HandlerThread("Song Delay")
