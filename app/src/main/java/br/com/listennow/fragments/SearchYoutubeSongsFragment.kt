@@ -60,8 +60,6 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
         }
 
         adapter.onDownloadClicked = { song ->
-            Toast.makeText(requireContext(), R.string.download_started, Toast.LENGTH_SHORT).show()
-
             var notificationBuilder = getNotificationBuilder(song)
 
             notificationBuilder.setProgress(0,  0, true)
