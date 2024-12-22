@@ -60,6 +60,15 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
         }
 
         adapter.onDownloadClicked = { song ->
+            lifecycleScope.launch {
+                viewModel.downloadSong(song.videoId)
+            }
+
+            showSnackBar(
+                anchorView = mainActivity.binding.playBackButtons,
+                messageId = R.string.download_started
+            )
+
             var notificationBuilder = getNotificationBuilder(song)
 
             notificationBuilder.setProgress(0,  0, true)
@@ -100,10 +109,6 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
                     }
                 }).start()
             }
-
-            lifecycleScope.launch {
-                viewModel.downloadSong(song.videoId)
-            }
         }
     }
 
@@ -112,7 +117,7 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
             requireContext(),
             MainActivity.DOWNLAOD_SONG_NOTIFICATION_CHANNEl
         )
-            .setSmallIcon(R.drawable.ic_notification_icon, 2)
+            .setSmallIcon(R.drawable.ic_notification_icon)
             .setContentTitle("${song.title} - ${song.artist}")
             .setContentText(getString(R.string.download_resquest_has_started))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
