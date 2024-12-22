@@ -8,27 +8,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import br.com.listennow.BR
 import br.com.listennow.R
 import br.com.listennow.adapter.HomeSongsAdapter
+import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.databinding.FragmentHomeBinding
 import br.com.listennow.listener.OnSwipeTouchListener
 import br.com.listennow.model.Song
-import br.com.listennow.utils.ImageUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.HomeViewModel
+import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
-class HomeFragment : CommonFragment<HomeViewModel>() {
+class HomeFragment : CommonFragment<HomeViewModel>(), IControllerItemsAdapter {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapter: HomeSongsAdapter
 
@@ -40,7 +41,7 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-        adapter = HomeSongsAdapter(emptyList(), requireContext())
+        adapter = HomeSongsAdapter(BR.songItem, this)
 
         return binding.root
     }
@@ -77,12 +78,6 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
         }
 
         SongUtil.onNextSong = { song ->
-            SongUtil.readSong(requireContext(), song)
-            viewModel.updateActualSong(song)
-            configSongToolbar(song)
-        }
-
-        adapter.onItemClick = { song ->
             SongUtil.readSong(requireContext(), song)
             viewModel.updateActualSong(song)
             configSongToolbar(song)
@@ -177,7 +172,7 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
     }
 
     private fun updateSongsOnScreen(songs: List<Song>) {
-        adapter.update(songs)
+        adapter.loadItems(songs)
     }
 
     private fun startShimmer() {
@@ -199,14 +194,7 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
         mainActivity.binding.listSongsTitle.text = song.name
         mainActivity.binding.listSongsArtist.text = song.artist
         mainActivity.binding.play.setBackgroundResource(R.drawable.ic_pause)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val bitmap = ImageUtil.getBitmapImage(song.thumb, 120, 120, requireContext())
-
-            withContext(Dispatchers.Main) {
-                mainActivity.binding.homeThumbSongDetails.setImageBitmap(bitmap)
-            }
-        }
+        Glide.with(mainActivity.binding.homeThumbSongDetails).load(song.thumb).into(mainActivity.binding.homeThumbSongDetails)
     }
 
     private fun syncSongs() {
@@ -227,4 +215,28 @@ class HomeFragment : CommonFragment<HomeViewModel>() {
             }
         })
     }
+
+    override fun onViewItemClickListener(
+        view: View,
+        position: Int,
+        item: Any?,
+        holder: RecyclerView.ViewHolder,
+        dataBinding: ViewDataBinding
+    ) {
+        item as Song
+
+        view.setOnClickListener {
+            SongUtil.readSong(requireContext(), item)
+            viewModel.updateActualSong(item)
+            configSongToolbar(item)
+        }
+    }
+
+    override fun onChangeViewItem(
+        view: View,
+        position: Int,
+        item: Any?,
+        holder: RecyclerView.ViewHolder,
+        dataBinding: ViewDataBinding
+    ) {}
 }

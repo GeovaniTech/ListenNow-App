@@ -2,7 +2,6 @@ package br.com.listennow.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import br.com.listennow.model.Song
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
@@ -20,6 +19,7 @@ class SongDetailsViewModel @Inject constructor(
     lateinit var songId: String
 
     suspend fun loadSong() {
-        _song.postValue(songRepository.findSongById(songId))
+        _song.value = songRepository.findSongById(songId)
+        _song.postValue(_song.value)
     }
 }

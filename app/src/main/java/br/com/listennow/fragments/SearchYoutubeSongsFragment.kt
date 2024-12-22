@@ -11,14 +11,19 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import br.com.listennow.BR
 import br.com.listennow.R
+import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.adapter.SearchYoutubeSongsAdapter
 import br.com.listennow.databinding.FragmentSearchYoutubeSongsBinding
+import br.com.listennow.databinding.FragmentSearchYoutubeSongsItemBinding
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.SearchYoutubeSongsViewModel
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
@@ -29,7 +34,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
-class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>() {
+class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>(), IControllerItemsAdapter {
     private lateinit var binding: FragmentSearchYoutubeSongsBinding
     private lateinit var adapter: SearchYoutubeSongsAdapter
 
@@ -40,7 +45,10 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchYoutubeSongsBinding.inflate(inflater, container, false)
-        adapter = SearchYoutubeSongsAdapter(emptyList())
+        adapter = SearchYoutubeSongsAdapter(
+            variableId = BR.ytSong,
+            this
+        )
 
         return binding.root
     }
@@ -54,58 +62,6 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
         mainActivity.binding.playBackButtons.setOnClickListener {
             if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
                 findNavController().navigate(SearchYoutubeSongsFragmentDirections.actionSearchNewSongsFragmentSongDetailsFragment(SongUtil.actualSong!!.videoId))
-            }
-        }
-
-        adapter.onDownloadClicked = { song ->
-            lifecycleScope.launch {
-                viewModel.downloadSong(song.videoId)
-            }
-
-            showSnackBar(
-                anchorView = mainActivity.binding.playBackButtons,
-                messageId = R.string.download_started
-            )
-
-            var notificationBuilder = getNotificationBuilder(song)
-
-            notificationBuilder.setProgress(0,  0, true)
-
-            NotificationManagerCompat.from(requireContext()).apply {
-                val manager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-                viewModel.notificationId += 1
-
-                manager.notify(viewModel.notificationId, notificationBuilder.build())
-
-                Thread(Runnable {
-                    val retries = 10
-                    var attempts = 0
-                    val notificationId = viewModel.notificationId
-                    val song = song
-
-                    viewModel.viewModelScope.launch {
-                        withContext(Dispatchers.IO) {
-                            while (attempts < retries) {
-                                if (viewModel.songSynchronizedSuccessfully(song.videoId)) {
-                                    notificationBuilder = getNotificationBuilder(song)
-                                    notificationBuilder.setContentText(getString(R.string.download_completed))
-                                    manager.notify(notificationId, notificationBuilder.build())
-                                    break
-                                }
-
-                                attempts += 1
-                                delay(5000)
-                            }
-
-                            if (attempts == retries) {
-                                notificationBuilder = getNotificationBuilder(song)
-                                notificationBuilder.setContentText(getString(R.string.download_failed))
-                                manager.notify(notificationId, notificationBuilder.build())
-                            }
-                        }
-                    }
-                }).start()
             }
         }
     }
@@ -168,7 +124,7 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
                 binding.fragmentSearchYoutubeSongsEmptyText.visibility = View.VISIBLE
                 binding.listSongsYT.visibility = View.GONE
             } else {
-                adapter.update(songs)
+                adapter.loadItems(songs)
 
                 binding.fragmentSearchYoutubeSongsEmptyImage.visibility = View.GONE
                 binding.fragmentSearchYoutubeSongsEmptyText.visibility = View.GONE
@@ -188,4 +144,74 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
         listSongs.setHasFixedSize(true)
         listSongs.adapter = adapter
     }
+
+    override fun onViewItemClickListener(
+        view: View,
+        position: Int,
+        item: Any?,
+        holder: RecyclerView.ViewHolder,
+        dataBinding: ViewDataBinding
+    ) {
+        item as SearchYTSongResponse
+        dataBinding as FragmentSearchYoutubeSongsItemBinding
+
+        dataBinding.listSongsSearchSync.setOnClickListener {
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.downloadSong(item.videoId)
+            }
+
+            showSnackBar(
+                anchorView = mainActivity.binding.playBackButtons,
+                messageId = R.string.download_started
+            )
+
+            var notificationBuilder = getNotificationBuilder(item)
+
+            notificationBuilder.setProgress(0,  0, true)
+
+            NotificationManagerCompat.from(requireContext()).apply {
+                val manager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+                viewModel.notificationId += 1
+
+                manager.notify(viewModel.notificationId, notificationBuilder.build())
+
+                Thread(Runnable {
+                    val retries = 10
+                    var attempts = 0
+                    val notificationId = viewModel.notificationId
+
+                    viewModel.viewModelScope.launch {
+                        withContext(Dispatchers.IO) {
+                            while (attempts < retries) {
+                                if (viewModel.songSynchronizedSuccessfully(item.videoId)) {
+                                    notificationBuilder = getNotificationBuilder(item)
+                                    notificationBuilder.setContentText(getString(R.string.download_completed))
+                                    manager.notify(notificationId, notificationBuilder.build())
+                                    break
+                                }
+
+                                attempts += 1
+                                delay(5000)
+                            }
+
+                            if (attempts == retries) {
+                                notificationBuilder = getNotificationBuilder(item)
+                                notificationBuilder.setContentText(getString(R.string.download_failed))
+                                manager.notify(notificationId, notificationBuilder.build())
+                            }
+                        }
+                    }
+                }).start()
+            }
+        }
+    }
+
+    override fun onChangeViewItem(
+        view: View,
+        position: Int,
+        item: Any?,
+        holder: RecyclerView.ViewHolder,
+        dataBinding: ViewDataBinding
+    ) {}
 }

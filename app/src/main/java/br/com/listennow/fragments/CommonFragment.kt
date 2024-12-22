@@ -25,8 +25,8 @@ abstract class CommonFragment<ViewModel: CommonViewModel>() : Fragment() {
         loadUser()
         loadNavParams()
         setViewListeners()
-        setViewModelObservers()
         loadData()
+        setViewModelObservers()
     }
 
     private fun loadUser() {
