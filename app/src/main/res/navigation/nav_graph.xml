@@ -5,8 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
+        <!-- Global Actions-->
+        <action
+            android:id="@+id/action_global_to_errorFragment"
+            app:destination="@id/errorFragment" />
 
-        <fragment android:id="@+id/homeFragment"
+        <!-- Fragments-->
+        <fragment
+            android:id="@+id/homeFragment"
             android:name="br.com.listennow.fragments.HomeFragment"
             android:label="@string/home"
             tools:layout="@layout/fragment_home">
@@ -19,7 +25,8 @@
                     app:destination="@id/songDetailsFragment" />
         </fragment>
 
-        <fragment android:id="@+id/searchNewSongsFragment"
+        <fragment
+            android:id="@+id/searchNewSongsFragment"
             android:name="br.com.listennow.fragments.SearchYoutubeSongsFragment"
             android:label="@string/search_new_songs"
             tools:layout="@layout/fragment_search_youtube_songs">
@@ -29,7 +36,8 @@
                     app:destination="@id/songDetailsFragment"/>
         </fragment>
 
-        <fragment android:id="@+id/songDetailsFragment"
+        <fragment
+            android:id="@+id/songDetailsFragment"
             android:name="br.com.listennow.fragments.SongDetailsFragment"
             android:label="@string/song_details"
             tools:layout="@layout/fragment_song_details">
@@ -37,5 +45,18 @@
                 <argument
                     android:name="songId"
                     app:argType="string"/>
+        </fragment>
+
+        <fragment
+            android:id="@+id/errorFragment"
+            android:name="br.com.listennow.fragments.ErrorFragment"
+            android:label="@string/fragment_error_title">
+                <argument
+                    android:name="navParams"
+                    app:argType="br.com.listennow.navparams.ErrorNavParams"/>
+
+                <action
+                    android:id="@+id/action_errroFragment_to_homeFragment"
+                    app:destination="@id/homeFragment"/>
         </fragment>
 </navigation>

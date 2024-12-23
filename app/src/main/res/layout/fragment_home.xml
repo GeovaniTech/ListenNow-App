@@ -1,167 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.HomeFragment"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout>
+    <data></data>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_search_songs"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardUseCompatPadding="true"
-        android:layout_margin="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/gold"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintBottom_toTopOf="@+id/refresh_songs">
+        android:layout_height="match_parent"
+        tools:context=".fragments.HomeFragment"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/search_yt_songs"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_search_songs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            app:iconifiedByDefault="false"
-            app:queryHint="@string/title_artist_album"
-            app:searchHintIcon="@drawable/ic_search"
-            app:searchIcon="@drawable/ic_search"
-            android:focusable="true" />
-    </androidx.cardview.widget.CardView>
+            app:cardUseCompatPadding="true"
+            android:layout_margin="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@color/gold"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintBottom_toTopOf="@+id/refresh_songs">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresh_songs"
-        app:layout_constraintVertical_chainStyle="packed"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="155dp"
-        app:layout_constraintTop_toBottomOf="@+id/card_search_songs">
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_yt_songs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                app:iconifiedByDefault="false"
+                app:queryHint="@string/title_artist_album"
+                app:searchHintIcon="@drawable/ic_search"
+                app:searchIcon="@drawable/ic_search"
+                android:focusable="true" />
+        </androidx.cardview.widget.CardView>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_songs"
+            app:layout_constraintVertical_chainStyle="packed"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="155dp"
+            app:layout_constraintTop_toBottomOf="@+id/card_search_songs">
 
-            <ImageView
-                android:id="@+id/fragment_home_empty_image"
-                android:layout_width="300dp"
-                android:layout_height="300dp"
-                android:src="@drawable/empty_results"
-                app:layout_constraintBottom_toTopOf="@+id/fragment_home_empty_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="packed"
-                android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/fragment_home_empty_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/not_results_found_try_download_a_new_song"
-                android:textSize="16dp"
-                app:layout_constraintBottom_toTopOf="@+id/fragment_home_button_find_new_song"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fragment_home_empty_image"
-                app:layout_constraintVertical_chainStyle="packed"
-                android:layout_marginVertical="10dp"
-                android:visibility="gone"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/fragment_home_button_find_new_song"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/find_a_new_song"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fragment_home_empty_text"
-                app:icon="@drawable/ic_search"
-                android:visibility="gone"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/songs"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:listitem="@layout/fragment_song_item"
-                android:visibility="gone"/>
+                android:layout_height="match_parent">
 
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmerList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                <ImageView
+                    android:id="@+id/fragment_home_empty_image"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:src="@drawable/empty_results"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_home_empty_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    android:visibility="gone"/>
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/fragment_home_empty_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/not_results_found_try_download_a_new_song"
+                    android:textSize="16dp"
+                    app:layout_constraintBottom_toTopOf="@+id/fragment_home_button_find_new_song"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_home_empty_image"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    android:layout_marginVertical="10dp"
+                    android:visibility="gone"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/fragment_home_button_find_new_song"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/find_a_new_song"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fragment_home_empty_text"
+                    app:icon="@drawable/ic_search"
+                    android:visibility="gone"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/songs"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:listitem="@layout/fragment_song_item"
+                    android:visibility="gone"/>
 
-                    <include
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        layout="@layout/fragment_song_item_skeleton"  />
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <include
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        layout="@layout/fragment_song_item_skeleton"  />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                    <include
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        layout="@layout/fragment_song_item_skeleton"  />
+                        <include
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            layout="@layout/fragment_song_item_skeleton"  />
 
-                    <include
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        layout="@layout/fragment_song_item_skeleton"  />
+                        <include
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            layout="@layout/fragment_song_item_skeleton"  />
 
-                    <include
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        layout="@layout/fragment_song_item_skeleton"  />
+                        <include
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            layout="@layout/fragment_song_item_skeleton"  />
 
-                    <include
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        layout="@layout/fragment_song_item_skeleton"  />
+                        <include
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            layout="@layout/fragment_song_item_skeleton"  />
 
-                    <include
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        layout="@layout/fragment_song_item_skeleton"  />
+                        <include
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            layout="@layout/fragment_song_item_skeleton"  />
 
-                    <include
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        layout="@layout/fragment_song_item_skeleton"  />
+                        <include
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            layout="@layout/fragment_song_item_skeleton"  />
 
-                    <include
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        layout="@layout/fragment_song_item_skeleton"  />
+                        <include
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            layout="@layout/fragment_song_item_skeleton"  />
 
-                    <include
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        layout="@layout/fragment_song_item_skeleton"  />
-                </LinearLayout>
-            </com.facebook.shimmer.ShimmerFrameLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+                        <include
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            layout="@layout/fragment_song_item_skeleton"  />
+
+                        <include
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            layout="@layout/fragment_song_item_skeleton"  />
+
+                        <include
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            layout="@layout/fragment_song_item_skeleton"  />
+                    </LinearLayout>
+                </com.facebook.shimmer.ShimmerFrameLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

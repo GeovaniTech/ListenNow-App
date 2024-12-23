@@ -2,12 +2,9 @@ package br.com.listennow.fragments
 
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -34,23 +31,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
-class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>(), IControllerItemsAdapter {
-    private lateinit var binding: FragmentSearchYoutubeSongsBinding
+class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel, FragmentSearchYoutubeSongsBinding>(), IControllerItemsAdapter {
     private lateinit var adapter: SearchYoutubeSongsAdapter
 
     override val viewModel: SearchYoutubeSongsViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentSearchYoutubeSongsBinding.inflate(inflater, container, false)
+    override fun getLayout(): Int = R.layout.fragment_search_youtube_songs
+
+    private fun createAdapter() {
         adapter = SearchYoutubeSongsAdapter(
             variableId = BR.ytSong,
             this
         )
-
-        return binding.root
     }
 
     override fun loadNavParams() {
@@ -83,6 +75,7 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel>()
         val looper = handlerThread.looper
         val handler = Handler(looper)
 
+        createAdapter()
         showSoftKeyboard(binding.searchYtSongs)
 
         binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

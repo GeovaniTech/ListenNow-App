@@ -46,7 +46,7 @@ class HomeViewModel @Inject constructor (
 
     suspend fun syncSongs() {
         _syncing.postValue(AtomicBoolean(true))
-        songRepository.updateAll(user.id)
+        songRepository.updateAll(user?.id)
         _syncing.postValue(AtomicBoolean(false))
     }
 }

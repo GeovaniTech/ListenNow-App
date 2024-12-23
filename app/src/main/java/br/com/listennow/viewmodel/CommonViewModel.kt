@@ -7,15 +7,13 @@ import br.com.listennow.repository.UserRepository
 abstract class CommonViewModel constructor(
     private val userRepository: UserRepository
 ): ViewModel() {
-    lateinit var user: User
+    var user: User? = null
 
     suspend fun loadUser() {
-        val userDB = userRepository.findUser()
-        user = if (userDB == null) {
-            userRepository.saveUser(User())
-            userRepository.findUser()!!
-        } else {
-            userDB
-        }
+        user = userRepository.findUser()
+    }
+
+    suspend fun createUser(): Boolean {
+        return userRepository.saveUser(User())
     }
 }

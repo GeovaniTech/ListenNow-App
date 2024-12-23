@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
@@ -120,6 +121,16 @@ class MainActivity : AppCompatActivity() {
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
+    }
+
+    fun showBottomMenuAndPlayButtons() {
+        binding.playBackButtons.visibility = View.VISIBLE
+        binding.playBackBottomNavigation.visibility = View.VISIBLE
+    }
+
+    fun hideBottomMenuAndPlayButtons() {
+        binding.playBackButtons.visibility = View.GONE
+        binding.playBackBottomNavigation.visibility = View.GONE
     }
 
     companion object {

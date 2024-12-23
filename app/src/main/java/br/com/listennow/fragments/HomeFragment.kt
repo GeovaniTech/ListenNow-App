@@ -1,12 +1,9 @@
 package br.com.listennow.fragments
 
 import android.annotation.SuppressLint
-import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
@@ -29,22 +26,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : CommonFragment<HomeViewModel>(), IControllerItemsAdapter {
-    private lateinit var binding: FragmentHomeBinding
+class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), IControllerItemsAdapter {
     private lateinit var adapter: HomeSongsAdapter
 
     override val viewModel: HomeViewModel by viewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
-        adapter = HomeSongsAdapter(BR.songItem, this)
-
-        return binding.root
-    }
+    override fun getLayout(): Int = R.layout.fragment_home
 
     override fun loadNavParams() {
     }
@@ -185,9 +172,15 @@ class HomeFragment : CommonFragment<HomeViewModel>(), IControllerItemsAdapter {
     }
 
     private fun configRecyclerSongs() {
+        createAdapter()
+
         binding.songs.layoutManager = LinearLayoutManager(requireContext())
         binding.songs.setHasFixedSize(true)
         binding.songs.adapter = adapter
+    }
+
+    private fun createAdapter() {
+        adapter = HomeSongsAdapter(BR.songItem, this)
     }
 
     private fun configSongToolbar(song: Song) {

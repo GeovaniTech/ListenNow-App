@@ -3,12 +3,9 @@ package br.com.listennow.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
-import br.com.listennow.webclient.song.model.SongResponse
-import br.com.listennow.webclient.song.service.SongWebClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -23,7 +20,7 @@ class SearchYoutubeSongsViewModel @Inject constructor (
     val songs: LiveData<List<SearchYTSongResponse>?> get() = _songs
 
     suspend fun downloadSong(songId: String) {
-        songRepository.downloadSong(songId, user.id)
+        songRepository.downloadSong(songId, user?.id!!)
     }
 
     suspend fun loadYoutubeSongs(filter: String) {
