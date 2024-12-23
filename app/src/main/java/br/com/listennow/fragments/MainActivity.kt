@@ -17,6 +17,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import br.com.listennow.BuildConfig
 import br.com.listennow.R
@@ -84,14 +85,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpBottomNavigation(navController: NavController) {
         val menu = binding.playBackBottomNavigation
+
+        val navOptions = NavOptions.Builder()
+            .setEnterAnim(R.anim.to_right)
+            .setExitAnim(R.anim.to_left)
+            .setPopEnterAnim(R.anim.from_right)
+            .setPopExitAnim(R.anim.from_left)
+            .build()
+
         menu.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.homeFragment -> {
-                    navController.navigate(R.id.homeFragment)
+                    navController.navigate(R.id.homeFragment, null, navOptions)
                     true
                 }
                 R.id.searchNewSongsFragment -> {
-                    navController.navigate(R.id.searchNewSongsFragment)
+                    navController.navigate(R.id.searchNewSongsFragment, null, navOptions)
                     true
                 }
                 else -> false

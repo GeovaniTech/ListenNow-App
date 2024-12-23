@@ -18,11 +18,19 @@
             tools:layout="@layout/fragment_home">
                 <action
                     android:id="@+id/action_homeFragment_to_searchNewSongs"
-                    app:destination="@id/searchNewSongsFragment" />
+                    app:destination="@id/searchNewSongsFragment"
+                    app:enterAnim="@anim/to_right"
+                    app:exitAnim="@anim/to_left"
+                    app:popEnterAnim="@anim/from_left"
+                    app:popExitAnim="@anim/from_right" />
 
                 <action
                     android:id="@+id/action_homeFragment_to_songDetailsFragment"
-                    app:destination="@id/songDetailsFragment" />
+                    app:destination="@id/songDetailsFragment"
+                    app:enterAnim="@anim/to_right"
+                    app:exitAnim="@anim/to_left"
+                    app:popEnterAnim="@anim/from_left"
+                    app:popExitAnim="@anim/from_right" />
         </fragment>
 
         <fragment
@@ -33,7 +41,11 @@
 
                 <action
                     android:id="@+id/action_searchNewSongsFragment_songDetailsFragment"
-                    app:destination="@id/songDetailsFragment"/>
+                    app:destination="@id/songDetailsFragment"
+                    app:enterAnim="@anim/to_right"
+                    app:exitAnim="@anim/to_left"
+                    app:popEnterAnim="@anim/from_left"
+                    app:popExitAnim="@anim/from_right" />
         </fragment>
 
         <fragment
@@ -57,6 +69,10 @@
 
                 <action
                     android:id="@+id/action_errroFragment_to_homeFragment"
-                    app:destination="@id/homeFragment"/>
+                    app:destination="@id/homeFragment"
+                    app:enterAnim="@anim/to_left"
+                    app:exitAnim="@anim/to_right"
+                    app:popEnterAnim="@anim/from_right"
+                    app:popExitAnim="@anim/from_left" />
         </fragment>
 </navigation>
