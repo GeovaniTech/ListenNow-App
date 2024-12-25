@@ -38,7 +38,7 @@ class ImportAllSongsService: Service() {
         startForeground(1, notification)
 
         CoroutineScope(Dispatchers.IO).launch {
-            songsIds.windowed(20, 20, partialWindows = false).forEachIndexed{ index, chunk ->
+            songsIds.windowed(20, 1, partialWindows = true).forEachIndexed{ index, chunk ->
                 if (songRepository.copySongsFromAnotherDevice(userReceiver!!, chunk)) {
                     songRepository.updateAll(userReceiver)
                 }
