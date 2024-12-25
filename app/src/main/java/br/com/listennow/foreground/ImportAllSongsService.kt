@@ -3,6 +3,7 @@ package br.com.listennow.foreground
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import br.com.listennow.R
 import br.com.listennow.fragments.MainActivity
@@ -38,7 +39,8 @@ class ImportAllSongsService: Service() {
         startForeground(1, notification)
 
         CoroutineScope(Dispatchers.IO).launch {
-            songsIds.windowed(20, 1, partialWindows = true).forEachIndexed{ index, chunk ->
+            songsIds.windowed(20, 20, partialWindows = true).forEachIndexed{ index, chunk ->
+                Log.i("TESTE GEOVANI", "onStartCommand: $chunk")
                 if (songRepository.copySongsFromAnotherDevice(userReceiver!!, chunk)) {
                     songRepository.updateAll(userReceiver)
                 }
