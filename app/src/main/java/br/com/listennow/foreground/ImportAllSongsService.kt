@@ -40,7 +40,6 @@ class ImportAllSongsService: Service() {
 
         CoroutineScope(Dispatchers.IO).launch {
             songsIds.windowed(20, 20, partialWindows = true).forEachIndexed{ index, chunk ->
-                Log.i("TESTE GEOVANI", "onStartCommand: $chunk")
                 if (songRepository.copySongsFromAnotherDevice(userReceiver!!, chunk)) {
                     songRepository.updateAll(userReceiver)
                 }
