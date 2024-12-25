@@ -61,7 +61,7 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel, F
     private fun getNotificationBuilder(song: SearchYTSongResponse) =
         NotificationCompat.Builder(
             requireContext(),
-            MainActivity.DOWNLAOD_SONG_NOTIFICATION_CHANNEl
+            MainActivity.DOWNLOAD_SONG_NOTIFICATION_CHANNEl
         )
             .setSmallIcon(R.drawable.ic_notification_icon)
             .setContentTitle("${song.title} - ${song.artist}")

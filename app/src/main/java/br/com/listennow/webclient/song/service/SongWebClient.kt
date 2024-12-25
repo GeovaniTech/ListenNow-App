@@ -3,11 +3,14 @@ package br.com.listennow.webclient.song.service
 import android.util.Log
 import br.com.listennow.model.Song
 import br.com.listennow.service.SongService
+import br.com.listennow.webclient.enums.StatusMessage
 import br.com.listennow.webclient.song.model.SearchDownloadSongRequest
 import br.com.listennow.webclient.song.model.SearchYTSongRequest
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
+import br.com.listennow.webclient.song.model.SongCopyRequest
 import br.com.listennow.webclient.song.model.SongDownloadRequest
 import br.com.listennow.webclient.song.model.SongDownloadResponse
+import br.com.listennow.webclient.song.model.SongIdsRequest
 import br.com.listennow.webclient.song.model.SongRequest
 import br.com.listennow.webclient.song.model.SongResponse
 
@@ -60,5 +63,25 @@ class SongWebClient(
 
     suspend fun findSongById(videoId: String): SongResponse? {
         return songService.findSongById(SongDownloadRequest(videoId))
+    }
+
+    suspend fun getSongIdsByUser(userReceiver: String, userWithSongs: String): List<String>? {
+        return try {
+            val response = songService.getSongIdsByUserId(SongIdsRequest(userReceiver, userWithSongs))
+            response.songsIds
+        } catch (e: Exception) {
+            Log.e(TAG, "Error trying to get qtde songs by user. UserReceiver: $userReceiver UserWithSongs: $userWithSongs, Error: ${e.message}")
+            null
+        }
+    }
+
+    suspend fun copySongsFromAnotherUser(userReceiver: String, songs: List<String>): Boolean {
+        return try {
+            val response = songService.copySongsFromOtherUser(SongCopyRequest(userReceiver, songs))
+            response.message == StatusMessage.SONGS_COPIED_SUCCESSFULLY.message
+        } catch (e: Exception) {
+            Log.e(TAG, "Error trying to copy songs from another user. UserReceiverId: $userReceiver. Error: ${e.message}")
+            false
+        }
     }
 }

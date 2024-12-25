@@ -5,6 +5,10 @@ import br.com.listennow.webclient.song.model.SearchYTSongRequest
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import br.com.listennow.webclient.song.model.SongDownloadRequest
 import br.com.listennow.webclient.song.model.SongDownloadResponse
+import br.com.listennow.webclient.song.model.SongCopyRequest
+import br.com.listennow.webclient.song.model.SongCopyResponse
+import br.com.listennow.webclient.song.model.SongIdsRequest
+import br.com.listennow.webclient.song.model.SongIdsResponse
 import br.com.listennow.webclient.song.model.SongRequest
 import br.com.listennow.webclient.song.model.SongResponse
 import retrofit2.Response
@@ -26,4 +30,10 @@ interface SongService {
 
     @POST("songs/find")
     suspend fun findSongById(@Body searchSongDownloadRequest: SongDownloadRequest): SongResponse?
+
+    @POST("songs/ids")
+    suspend fun getSongIdsByUserId(@Body songIdsRequest: SongIdsRequest): SongIdsResponse
+
+    @POST("songs/copy")
+    suspend fun copySongsFromOtherUser(@Body songCopyRequest: SongCopyRequest): SongCopyResponse
 }

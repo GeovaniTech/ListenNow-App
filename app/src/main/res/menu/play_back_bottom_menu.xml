@@ -9,4 +9,9 @@
         android:id="@+id/searchNewSongsFragment"
         android:title="@string/search_new_songs"
         android:icon="@drawable/ic_search" />
+
+    <item
+        android:id="@+id/deviceInfosFragment"
+        android:title="@string/fragment_device_infos_title"
+        android:icon="@drawable/ic_device_info_24" />
 </menu>

@@ -54,4 +54,22 @@
     <string name="fragment_error_title">Erro Screen</string>
     <string name="message_error_creating_user">We apologize for the inconvenience. A problem occurred while creating your device ID on our servers. Please check your internet connection and try again.</string>
     <string name="message_failed_to_save_user">Failed to save device ID</string>
+    <string name="fragment_device_infos_your_id">Your Device ID</string>
+    <string name="fragment_device_infos_title">Device Infos\n</string>
+    <string name="copied_text">Copied Text</string>
+    <string name="fragment_device_infos_id_copied_successfully">Device ID copied!</string>
+    <string name="app_version">App Version: %s</string>
+    <string name="fragment_device_infos_use_cause_for_id_message">You can use your device ID to listen your songs in another device.</string>
+    <string name="fragment_device_infos_device_id_to_download_songs">Device ID to Download Songs</string>
+    <string name="importing_all_songs_from_another_device">Importing %d songs from another device</string>
+    <string name="importing_songs">Importing Songs</string>
+    <string name="fragment_device_infos_device_id_must_not_be_null">Device ID must not be null, specify the device id that you want to download songs</string>
+    <string name="fragment_Device_infos_device_id_must_be_different_than_yours">The device ID must be different than yours</string>
+    <string name="message_it_was_not_possible_to_execute_this_action">It was not possible to execute this action, please verify your internet connection</string>
+    <string name="attention">Attention</string>
+    <string name="dialog_download_songs_title">Are you sure about download these song(s)?</string>
+    <string name="dialog_download_songs_message">We found %d songs to download, you want to proceed the download?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="fragment_device_infos_no_songs_found_to_download_with_id">No songs found with the informed id, please verify the informed id and if that device has songs</string>
 </resources>

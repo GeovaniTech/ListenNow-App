@@ -1,6 +1,7 @@
 package br.com.listennow.repository
 
 import android.os.Environment
+import android.os.OutcomeReceiver
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -87,5 +88,20 @@ class SongRepository @Inject constructor (
                 }
             }
         }
+    }
+
+    /**
+     * Returns the ids of the songs from another user that the receiver does not have. Songs that he already has were
+     * ignored in the query api.
+     */
+    suspend fun getIdsSongsFromAnotherUser(userReceiver: String, userWithSongs: String): List<String>? {
+        return songWebClient.getSongIdsByUser(userReceiver, userWithSongs)
+    }
+
+    /**
+     * True if all songs were saved successfully on server
+     */
+    suspend fun copySongsFromAnotherDevice(userReceiver: String, songs: List<String>): Boolean {
+        return songWebClient.copySongsFromAnotherUser(userReceiver, songs)
     }
 }

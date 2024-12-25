@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import br.com.listennow.BuildConfig
 import br.com.listennow.R
@@ -38,12 +39,14 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view_listennow) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_container_view_listennow) as NavHostFragment
 
         setUpBottomNavigation(navHostFragment.navController)
         askPermissions()
         configPhoneDisconnectedReceiver()
-        createNotificationChannel()
+        createDownloadSongNotificationChannel()
+        createImportAllSongsForegroundServiceNotificationChannel()
     }
 
     private fun askPermissions() {
@@ -94,15 +97,22 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         menu.setOnItemSelectedListener {
-            when(it.itemId) {
+            when (it.itemId) {
                 R.id.homeFragment -> {
                     navController.navigate(R.id.homeFragment, null, navOptions)
                     true
                 }
+
                 R.id.searchNewSongsFragment -> {
                     navController.navigate(R.id.searchNewSongsFragment, null, navOptions)
                     true
                 }
+
+                R.id.deviceInfosFragment -> {
+                    navController.navigate(R.id.deviceInfosFragment, null, navOptions)
+                    true
+                }
+
                 else -> false
             }
         }
@@ -117,19 +127,32 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, receiverFilter)
     }
 
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = getString(R.string.app_name)
-            val descriptionText = getString(R.string.download_started)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(DOWNLAOD_SONG_NOTIFICATION_CHANNEl, name, importance).apply {
+    private fun createDownloadSongNotificationChannel() {
+        val name = getString(R.string.app_name)
+        val descriptionText = getString(R.string.download_started)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel =
+            NotificationChannel(DOWNLOAD_SONG_NOTIFICATION_CHANNEl, name, importance).apply {
                 description = descriptionText
             }
-            // Register the channel with the system.
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
+        // Register the channel with the system.
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun createImportAllSongsForegroundServiceNotificationChannel() {
+        val name = getString(R.string.app_name)
+        val descriptionText = getString(R.string.importing_all_songs_from_another_device)
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel =
+            NotificationChannel(IMPORT_ALL_SONGS_FOREGROUND_SERVICE_NOTIFICATION_CHANNEl, name, importance).apply {
+                description = descriptionText
+            }
+        // Register the channel with the system.
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 
     fun showBottomMenuAndPlayButtons() {
@@ -143,6 +166,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val DOWNLAOD_SONG_NOTIFICATION_CHANNEl = "DownloadSongNotification"
+        const val DOWNLOAD_SONG_NOTIFICATION_CHANNEl = "DownloadSongNotification"
+        const val IMPORT_ALL_SONGS_FOREGROUND_SERVICE_NOTIFICATION_CHANNEl = "ImportAllSongsForegroundServiceNotification"
     }
 }

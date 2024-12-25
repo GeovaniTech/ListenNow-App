@@ -47,6 +47,7 @@ abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBindi
         setViewListeners()
         loadData()
         setViewModelObservers()
+        loadBindingVariables()
     }
 
     private fun loadUser() {
@@ -83,10 +84,22 @@ abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBindi
 
     fun showSnackBar (
         messageId: Int,
-        anchorView: View? = null,
+        anchorView: View? = mainActivity.binding.playBackButtons,
         duration: Int = Snackbar.LENGTH_SHORT
     ) {
         Snackbar.make(requireView(), messageId, duration)
+            .setAnchorView(anchorView)
+            .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.background))
+            .show()
+    }
+
+    fun showSnackBar (
+        message: String,
+        anchorView: View? = mainActivity.binding.playBackButtons,
+        duration: Int = Snackbar.LENGTH_SHORT
+    ) {
+        Snackbar.make(requireView(), message, duration)
             .setAnchorView(anchorView)
             .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.background))
@@ -98,4 +111,5 @@ abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBindi
     abstract fun setViewListeners()
     abstract fun setViewModelObservers()
     abstract fun loadData()
+    open fun loadBindingVariables() {}
 }
