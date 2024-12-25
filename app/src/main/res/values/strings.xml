@@ -71,5 +71,5 @@
     <string name="dialog_download_songs_message">We found %d songs to download, you want to proceed the download?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="fragment_device_infos_no_songs_found_to_download_with_id">No songs found with the informed id, please verify the informed id and if that device has songs</string>
+    <string name="fragment_device_infos_no_songs_found_to_download_with_id">No new songs found for the provided ID. Please, check if the device contains any songs to download.</string>
 </resources>
