@@ -63,7 +63,6 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
     private fun configLoadLastSong() {
         if (SongUtil.actualSong != null) {
             mainActivity.configSongToolbar(SongUtil.actualSong!!)
-            viewModel.updateActualSong(SongUtil.actualSong!!)
         }
     }
 
@@ -106,12 +105,6 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
             setViewState(songs)
         }
 
-        viewModel.actualSong.observe(viewLifecycleOwner) { song ->
-            song?.let {
-                mainActivity.configSongToolbar(it)
-            }
-        }
-
         viewModel.syncing.observe(viewLifecycleOwner) {
             binding.refreshSongs.isRefreshing = it.get()
 
@@ -150,7 +143,6 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
             } else {
                 viewModel.loadSongsFiltering(viewModel.songFilter!!)
             }
-            viewModel.loadActualSong()
         }
     }
 
@@ -209,7 +201,6 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
 
         view.setOnClickListener {
             SongUtil.readSong(requireContext(), item)
-            viewModel.updateActualSong(item)
             mainActivity.startNotificationService(Actions.PLAY_SPECIFIC)
         }
     }

@@ -15,8 +15,10 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
@@ -31,6 +33,7 @@ import br.com.listennow.receiver.HeadsetStateReceiver
 import br.com.listennow.receiver.UpdateSongReceiver
 import br.com.listennow.receiver.enums.IntentEnums
 import br.com.listennow.utils.SongUtil
+import br.com.listennow.viewmodel.MainActivityViewModel
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,6 +42,8 @@ class MainActivity : AppCompatActivity() {
     val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+
+    private val viewModel by viewModels<MainActivityViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +62,25 @@ class MainActivity : AppCompatActivity() {
         createDownloadSongNotificationChannel()
         createImportAllSongsForegroundServiceNotificationChannel()
         createSongPlayerNotificationChannel()
+        setViewBindVariables()
+        setViewModelObservers()
+        onLoadLastSong()
+    }
+
+    private fun setViewBindVariables() {
+        binding.mainActivityViewModel = viewModel
+    }
+
+    private fun onLoadLastSong() {
+        viewModel.loadActualSong()
+    }
+
+    private fun setViewModelObservers() {
+        viewModel.actualSong.observe(this) { song ->
+            song?.let {
+                configSongToolbar(song)
+            }
+        }
     }
 
     private fun configPlayPauseListener() {

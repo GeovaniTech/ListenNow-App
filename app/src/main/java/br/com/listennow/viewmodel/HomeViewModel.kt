@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import br.com.listennow.model.Song
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
+import br.com.listennow.utils.SongUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -20,9 +21,6 @@ class HomeViewModel @Inject constructor (
     private var _filteredSongs: MutableLiveData<List<Song>> = MutableLiveData()
     val filteredSongs: LiveData<List<Song>> get() = _filteredSongs
 
-    private var _actualSong: MutableLiveData<Song?> = MutableLiveData()
-    val actualSong: LiveData<Song?> get() = _actualSong
-
     private var _syncing: MutableLiveData<AtomicBoolean> = MutableLiveData(AtomicBoolean(false))
     val syncing: LiveData<AtomicBoolean> get() = _syncing
 
@@ -32,16 +30,8 @@ class HomeViewModel @Inject constructor (
         _songs.postValue(songRepository.getAll())
     }
 
-    fun loadActualSong() {
-        _actualSong.postValue(_actualSong.value)
-    }
-
     suspend fun loadSongsFiltering(filter: String) {
         _filteredSongs.postValue(songRepository.getAllFiltering(filter))
-    }
-
-    fun updateActualSong(song: Song) {
-        _actualSong.postValue(song)
     }
 
     suspend fun syncSongs() {
