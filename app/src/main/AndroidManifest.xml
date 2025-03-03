@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />    
 
     <application
         android:allowBackup="true"
@@ -19,7 +20,8 @@
         tools:targetApi="31"
         android:name=".hilt.ListenNowApplication">
 
-        <service android:name="br.com.listennow.foreground.ImportAllSongsService"/>
+        <service android:name="br.com.listennow.foreground.ImportAllSongsService" />
+        <service android:name=".foreground.SongPlayerService" />
 
         <receiver
             android:name="br.com.listennow.receiver.HeadsetStateReceiver"
@@ -32,8 +34,8 @@
 
         <activity
             android:name=".fragments.MainActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

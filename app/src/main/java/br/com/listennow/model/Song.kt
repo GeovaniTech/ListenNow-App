@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 import java.util.UUID
 
 @Entity
@@ -16,4 +17,4 @@ data class Song (
     val thumb: String,
     var path: String,
     val lyrics: String
-)
+): Serializable

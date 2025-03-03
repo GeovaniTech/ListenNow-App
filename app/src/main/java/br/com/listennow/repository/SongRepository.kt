@@ -10,6 +10,8 @@ import br.com.listennow.model.Song
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import br.com.listennow.webclient.song.model.SongResponse
 import br.com.listennow.webclient.song.service.SongWebClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.util.Base64
@@ -24,7 +26,7 @@ class SongRepository @Inject constructor (
         return songDao.getSongs()
     }
 
-    suspend fun findSongById(id: String): Song? {
+    suspend fun findSongById(id: String): Song {
         return songDao.findById(id)
     }
 
@@ -103,5 +105,9 @@ class SongRepository @Inject constructor (
      */
     suspend fun copySongsFromAnotherDevice(userReceiver: String, songs: List<String>): Boolean {
         return songWebClient.copySongsFromAnotherUser(userReceiver, songs)
+    }
+
+    suspend fun getIdsSongsFromDB(): List<String>? {
+        return songDao.getIdsSongsFromDB()
     }
 }

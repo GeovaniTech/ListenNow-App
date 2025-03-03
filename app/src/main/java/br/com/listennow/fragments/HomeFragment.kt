@@ -1,6 +1,7 @@
 package br.com.listennow.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
@@ -17,12 +18,15 @@ import br.com.listennow.R
 import br.com.listennow.adapter.HomeSongsAdapter
 import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.databinding.FragmentHomeBinding
+import br.com.listennow.foreground.Actions
+import br.com.listennow.foreground.SongPlayerService
 import br.com.listennow.listener.OnSwipeTouchListener
 import br.com.listennow.model.Song
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.HomeViewModel
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -39,6 +43,7 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
     override fun setViewListeners() {
         configToolbar()
         configSearchView()
+        configLoadLastSong()
 
         mainActivity.binding.playBackButtons.setOnClickListener {
             if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
@@ -50,24 +55,15 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
             syncSongs()
         }
 
-        mainActivity.binding.play.setOnClickListener {
-            if(SongUtil.isPlaying()) {
-                SongUtil.pause()
-                mainActivity.binding.play.setBackgroundResource(R.drawable.ic_play)
-            } else {
-                SongUtil.play()
-                mainActivity.binding.play.setBackgroundResource(R.drawable.ic_pause)
-            }
-        }
-
         binding.fragmentHomeButtonFindNewSong.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchNewSongs())
         }
+    }
 
-        SongUtil.onNextSong = { song ->
-            SongUtil.readSong(requireContext(), song)
-            viewModel.updateActualSong(song)
-            configSongToolbar(song)
+    private fun configLoadLastSong() {
+        if (SongUtil.actualSong != null) {
+            mainActivity.configSongToolbar(SongUtil.actualSong!!)
+            viewModel.updateActualSong(SongUtil.actualSong!!)
         }
     }
 
@@ -112,7 +108,7 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
 
         viewModel.actualSong.observe(viewLifecycleOwner) { song ->
             song?.let {
-                configSongToolbar(it)
+                mainActivity.configSongToolbar(it)
             }
         }
 
@@ -183,13 +179,6 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         adapter = HomeSongsAdapter(BR.songItem, this)
     }
 
-    private fun configSongToolbar(song: Song) {
-        mainActivity.binding.listSongsTitle.text = song.name
-        mainActivity.binding.listSongsArtist.text = song.artist
-        mainActivity.binding.play.setBackgroundResource(R.drawable.ic_pause)
-        Glide.with(mainActivity.binding.homeThumbSongDetails).load(song.thumb).into(mainActivity.binding.homeThumbSongDetails)
-    }
-
     private fun syncSongs() {
         startShimmer()
         viewLifecycleOwner.lifecycleScope.launch {
@@ -204,7 +193,7 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         buttons.setOnTouchListener(object: OnSwipeTouchListener(requireContext()) {
             // Here I could create a feature to play the previous and next songs depending of the swipe
             override fun onSwipeRight() {
-                SongUtil.playRandomSong()
+                mainActivity.startNotificationService(Actions.NEXT)
             }
         })
     }
@@ -221,7 +210,7 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         view.setOnClickListener {
             SongUtil.readSong(requireContext(), item)
             viewModel.updateActualSong(item)
-            configSongToolbar(item)
+            mainActivity.startNotificationService(Actions.PLAY_SPECIFIC)
         }
     }
 

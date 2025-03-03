@@ -72,4 +72,9 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="fragment_device_infos_no_songs_found_to_download_with_id">No new songs found for the provided ID. Please, check if the device contains any songs to download.</string>
+    <string name="song_player_notification">Song Player on Notification Bar</string>
+    <string name="import_all_songs_from_another_device">Import All Songs From Another Device Notification</string>
+    <string name="download_started_notification">Download Started Notification</string>
+    <string name="next">Next</string>
+    <string name="stop">Stop</string>
 </resources>

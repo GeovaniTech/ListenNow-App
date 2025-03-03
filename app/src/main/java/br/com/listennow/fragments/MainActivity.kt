@@ -3,6 +3,7 @@ package br.com.listennow.fragments
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -23,7 +24,14 @@ import androidx.navigation.fragment.NavHostFragment
 import br.com.listennow.BuildConfig
 import br.com.listennow.R
 import br.com.listennow.databinding.ActivityMainBinding
+import br.com.listennow.foreground.Actions
+import br.com.listennow.foreground.SongPlayerService
+import br.com.listennow.model.Song
 import br.com.listennow.receiver.HeadsetStateReceiver
+import br.com.listennow.receiver.UpdateSongReceiver
+import br.com.listennow.receiver.enums.IntentEnums
+import br.com.listennow.utils.SongUtil
+import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,7 +44,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setTheme(R.style.Theme_ListenNow)
-
         setContentView(binding.root)
 
         val navHostFragment =
@@ -45,8 +52,23 @@ class MainActivity : AppCompatActivity() {
         setUpBottomNavigation(navHostFragment.navController)
         askPermissions()
         configPhoneDisconnectedReceiver()
+        configUpdateSongOnViewReceiver()
+        configPlayPauseListener()
         createDownloadSongNotificationChannel()
         createImportAllSongsForegroundServiceNotificationChannel()
+        createSongPlayerNotificationChannel()
+    }
+
+    private fun configPlayPauseListener() {
+        binding.play.setOnClickListener {
+            if(SongUtil.actualSong != null) {
+                if (SongUtil.isPlaying()) {
+                    startNotificationService(Actions.STOP)
+                } else {
+                    startNotificationService(Actions.PLAY)
+                }
+            }
+        }
     }
 
     private fun askPermissions() {
@@ -72,17 +94,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } else {
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    100
-                )
-            }
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                100
+            )
         }
     }
 
@@ -118,6 +134,30 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun configUpdateSongOnViewReceiver() {
+        val receiver = UpdateSongReceiver()
+        val receiverFilter = IntentFilter(IntentEnums.INTENT_UPDATE_SONG.toString())
+
+        receiver.mainActivity = this
+
+        registerReceiver(receiver, receiverFilter)
+    }
+
+    fun configSongToolbar(song: Song) {
+        binding.listSongsTitle.text = song.name
+        binding.listSongsArtist.text = song.artist
+
+        if (applicationContext != null) {
+            Glide.with(applicationContext).load(song.thumb).into(binding.homeThumbSongDetails)
+        }
+
+        if (SongUtil.isPlaying()) {
+            binding.play.setBackgroundResource(R.drawable.ic_pause)
+        } else {
+            binding.play.setBackgroundResource(R.drawable.ic_play)
+        }
+    }
+
     private fun configPhoneDisconnectedReceiver() {
         val receiver = HeadsetStateReceiver()
         val receiverFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
@@ -129,13 +169,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun createDownloadSongNotificationChannel() {
         val name = getString(R.string.app_name)
-        val descriptionText = getString(R.string.download_started)
+        val descriptionText = getString(R.string.download_started_notification)
         val importance = NotificationManager.IMPORTANCE_DEFAULT
         val channel =
             NotificationChannel(DOWNLOAD_SONG_NOTIFICATION_CHANNEl, name, importance).apply {
                 description = descriptionText
             }
-        // Register the channel with the system.
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
@@ -143,16 +182,37 @@ class MainActivity : AppCompatActivity() {
 
     private fun createImportAllSongsForegroundServiceNotificationChannel() {
         val name = getString(R.string.app_name)
-        val descriptionText = getString(R.string.importing_all_songs_from_another_device)
+        val descriptionText = getString(R.string.import_all_songs_from_another_device)
         val importance = NotificationManager.IMPORTANCE_HIGH
         val channel =
             NotificationChannel(IMPORT_ALL_SONGS_FOREGROUND_SERVICE_NOTIFICATION_CHANNEl, name, importance).apply {
                 description = descriptionText
             }
-        // Register the channel with the system.
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun createSongPlayerNotificationChannel() {
+        val name = getString(R.string.app_name)
+        val descriptionText = getString(R.string.song_player_notification)
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel =
+            NotificationChannel(SONG_PLAYER_NOTIFICATION_CHANNEL, name, importance).apply {
+                description = descriptionText
+            }
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    fun startNotificationService(action: Actions) {
+        Intent().also {
+            it.setClass(this, SongPlayerService::class.java)
+            it.action = action.toString()
+
+            startService(it)
+        }
     }
 
     fun showBottomMenuAndPlayButtons() {
@@ -168,5 +228,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val DOWNLOAD_SONG_NOTIFICATION_CHANNEl = "DownloadSongNotification"
         const val IMPORT_ALL_SONGS_FOREGROUND_SERVICE_NOTIFICATION_CHANNEl = "ImportAllSongsForegroundServiceNotification"
+        const val SONG_PLAYER_NOTIFICATION_CHANNEL = "SongPlayerNotificationChannel"
     }
 }
