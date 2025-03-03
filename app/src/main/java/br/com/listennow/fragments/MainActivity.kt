@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
     private fun setViewModelObservers() {
         viewModel.actualSong.observe(this) { song ->
             song?.let {
-                configSongToolbar(song)
+                configSongToolbar(song, SongUtil.isPlaying())
             }
         }
     }
@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, receiverFilter)
     }
 
-    fun configSongToolbar(song: Song) {
+    fun configSongToolbar(song: Song, isPlaying: Boolean) {
         binding.listSongsTitle.text = song.name
         binding.listSongsArtist.text = song.artist
 
@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity() {
             Glide.with(applicationContext).load(song.thumb).into(binding.homeThumbSongDetails)
         }
 
-        if (SongUtil.isPlaying()) {
+        if (isPlaying) {
             binding.play.setBackgroundResource(R.drawable.ic_pause)
         } else {
             binding.play.setBackgroundResource(R.drawable.ic_play)

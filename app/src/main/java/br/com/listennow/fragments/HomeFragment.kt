@@ -43,7 +43,6 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
     override fun setViewListeners() {
         configToolbar()
         configSearchView()
-        configLoadLastSong()
 
         mainActivity.binding.playBackButtons.setOnClickListener {
             if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
@@ -57,12 +56,6 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
 
         binding.fragmentHomeButtonFindNewSong.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchNewSongs())
-        }
-    }
-
-    private fun configLoadLastSong() {
-        if (SongUtil.actualSong != null) {
-            mainActivity.configSongToolbar(SongUtil.actualSong!!)
         }
     }
 

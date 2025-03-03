@@ -111,7 +111,7 @@ class SongPlayerService: Service() {
             Glide.with(applicationContext).clear(futureTarget)
 
             startForeground(1, notification)
-            callUpdateSongReceiver()
+            callUpdateSongReceiver(isPlaying = false)
         }
 
         return START_STICKY
@@ -213,8 +213,9 @@ class SongPlayerService: Service() {
         return START_STICKY
     }
 
-    private fun callUpdateSongReceiver() {
+    private fun callUpdateSongReceiver(isPlaying: Boolean = true) {
         val intent = Intent(IntentEnums.INTENT_UPDATE_SONG.toString())
+        intent.putExtra(Actions.IS_PLAYING.toString(), isPlaying)
         sendBroadcast(intent)
     }
 }
@@ -223,5 +224,6 @@ enum class Actions {
     PLAY,
     PLAY_SPECIFIC,
     STOP,
-    NEXT
+    NEXT,
+    IS_PLAYING
 }
