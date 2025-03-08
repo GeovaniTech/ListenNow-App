@@ -201,6 +201,7 @@ class MainActivity : AppCompatActivity() {
         val channel =
             NotificationChannel(DOWNLOAD_SONG_NOTIFICATION_CHANNEl, name, importance).apply {
                 description = descriptionText
+                setSound(null, null)
             }
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -214,6 +215,7 @@ class MainActivity : AppCompatActivity() {
         val channel =
             NotificationChannel(IMPORT_ALL_SONGS_FOREGROUND_SERVICE_NOTIFICATION_CHANNEl, name, importance).apply {
                 description = descriptionText
+                setSound(null, null)
             }
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -224,10 +226,13 @@ class MainActivity : AppCompatActivity() {
         val name = getString(R.string.app_name)
         val descriptionText = getString(R.string.song_player_notification)
         val importance = NotificationManager.IMPORTANCE_HIGH
+
         val channel =
             NotificationChannel(SONG_PLAYER_NOTIFICATION_CHANNEL, name, importance).apply {
                 description = descriptionText
+                setSound(null, null)
             }
+
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
