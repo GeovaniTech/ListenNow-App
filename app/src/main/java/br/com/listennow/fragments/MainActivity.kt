@@ -187,6 +187,9 @@ class MainActivity : AppCompatActivity() {
         val receiverFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
 
         receiver.button = binding.play
+        receiver.executeAfterPausing = {
+            startNotificationService(Actions.STOP)
+        }
 
         registerReceiver(receiver, receiverFilter)
     }
