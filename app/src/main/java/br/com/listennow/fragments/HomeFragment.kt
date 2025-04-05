@@ -1,7 +1,6 @@
 package br.com.listennow.fragments
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
@@ -19,14 +18,11 @@ import br.com.listennow.adapter.HomeSongsAdapter
 import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.databinding.FragmentHomeBinding
 import br.com.listennow.foreground.Actions
-import br.com.listennow.foreground.SongPlayerService
 import br.com.listennow.listener.OnSwipeTouchListener
 import br.com.listennow.model.Song
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.HomeViewModel
-import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint

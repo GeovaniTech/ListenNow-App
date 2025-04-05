@@ -106,8 +106,4 @@ class SongRepository @Inject constructor (
     suspend fun copySongsFromAnotherDevice(userReceiver: String, songs: List<String>): Boolean {
         return songWebClient.copySongsFromAnotherUser(userReceiver, songs)
     }
-
-    suspend fun getIdsSongsFromDB(): List<String>? {
-        return songDao.getIdsSongsFromDB()
-    }
 }

@@ -1,13 +1,11 @@
 package br.com.listennow.fragments
 
 import android.app.AlertDialog
-import android.content.BroadcastReceiver
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,7 +17,6 @@ import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.DeviceInfosViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.ArrayList
 
 @AndroidEntryPoint
 class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceInfosBinding>() {

@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import br.com.listennow.model.User
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {

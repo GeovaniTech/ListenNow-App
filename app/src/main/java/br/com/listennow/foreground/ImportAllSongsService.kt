@@ -3,7 +3,6 @@ package br.com.listennow.foreground
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import br.com.listennow.R
 import br.com.listennow.fragments.MainActivity
