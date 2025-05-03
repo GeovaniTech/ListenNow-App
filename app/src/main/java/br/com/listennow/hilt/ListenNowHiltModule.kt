@@ -68,7 +68,7 @@ object ListenNowHiltModule {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("https://api.devpree.com.br/listennow/")
+            .baseUrl("https://home.devpree.com.br/listennow/")
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(client)
             .build()
