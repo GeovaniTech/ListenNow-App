@@ -1,9 +1,12 @@
 package br.com.listennow.fragments
 
 import android.Manifest
+import android.app.AlertDialog
+import android.app.DownloadManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
@@ -25,13 +28,16 @@ import br.com.listennow.databinding.ActivityMainBinding
 import br.com.listennow.foreground.Actions
 import br.com.listennow.foreground.SongPlayerService
 import br.com.listennow.model.Song
+import br.com.listennow.receiver.AppVersionUpdateReceiver
 import br.com.listennow.receiver.HeadsetStateReceiver
 import br.com.listennow.receiver.UpdateSongReceiver
 import br.com.listennow.receiver.enums.IntentEnums
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.MainActivityViewModel
+import br.com.listennow.webclient.appversion.model.LastVersionAvailableAppResponse
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.atomic.AtomicBoolean
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -61,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         setViewBindVariables()
         setViewModelObservers()
         onLoadLastSong()
+        checkForAppUpdate()
     }
 
     private fun setViewBindVariables() {
@@ -77,6 +84,81 @@ class MainActivity : AppCompatActivity() {
                 configSongToolbar(song, SongUtil.isPlaying())
             }
         }
+
+        viewModel.newVersionAvailable.observe(this) { lastVersion ->
+            if (lastVersion.first.get() && lastVersion.second != null) {
+                showDialogInstallNewVersion(lastVersion)
+            }
+        }
+    }
+
+    private fun showDialogInstallNewVersion(lastVersion: Pair<AtomicBoolean, LastVersionAvailableAppResponse?>) {
+        val version = lastVersion.second!!
+        val dialogBuilder = AlertDialog.Builder(this)
+
+        val positiveButtonClick = { dialog: DialogInterface, _: Int ->
+            createDownloadRequest(version, dialog)
+        }
+
+        val negativeButtonClick = { dialog: DialogInterface, _: Int ->
+            dialog.dismiss()
+        }
+
+        with(dialogBuilder) {
+            setTitle(getString(R.string.dialog_new_version_available_title))
+            setMessage(
+                getString(
+                    R.string.dialog_new_version_available_message,
+                    BuildConfig.VERSION_NAME,
+                    lastVersion.second!!.name
+                )
+            )
+            setPositiveButton(R.string.yes, DialogInterface.OnClickListener(positiveButtonClick))
+            setNegativeButton(
+                R.string.maybe_later,
+                DialogInterface.OnClickListener(negativeButtonClick)
+            )
+            show()
+        }
+    }
+
+    /**
+     * Create the Download Notification Request
+     */
+    private fun createDownloadRequest(
+        version: LastVersionAvailableAppResponse,
+        dialog: DialogInterface
+    ) {
+        val request = DownloadManager.Request(Uri.parse(version.url))
+        val subPath = "listennow-update-${version.name}.apk"
+
+        request.setTitle(
+            getString(R.string.download_new_version_apk, version.name)
+        )
+
+        request.setDescription(
+            getString(R.string.new_version_is_being_donwloaded)
+        )
+
+        request.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, subPath)
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+
+        val manager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+        val downloadId = manager.enqueue(request)
+
+        val receiver = AppVersionUpdateReceiver(
+            context = this,
+            downloadId = downloadId,
+            newApkName = subPath
+        )
+
+        registerReceiver(
+            receiver, IntentFilter(
+                IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+            )
+        )
+
+        dialog.dismiss()
     }
 
     private fun configPlayPauseListener() {
@@ -251,6 +333,10 @@ class MainActivity : AppCompatActivity() {
     fun hideBottomMenuAndPlayButtons() {
         binding.playBackButtons.visibility = View.GONE
         binding.playBackBottomNavigation.visibility = View.GONE
+    }
+
+    private fun checkForAppUpdate() {
+        viewModel.checkAppUpdate()
     }
 
     companion object {

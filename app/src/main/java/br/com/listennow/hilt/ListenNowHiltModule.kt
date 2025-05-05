@@ -6,8 +6,10 @@ import br.com.listennow.database.dao.SongDao
 import br.com.listennow.database.dao.UserDao
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
+import br.com.listennow.service.AppVersionService
 import br.com.listennow.service.SongService
 import br.com.listennow.service.UserService
+import br.com.listennow.webclient.appversion.service.AppVersionWebClient
 import br.com.listennow.webclient.client.service.UserWebClient
 import br.com.listennow.webclient.song.service.SongWebClient
 import com.squareup.moshi.Moshi
@@ -98,4 +100,12 @@ object ListenNowHiltModule {
         return UserRepository(userDao, userWebClient)
     }
 
+    @Provides
+    fun provideAppVersionWebClient(
+        retrofit: Retrofit
+    ): AppVersionWebClient {
+        return AppVersionWebClient(
+            retrofit.create(AppVersionService::class.java)
+        )
+    }
 }

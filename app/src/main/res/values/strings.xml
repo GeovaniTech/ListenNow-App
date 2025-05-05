@@ -77,4 +77,9 @@
     <string name="download_started_notification">Download Started Notification</string>
     <string name="next">Next</string>
     <string name="stop">Stop</string>
+    <string name="dialog_new_version_available_title">New Version Available</string>
+    <string name="dialog_new_version_available_message">A new version of ListenNow is now Available!\n\nInstalled Version: %s\nLatest Version: %s\n\nDo you want to update now?</string>
+    <string name="maybe_later">Maybe Later</string>
+    <string name="download_new_version_apk">Download ListenNow %s</string>
+    <string name="new_version_is_being_donwloaded">ListenNow update is being downloaded</string>
 </resources>
