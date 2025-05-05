@@ -14,8 +14,6 @@ class SearchYoutubeSongsViewModel @Inject constructor (
     private val songRepository: SongRepository,
     userRepository: UserRepository
 ): CommonViewModel(userRepository) {
-    var notificationId = 0
-
     private var _songs: MutableLiveData<List<SearchYTSongResponse>?> = MutableLiveData()
     val songs: LiveData<List<SearchYTSongResponse>?> get() = _songs
 

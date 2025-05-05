@@ -7,6 +7,7 @@ import androidx.core.app.NotificationCompat
 import br.com.listennow.R
 import br.com.listennow.fragments.MainActivity
 import br.com.listennow.repository.SongRepository
+import br.com.listennow.utils.NotificationUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +36,7 @@ class ImportAllSongsService: Service() {
             build()
         }
 
-        startForeground(1, notification)
+        startForeground(NotificationUtil.getUniqueNotificationId(), notification)
 
         CoroutineScope(Dispatchers.IO).launch {
             songsIds.windowed(20, 20, partialWindows = true).forEachIndexed{ index, chunk ->

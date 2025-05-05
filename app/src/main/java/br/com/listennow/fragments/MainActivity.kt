@@ -311,7 +311,7 @@ class MainActivity : AppCompatActivity() {
     private fun createDownloadSongNotificationChannel() {
         val name = getString(R.string.app_name)
         val descriptionText = getString(R.string.download_started_notification)
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val importance = NotificationManager.IMPORTANCE_LOW
         val channel =
             NotificationChannel(DOWNLOAD_SONG_NOTIFICATION_CHANNEl, name, importance).apply {
                 description = descriptionText
@@ -325,7 +325,7 @@ class MainActivity : AppCompatActivity() {
     private fun createImportAllSongsForegroundServiceNotificationChannel() {
         val name = getString(R.string.app_name)
         val descriptionText = getString(R.string.import_all_songs_from_another_device)
-        val importance = NotificationManager.IMPORTANCE_HIGH
+        val importance = NotificationManager.IMPORTANCE_LOW
         val channel =
             NotificationChannel(IMPORT_ALL_SONGS_FOREGROUND_SERVICE_NOTIFICATION_CHANNEl, name, importance).apply {
                 description = descriptionText

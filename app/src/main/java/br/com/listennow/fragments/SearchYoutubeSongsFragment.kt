@@ -21,6 +21,7 @@ import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.adapter.SearchYoutubeSongsAdapter
 import br.com.listennow.databinding.FragmentSearchYoutubeSongsBinding
 import br.com.listennow.databinding.FragmentSearchYoutubeSongsItemBinding
+import br.com.listennow.utils.NotificationUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.SearchYoutubeSongsViewModel
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
@@ -165,14 +166,13 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel, F
             NotificationManagerCompat.from(requireContext()).apply {
                 val manager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-                viewModel.notificationId += 1
+                val notificationId = NotificationUtil.getUniqueNotificationId()
 
-                manager.notify(viewModel.notificationId, notificationBuilder.build())
+                manager.notify(notificationId, notificationBuilder.build())
 
                 Thread(Runnable {
                     val retries = 10
                     var attempts = 0
-                    val notificationId = viewModel.notificationId
 
                     viewModel.viewModelScope.launch {
                         withContext(Dispatchers.IO) {
