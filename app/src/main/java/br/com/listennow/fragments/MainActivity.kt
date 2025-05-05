@@ -15,6 +15,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
+import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -46,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val viewModel by viewModels<MainActivityViewModel>()
-
+    private lateinit var mediaSession: MediaSessionCompat
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -68,6 +70,40 @@ class MainActivity : AppCompatActivity() {
         setViewModelObservers()
         onLoadLastSong()
         checkForAppUpdate()
+        createMediaSession()
+    }
+
+    private fun createMediaSession() {
+        mediaSession = MediaSessionCompat(this, "MediaSessionListenNow").apply {
+            setCallback(object : MediaSessionCompat.Callback() {
+                override fun onPlay() {
+                    startNotificationService(Actions.PLAY)
+                }
+
+                override fun onPause() {
+                    startNotificationService(Actions.STOP)
+                }
+
+                override fun onSkipToNext() {
+                    super.onSkipToNext()
+
+                    startNotificationService(Actions.NEXT)
+                }
+            })
+
+            setPlaybackState(
+                PlaybackStateCompat.Builder()
+                    .setActions(
+                        PlaybackStateCompat.ACTION_PLAY or
+                                PlaybackStateCompat.ACTION_PAUSE or
+                                PlaybackStateCompat.ACTION_PLAY_PAUSE
+                    )
+                    .setState(PlaybackStateCompat.STATE_NONE, 0, 1.0f)
+                    .build()
+            )
+
+            isActive = true
+        }
     }
 
     private fun setViewBindVariables() {
@@ -343,5 +379,11 @@ class MainActivity : AppCompatActivity() {
         const val DOWNLOAD_SONG_NOTIFICATION_CHANNEl = "DownloadSongNotification"
         const val IMPORT_ALL_SONGS_FOREGROUND_SERVICE_NOTIFICATION_CHANNEl = "ImportAllSongsForegroundServiceNotification"
         const val SONG_PLAYER_NOTIFICATION_CHANNEL = "SongPlayerNotificationChannel"
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        mediaSession.release()
     }
 }
