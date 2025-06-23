@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import br.com.listennow.database.dao.SongDao
+import br.com.listennow.decorator.AlbumItemDecorator
 import br.com.listennow.model.Song
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import br.com.listennow.webclient.song.model.SongResponse
@@ -105,5 +106,16 @@ class SongRepository @Inject constructor (
      */
     suspend fun copySongsFromAnotherDevice(userReceiver: String, songs: List<String>): Boolean {
         return songWebClient.copySongsFromAnotherUser(userReceiver, songs)
+    }
+
+    /**
+     * Return all distinct albums from Songs
+     */
+    suspend fun getAlbums(query: String?): List<AlbumItemDecorator> {
+        if (query.isNullOrEmpty()) {
+            return songDao.getAlbums()
+        }
+
+        return songDao.getAlbumsFiltering(query)
     }
 }

@@ -39,6 +39,14 @@
                     app:exitAnim="@anim/to_left"
                     app:popEnterAnim="@anim/from_left"
                     app:popExitAnim="@anim/from_right" />
+
+                <action
+                    android:id="@+id/action_homeFragment_to_albumsFragment"
+                    app:destination="@id/albumsFragment"
+                    app:enterAnim="@anim/to_right"
+                    app:exitAnim="@anim/to_left"
+                    app:popEnterAnim="@anim/from_left"
+                    app:popExitAnim="@anim/from_right" />
         </fragment>
 
         <fragment
@@ -105,4 +113,9 @@
                     app:popEnterAnim="@anim/from_left"
                     app:popExitAnim="@anim/from_right" />
         </fragment>
+
+        <fragment
+            android:id="@+id/albumsFragment"
+            android:name="br.com.listennow.fragments.AlbumsFragment"
+            android:label="@string/albums" />
 </navigation>

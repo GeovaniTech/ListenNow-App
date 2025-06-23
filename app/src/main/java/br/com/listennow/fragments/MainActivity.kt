@@ -267,6 +267,11 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
+                R.id.albumsFragment -> {
+                    navController.navigate(R.id.albumsFragment, null, navOptions)
+                    true
+                }
+
                 else -> false
             }
         }

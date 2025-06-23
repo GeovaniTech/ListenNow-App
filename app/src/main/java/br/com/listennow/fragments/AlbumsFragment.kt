@@ -1,13 +1,29 @@
 package br.com.listennow.fragments
 
+import android.os.Handler
+import android.os.HandlerThread
+import android.view.View
+import androidx.appcompat.widget.SearchView
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import br.com.listennow.BR
 import br.com.listennow.R
+import br.com.listennow.adapter.AlbumsAdapter
+import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.databinding.FragmentAlbumsBinding
+import br.com.listennow.databinding.FragmentAlbumsItemBinding
 import br.com.listennow.viewmodel.AlbumsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>() {
+class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(), IControllerItemsAdapter {
+
+    private lateinit var _adapter: AlbumsAdapter
 
     override val viewModel: AlbumsViewModel by viewModels()
 
@@ -16,14 +32,81 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>() 
     override fun loadNavParams() = Unit
 
     override fun setViewListeners() {
-        TODO("Not yet implemented")
+        configSearchView()
     }
 
+    private fun configSearchView() {
+        val handlerThread = HandlerThread("Song Delay")
+        handlerThread.start()
+        val looper = handlerThread.looper
+        val handler = Handler(looper)
+
+        binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(filter: String?): Boolean {
+//                startShimmer()
+
+                handler.removeCallbacksAndMessages(null);
+                handler.postDelayed(Runnable {
+                    filter?.let {
+                        viewModel.viewModelScope.launch {
+                            viewModel.loadData(it)
+                        }
+                    }
+                }, 700)
+
+                return true
+            }
+        })
+    }
+
+
     override fun setViewModelObservers() {
-        TODO("Not yet implemented")
+        viewModel.albums.observe(viewLifecycleOwner) {
+            _adapter.loadItems(it)
+        }
     }
 
     override fun loadData() {
-        TODO("Not yet implemented")
+        configRecyclerView()
+        viewModel.loadData()
+    }
+
+    private fun configRecyclerView() {
+        createAdapter()
+
+        binding.albumsRecyclerview.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.albumsRecyclerview.setHasFixedSize(true)
+        binding.albumsRecyclerview.adapter = _adapter
+    }
+
+    private fun createAdapter() {
+        _adapter = AlbumsAdapter(BR.albumItemDecorator, this)
+    }
+
+    override fun onViewItemClickListener(
+        view: View,
+        position: Int,
+        item: Any?,
+        holder: RecyclerView.ViewHolder,
+        dataBinding: ViewDataBinding
+    ) {
+        dataBinding as FragmentAlbumsItemBinding
+
+        view.setOnClickListener {
+            // TODO - Navigate to AlbumSongsFragment
+        }
+    }
+
+    override fun onChangeViewItem(
+        view: View,
+        position: Int,
+        item: Any?,
+        holder: RecyclerView.ViewHolder,
+        dataBinding: ViewDataBinding
+    ) {
     }
 }
