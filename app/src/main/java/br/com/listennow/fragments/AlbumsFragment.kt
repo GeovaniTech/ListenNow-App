@@ -16,6 +16,8 @@ import br.com.listennow.adapter.AlbumsAdapter
 import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.databinding.FragmentAlbumsBinding
 import br.com.listennow.databinding.FragmentAlbumsItemBinding
+import br.com.listennow.decorator.AlbumItemDecorator
+import br.com.listennow.model.Song
 import br.com.listennow.viewmodel.AlbumsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -41,13 +43,13 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
         val looper = handlerThread.looper
         val handler = Handler(looper)
 
-        binding.searchYtSongs.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.albumsSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(filter: String?): Boolean {
-//                startShimmer()
+                startShimmer()
 
                 handler.removeCallbacksAndMessages(null);
                 handler.postDelayed(Runnable {
@@ -63,15 +65,30 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
         })
     }
 
+    private fun startShimmer() {
+        binding.albumsRecyclerview.visibility = View.GONE
+        binding.shimmerList.visibility = View.VISIBLE
+        binding.shimmerList.startShimmer()
+    }
+
+    private fun setViewState(albums: List<AlbumItemDecorator>) {
+        binding.shimmerList.stopShimmer()
+        binding.shimmerList.visibility = View.GONE
+        binding.albumsRecyclerview.visibility = View.VISIBLE
+
+        // TODO - Create EmptyState Component
+    }
 
     override fun setViewModelObservers() {
         viewModel.albums.observe(viewLifecycleOwner) {
             _adapter.loadItems(it)
+            setViewState(it)
         }
     }
 
     override fun loadData() {
         configRecyclerView()
+        startShimmer()
         viewModel.loadData()
     }
 
