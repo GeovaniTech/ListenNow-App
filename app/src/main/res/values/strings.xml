@@ -82,4 +82,5 @@
     <string name="maybe_later">Maybe Later</string>
     <string name="download_new_version_apk">Download ListenNow %s</string>
     <string name="new_version_is_being_donwloaded">ListenNow update is being downloaded</string>
+    <string name="albums">Albums</string>
 </resources>

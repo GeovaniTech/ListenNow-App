@@ -2,7 +2,6 @@ package br.com.listennow.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import br.com.listennow.foreground.ImportAllSongsService
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
