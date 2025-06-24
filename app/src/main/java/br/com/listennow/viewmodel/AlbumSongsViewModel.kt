@@ -20,10 +20,11 @@ class AlbumSongsViewModel @Inject constructor(
     val songs: LiveData<List<Song>> get() = _songs
 
     lateinit var navParams: AlbumSongsNavParams
+    var searchFilter: String? = null
 
-    fun loadData(query: String? = null) {
+    fun loadData() {
         viewModelScope.launch {
-            _songs.postValue(songRepository.getSongsFromAlbum(navParams.album, navParams.artist, query))
+            _songs.postValue(songRepository.getSongsFromAlbum(navParams.album, navParams.artist, searchFilter))
         }
     }
 }

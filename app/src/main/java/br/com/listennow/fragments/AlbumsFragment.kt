@@ -65,9 +65,8 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
                 handler.removeCallbacksAndMessages(null);
                 handler.postDelayed(Runnable {
                     filter?.let {
-                        viewModel.viewModelScope.launch {
-                            viewModel.loadData(it)
-                        }
+                        viewModel.searchFilter = filter
+                        viewModel.loadData()
                     }
                 }, 700)
 

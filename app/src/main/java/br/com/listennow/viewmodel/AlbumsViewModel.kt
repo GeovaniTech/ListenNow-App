@@ -19,9 +19,11 @@ class AlbumsViewModel @Inject constructor(
     private var _albums: MutableLiveData<List<AlbumItemDecorator>> = MutableLiveData()
     val albums: LiveData<List<AlbumItemDecorator>> get() = _albums
 
-    fun loadData(query: String? = null) {
+    var searchFilter: String? = null
+
+    fun loadData() {
         viewModelScope.launch {
-            _albums.postValue(songRepository.getAlbums(query))
+            _albums.postValue(songRepository.getAlbums(searchFilter))
         }
     }
 }

@@ -65,9 +65,8 @@ class AlbumSongsFragment : CommonFragment<AlbumSongsViewModel, FragmentAlbumSong
                 handler.removeCallbacksAndMessages(null);
                 handler.postDelayed(Runnable {
                     filter?.let {
-                        viewModel.viewModelScope.launch {
-                            viewModel.loadData(it)
-                        }
+                        viewModel.searchFilter = it
+                        viewModel.loadData()
                     }
                 }, 700)
 
