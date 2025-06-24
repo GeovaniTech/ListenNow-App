@@ -46,7 +46,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:listitem="@layout/fragment_song_item"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:layout_marginBottom="155dp" />
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmerList"
