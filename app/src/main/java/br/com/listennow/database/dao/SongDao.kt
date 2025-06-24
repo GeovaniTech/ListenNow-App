@@ -28,9 +28,12 @@ interface SongDao {
     @Query("SELECT * FROM Song WHERE LOWER(name) LIKE  '%' || LOWER(:text) || '%' OR artist LIKE '%' || LOWER(:text) || '%'")
     suspend fun listByFilters(text: String): List<Song>
 
-    @Query(" SELECT album as name, artist, thumb FROM Song GROUP BY album, artist")
+    @Query("SELECT album as name, artist, thumb FROM Song GROUP BY album, artist")
     suspend fun getAlbums(): List<AlbumItemDecorator>
 
-    @Query(" SELECT album as name, artist, thumb FROM Song WHERE LOWER(name) LIKE  '%' || LOWER(:query) || '%' OR artist LIKE '%' || LOWER(:query) || '%' GROUP BY album, artist")
+    @Query("SELECT album as name, artist, thumb FROM Song WHERE LOWER(name) LIKE  '%' || LOWER(:query) || '%' OR artist LIKE '%' || LOWER(:query) || '%' GROUP BY album, artist")
     suspend fun getAlbumsFiltering(query: String): List<AlbumItemDecorator>
+
+    @Query("SELECT * FROM Song WHERE album = :album AND artist = :artist")
+    suspend fun getSongsFromAlbum(album: String, artist: String): List<Song>
 }

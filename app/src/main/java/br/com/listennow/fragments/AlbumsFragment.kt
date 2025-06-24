@@ -7,6 +7,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,8 @@ import br.com.listennow.databinding.FragmentAlbumsBinding
 import br.com.listennow.databinding.FragmentAlbumsItemBinding
 import br.com.listennow.decorator.AlbumItemDecorator
 import br.com.listennow.model.Song
+import br.com.listennow.navparams.AlbumSongsNavParams
+import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.AlbumsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -35,6 +38,14 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
 
     override fun setViewListeners() {
         configSearchView()
+
+        mainActivity.binding.playBackButtons.setOnClickListener {
+            if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
+                findNavController().navigate(AlbumsFragmentDirections.actionAlbumsFragmentToSongDetailsFragment(
+                    SongUtil.actualSong!!.videoId
+                ))
+            }
+        }
     }
 
     private fun configSearchView() {
@@ -111,10 +122,16 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
         holder: RecyclerView.ViewHolder,
         dataBinding: ViewDataBinding
     ) {
+        item as AlbumItemDecorator
         dataBinding as FragmentAlbumsItemBinding
 
         view.setOnClickListener {
-            // TODO - Navigate to AlbumSongsFragment
+            findNavController().navigate(AlbumsFragmentDirections.actionAlbumsFragmentToAlbumSongsFragment(
+                AlbumSongsNavParams(
+                    album = item.name,
+                    artist = item.artist
+                )
+            ))
         }
     }
 
@@ -124,6 +141,5 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
         item: Any?,
         holder: RecyclerView.ViewHolder,
         dataBinding: ViewDataBinding
-    ) {
-    }
+    ) = Unit
 }

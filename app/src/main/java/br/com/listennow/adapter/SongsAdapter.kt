@@ -4,7 +4,7 @@ import br.com.listennow.R
 import br.com.listennow.databinding.FragmentSongItemBinding
 import br.com.listennow.model.Song
 
-class HomeSongsAdapter(
+class SongsAdapter(
     variableId: Int,
     itemsController: IControllerItemsAdapter
 ): CommonAdapter<Song, FragmentSongItemBinding>(variableId, itemsController) {

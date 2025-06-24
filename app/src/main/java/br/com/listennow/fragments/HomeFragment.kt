@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.listennow.BR
 import br.com.listennow.R
-import br.com.listennow.adapter.HomeSongsAdapter
+import br.com.listennow.adapter.SongsAdapter
 import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.databinding.FragmentHomeBinding
 import br.com.listennow.foreground.Actions
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), IControllerItemsAdapter {
-    private lateinit var adapter: HomeSongsAdapter
+    private lateinit var adapter: SongsAdapter
 
     override val viewModel: HomeViewModel by viewModels()
 
@@ -157,7 +157,7 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
     }
 
     private fun createAdapter() {
-        adapter = HomeSongsAdapter(BR.songItem, this)
+        adapter = SongsAdapter(BR.songItem, this)
     }
 
     private fun syncSongs() {

@@ -118,4 +118,11 @@ class SongRepository @Inject constructor (
 
         return songDao.getAlbumsFiltering(query)
     }
+
+    /**
+     * Return all songs from an Album of an Artist
+     */
+    suspend fun getSongsFromAlbum(album: String, artist: String): List<Song> {
+        return songDao.getSongsFromAlbum(album, artist)
+    }
 }

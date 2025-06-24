@@ -117,5 +117,40 @@
         <fragment
             android:id="@+id/albumsFragment"
             android:name="br.com.listennow.fragments.AlbumsFragment"
-            android:label="@string/albums" />
+            android:label="@string/albums">
+
+                <action
+                    android:id="@+id/action_albumsFragment_to_songDetailsFragment"
+                    app:destination="@id/songDetailsFragment"
+                    app:enterAnim="@anim/to_right"
+                    app:exitAnim="@anim/to_left"
+                    app:popEnterAnim="@anim/from_left"
+                    app:popExitAnim="@anim/from_right" />
+
+                <action
+                    android:id="@+id/action_albumsFragment_to_albumSongsFragment"
+                    app:destination="@id/albumSongsFragment"
+                    app:enterAnim="@anim/to_right"
+                    app:exitAnim="@anim/to_left"
+                    app:popEnterAnim="@anim/from_left"
+                    app:popExitAnim="@anim/from_right" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/albumSongsFragment"
+            android:name="br.com.listennow.fragments.AlbumSongsFragment"
+            android:label="@string/album_songs">
+
+                <action
+                    android:id="@+id/action_albumSongsFragment_to_songDetailsFragment"
+                    app:destination="@id/songDetailsFragment"
+                    app:enterAnim="@anim/to_right"
+                    app:exitAnim="@anim/to_left"
+                    app:popEnterAnim="@anim/from_left"
+                    app:popExitAnim="@anim/from_right" />
+
+                <argument
+                    android:name="navParams"
+                    app:argType="br.com.listennow.navparams.AlbumSongsNavParams" />
+        </fragment>
 </navigation>
