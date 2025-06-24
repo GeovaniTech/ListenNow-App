@@ -21,9 +21,9 @@ class AlbumSongsViewModel @Inject constructor(
 
     lateinit var navParams: AlbumSongsNavParams
 
-    fun loadData() {
+    fun loadData(query: String? = null) {
         viewModelScope.launch {
-            _songs.postValue(songRepository.getSongsFromAlbum(navParams.album, navParams.artist))
+            _songs.postValue(songRepository.getSongsFromAlbum(navParams.album, navParams.artist, query))
         }
     }
 }

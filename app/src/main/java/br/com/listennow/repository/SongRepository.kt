@@ -122,7 +122,11 @@ class SongRepository @Inject constructor (
     /**
      * Return all songs from an Album of an Artist
      */
-    suspend fun getSongsFromAlbum(album: String, artist: String): List<Song> {
-        return songDao.getSongsFromAlbum(album, artist)
+    suspend fun getSongsFromAlbum(album: String, artist: String, query: String?): List<Song> {
+        if (query.isNullOrEmpty()) {
+            return songDao.getSongsFromAlbum(album, artist)
+        }
+
+        return songDao.getSongsFromAlbumFiltering(album, artist, query)
     }
 }

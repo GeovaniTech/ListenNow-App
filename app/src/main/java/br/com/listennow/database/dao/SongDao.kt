@@ -36,4 +36,7 @@ interface SongDao {
 
     @Query("SELECT * FROM Song WHERE album = :album AND artist = :artist")
     suspend fun getSongsFromAlbum(album: String, artist: String): List<Song>
+
+    @Query("SELECT * FROM Song WHERE album = :album AND artist = :artist AND (LOWER(name) LIKE  '%' || LOWER(:query) || '%' OR artist LIKE '%' || LOWER(:query) || '%')")
+    suspend fun getSongsFromAlbumFiltering(album: String, artist: String, query: String): List<Song>
 }
