@@ -129,4 +129,11 @@ class SongRepository @Inject constructor (
 
         return songDao.getSongsFromAlbumFiltering(album, artist, query)
     }
+
+    /**
+     * Save the song on the Database
+     */
+    suspend fun saveSong(song: Song) {
+        songDao.save(song)
+    }
 }

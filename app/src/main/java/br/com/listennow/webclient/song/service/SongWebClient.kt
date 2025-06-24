@@ -30,7 +30,7 @@ class SongWebClient(
             }
         } catch (e: Exception) {
 
-            Log.e(TAG, "Error trying to get songs from API $e")
+            Log.e(TAG, "Error trying to get songs from API ${e.message}")
             null
         }
     }
@@ -39,7 +39,7 @@ class SongWebClient(
         return try {
             songService.getSongFile(SongDownloadRequest(songId))
         } catch (e: Exception) {
-            Log.e(TAG, "Error trying to get song $e")
+            Log.e(TAG, "Error trying to get song ${e.message}")
             null
         }
     }
@@ -48,7 +48,7 @@ class SongWebClient(
         return try {
             return songService.getYTSongs(SearchYTSongRequest(searchFor))
         } catch (e: Exception) {
-            Log.e(TAG, "Error trying to get songs from YT: $e" )
+            Log.e(TAG, "Error trying to get songs from YT: ${e.message}" )
             null
         }
     }
@@ -57,7 +57,7 @@ class SongWebClient(
         try {
             songService.downloadSong(SearchDownloadSongRequest(videoId, userId))
         } catch (e: Exception) {
-            Log.e(TAG, "Error trying to start downloading on Server $e")
+            Log.e(TAG, "Error trying to start downloading on Server ${e.message}")
         }
     }
 

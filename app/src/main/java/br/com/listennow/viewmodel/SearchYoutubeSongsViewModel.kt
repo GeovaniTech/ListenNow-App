@@ -30,7 +30,9 @@ class SearchYoutubeSongsViewModel @Inject constructor (
             val songResponse = songRepository.findSongByIdOnServer(videoId)
 
             songResponse?.let {
-                songRepository.handleSongFromServer(it.song)
+                val song = songResponse.song
+                songRepository.handleSongFromServer(song)
+                songRepository.saveSong(song)
             }
 
             return true
