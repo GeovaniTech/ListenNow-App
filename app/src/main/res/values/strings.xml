@@ -84,4 +84,6 @@
     <string name="new_version_is_being_donwloaded">ListenNow update is being downloaded</string>
     <string name="albums">Albums</string>
     <string name="album_songs">Album Songs</string>
+    <string name="cd_empty_state_people_looking_for_something">A wowen looking for something</string>
+    <string name="albums_no_albums_found_empty_state">No Albums found</string>
 </resources>

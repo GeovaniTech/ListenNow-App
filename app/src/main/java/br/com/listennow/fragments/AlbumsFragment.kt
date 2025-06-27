@@ -4,12 +4,11 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.listennow.BR
 import br.com.listennow.R
@@ -18,12 +17,10 @@ import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.databinding.FragmentAlbumsBinding
 import br.com.listennow.databinding.FragmentAlbumsItemBinding
 import br.com.listennow.decorator.AlbumItemDecorator
-import br.com.listennow.model.Song
 import br.com.listennow.navparams.AlbumSongsNavParams
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.AlbumsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(), IControllerItemsAdapter {
@@ -36,8 +33,16 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
 
     override fun loadNavParams() = Unit
 
-    override fun setViewListeners() {
+    override fun configView() {
         configSearchView()
+        configEmptyState()
+    }
+
+    private fun configEmptyState() {
+        binding.albumsEmptyState.hideAction()
+    }
+
+    override fun setViewListeners() {
 
         mainActivity.binding.playBackButtons.setOnClickListener {
             if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
@@ -77,6 +82,7 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
 
     private fun startShimmer() {
         binding.albumsRecyclerview.visibility = View.GONE
+        binding.albumsEmptyState.visibility = View.GONE
         binding.shimmerList.visibility = View.VISIBLE
         binding.shimmerList.startShimmer()
     }
@@ -84,9 +90,8 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
     private fun setViewState(albums: List<AlbumItemDecorator>) {
         binding.shimmerList.stopShimmer()
         binding.shimmerList.visibility = View.GONE
-        binding.albumsRecyclerview.visibility = View.VISIBLE
-
-        // TODO - Create EmptyState Component
+        binding.albumsEmptyState.isVisible = albums.isEmpty()
+        binding.albumsRecyclerview.isVisible = albums.isNotEmpty()
     }
 
     override fun setViewModelObservers() {

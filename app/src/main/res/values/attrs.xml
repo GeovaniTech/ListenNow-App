@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="EmptyState">
+        <attr name="message" format="string" />
+        <attr name="buttonText" format="string" />
+        <attr name="buttonIcon" />
+    </declare-styleable>
+</resources>

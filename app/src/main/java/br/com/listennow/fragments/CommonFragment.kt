@@ -45,6 +45,7 @@ abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBindi
 
         loadNavParams()
         setViewListeners()
+        configView()
         loadData()
         setViewModelObservers()
         loadBindingVariables()
@@ -112,4 +113,5 @@ abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBindi
     abstract fun setViewModelObservers()
     abstract fun loadData()
     open fun loadBindingVariables() {}
+    open fun configView() {}
 }
