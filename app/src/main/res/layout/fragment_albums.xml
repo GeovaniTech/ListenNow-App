@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:iconifiedByDefault="false"
-                app:queryHint="@string/title_artist_album"
+                app:queryHint="@string/albums_search_bar_hint"
                 app:searchHintIcon="@drawable/ic_search"
                 app:searchIcon="@drawable/ic_search"
                 android:focusable="true"

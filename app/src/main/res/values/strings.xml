@@ -86,4 +86,5 @@
     <string name="album_songs">Album Songs</string>
     <string name="cd_empty_state_people_looking_for_something">A wowen looking for something</string>
     <string name="albums_no_albums_found_empty_state">No Albums found</string>
+    <string name="albums_search_bar_hint">Search for album or artist name</string>
 </resources>
