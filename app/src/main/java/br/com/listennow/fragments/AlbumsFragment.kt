@@ -43,13 +43,16 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
     }
 
     override fun setViewListeners() {
-
         mainActivity.binding.playBackButtons.setOnClickListener {
             if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
                 findNavController().navigate(AlbumsFragmentDirections.actionAlbumsFragmentToSongDetailsFragment(
                     SongUtil.actualSong!!.videoId
                 ))
             }
+        }
+
+        binding.albumsSeePlaylists.setOnClickListener {
+            findNavController().navigate(AlbumsFragmentDirections.actionAlbumsFragmentToPlaylistsFragment())
         }
     }
 

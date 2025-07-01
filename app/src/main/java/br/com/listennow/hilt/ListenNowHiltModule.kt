@@ -2,6 +2,7 @@ package br.com.listennow.hilt
 
 import android.content.Context
 import br.com.listennow.database.AppDatabase
+import br.com.listennow.database.dao.PlaylistDao
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.database.dao.UserDao
 import br.com.listennow.repository.SongRepository
@@ -81,6 +82,13 @@ object ListenNowHiltModule {
         @ApplicationContext context: Context
     ): UserDao {
         return AppDatabase.getInstance(context).userDao()
+    }
+
+    @Provides
+    fun providePlaylistDao(
+        @ApplicationContext context: Context
+    ): PlaylistDao {
+        return AppDatabase.getInstance(context).playlistDao()
     }
 
     @Provides

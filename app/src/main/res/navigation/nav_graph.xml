@@ -134,6 +134,14 @@
                     app:exitAnim="@anim/to_left"
                     app:popEnterAnim="@anim/from_left"
                     app:popExitAnim="@anim/from_right" />
+
+                <action
+                    android:id="@+id/action_albumsFragment_to_playlistsFragment"
+                    app:destination="@id/playlistsFragment"
+                    app:enterAnim="@anim/to_right"
+                    app:exitAnim="@anim/to_left"
+                    app:popEnterAnim="@anim/from_left"
+                    app:popExitAnim="@anim/from_right" />
         </fragment>
 
         <fragment
@@ -152,5 +160,13 @@
                 <argument
                     android:name="navParams"
                     app:argType="br.com.listennow.navparams.AlbumSongsNavParams" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/playlistsFragment"
+            android:name="br.com.listennow.fragments.PlaylistsFragment"
+            android:label="@string/playlists_title">
+
+
         </fragment>
 </navigation>

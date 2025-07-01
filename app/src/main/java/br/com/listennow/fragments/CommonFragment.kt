@@ -1,5 +1,6 @@
 package br.com.listennow.fragments
 
+import android.app.ActionBar.LayoutParams
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -18,7 +20,7 @@ import br.com.listennow.viewmodel.CommonViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
-abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBinding>() : Fragment() {
+abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBinding>() : DialogFragment() {
     protected abstract val viewModel: ViewModel
     protected lateinit var binding: DataBinding
 
@@ -105,6 +107,10 @@ abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBindi
             .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.background))
             .show()
+    }
+
+    fun setFullWidth() {
+        dialog?.window?.setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
     }
 
     abstract fun getLayout(): Int
