@@ -9,7 +9,7 @@ import java.util.UUID
 data class Playlist(
     @PrimaryKey
     @NonNull
-    val id: String,
+    val playlistId: String,
 
     @NonNull
     val name: String

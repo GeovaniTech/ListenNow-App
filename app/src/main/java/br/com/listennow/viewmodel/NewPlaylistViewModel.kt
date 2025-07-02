@@ -31,7 +31,7 @@ class NewPlaylistViewModel @Inject constructor(
 
         viewModelScope.launch {
             playlistDao.save(Playlist(
-                id = UUID.randomUUID().toString(),
+                playlistId = UUID.randomUUID().toString(),
                 name = playlist.title!!
             ))
 

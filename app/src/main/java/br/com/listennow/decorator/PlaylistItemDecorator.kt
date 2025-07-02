@@ -1,4 +1,8 @@
 package br.com.listennow.decorator
 
-class PlaylistItemDecorator {
-}
+data class PlaylistItemDecorator (
+    val title: String,
+    val artists: String? = null,
+    val totalSongs: Int,
+    val playlistId: String
+)

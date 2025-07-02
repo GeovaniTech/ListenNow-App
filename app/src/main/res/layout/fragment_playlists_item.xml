@@ -3,7 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data></data>
+    <data>
+        <variable
+            name="playlistItemDecorator"
+            type="br.com.listennow.decorator.PlaylistItemDecorator" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -46,6 +50,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="Gym"
+                        android:text="@{playlistItemDecorator.title}"
                         android:textStyle="bold"
                         android:textSize="18sp"/>
 

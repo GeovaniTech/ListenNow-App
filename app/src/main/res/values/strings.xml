@@ -97,4 +97,7 @@
     <string name="playlists_new_playlist_cancel">Cancel</string>
     <string name="playlists_new_playlist_msg_title_is_required">You need to specify a title for playlist</string>
     <string name="playlists_new_playlist_msg_playlist_saved">Playlist %s saved successfully.</string>
+    <string name="playlists_item_total_songs">%d Song(s)</string>
+    <string name="playlists_item_artists">Artist(s): %s</string>
+    <string name="playlistS_msg_playlist_deleted">Playlist deleted.</string>
 </resources>

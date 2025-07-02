@@ -3,7 +3,6 @@ package br.com.listennow.fragments
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import br.com.listennow.R
 import br.com.listennow.databinding.FragmentPlaylistsNewPlaylistBinding

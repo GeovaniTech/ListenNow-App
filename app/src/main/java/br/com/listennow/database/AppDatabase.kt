@@ -9,10 +9,11 @@ import br.com.listennow.database.dao.SongDao
 import br.com.listennow.database.dao.UserDao
 import br.com.listennow.migrations.MIGRATION_5_6
 import br.com.listennow.model.Playlist
+import br.com.listennow.model.PlaylistSong
 import br.com.listennow.model.Song
 import br.com.listennow.model.User
 
-@Database(entities = [Song::class, User::class, Playlist::class], version = 6, exportSchema = true)
+@Database(entities = [Song::class, User::class, Playlist::class, PlaylistSong::class], version = 6, exportSchema = true)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun songDao(): SongDao
     abstract fun userDao(): UserDao
@@ -35,6 +36,7 @@ abstract class AppDatabase : RoomDatabase() {
                         DATABASE_NAME
                     )
                     .addMigrations(MIGRATION_5_6)
+                        .fallbackToDestructiveMigration()
                     .build()
 
                     INSTANCE = instance
