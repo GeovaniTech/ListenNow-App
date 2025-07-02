@@ -100,4 +100,5 @@
     <string name="playlists_item_total_songs">%d Song(s)</string>
     <string name="playlists_item_artists">Artist(s): %s</string>
     <string name="playlistS_msg_playlist_deleted">Playlist deleted.</string>
+    <string name="playlists_no_artists_found">No artists found</string>
 </resources>

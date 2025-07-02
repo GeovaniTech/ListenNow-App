@@ -114,6 +114,12 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
         item as PlaylistItemDecorator
 
         dataBinding.playlistsItemTotalSongs.text = getString(R.string.playlists_item_total_songs, item.totalSongs)
-        dataBinding.playlistsItemArtists.text = getString(R.string.playlists_item_artists, item.artists)
+
+        if (item.artists.isNullOrEmpty()) {
+            dataBinding.playlistsItemArtists.text = getString(R.string.playlists_item_artists, getString(R.string.playlists_no_artists_found))
+        } else {
+            dataBinding.playlistsItemArtists.text = getString(R.string.playlists_item_artists, item.artists)
+
+        }
     }
 }
