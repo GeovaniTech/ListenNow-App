@@ -2,6 +2,7 @@ package br.com.listennow.fragments
 
 import android.os.Handler
 import android.os.HandlerThread
+import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
@@ -22,6 +23,7 @@ import br.com.listennow.adapter.provider.SongKeyProvider
 import br.com.listennow.databinding.FragmentSelectSongsBinding
 import br.com.listennow.viewmodel.SelectSongsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Collections
 
 @AndroidEntryPoint
 class SelectSongsFragment : CommonFragment<SelectSongsViewModel, FragmentSelectSongsBinding>(), IControllerItemsAdapter {
@@ -41,7 +43,13 @@ class SelectSongsFragment : CommonFragment<SelectSongsViewModel, FragmentSelectS
                 return@setOnClickListener
             }
 
-            setFragmentResult(SELECT_SONGS_FRAGMENT_KEY, bundleOf(SELECT_SONGS_FRAGMENT_RESULT to _adapter.tracker!!.selection.toList()))
+            val songsIds = ArrayList<String>()
+
+            _adapter.tracker!!.selection.forEach { songId ->
+                songsIds.add(songId)
+            }
+
+            setFragmentResult(SELECT_SONGS_FRAGMENT_KEY, bundleOf(SELECT_SONGS_FRAGMENT_RESULT to songsIds))
             findNavController().popBackStack()
         }
     }

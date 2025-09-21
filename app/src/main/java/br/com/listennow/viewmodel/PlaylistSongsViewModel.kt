@@ -37,6 +37,7 @@ class PlaylistSongsViewModel @Inject constructor(
     }
 
     fun addSongsToPlaylist(songsIds: ArrayList<String>?) = viewModelScope.launch {
+        Log.i("BATATA", "addSongsToPlaylist: $songsIds")
         songsIds?.let {
             val playlistSongs = songsIds.map { PlaylistSong(navParams.playlistId, it) }
             playlistDao.addSongsToPlaylist(playlistSongs)
