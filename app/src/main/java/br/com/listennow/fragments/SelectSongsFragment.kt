@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
@@ -21,6 +22,7 @@ import br.com.listennow.adapter.SongsAdapter
 import br.com.listennow.adapter.lookup.SongKeyLookup
 import br.com.listennow.adapter.provider.SongKeyProvider
 import br.com.listennow.databinding.FragmentSelectSongsBinding
+import br.com.listennow.model.Song
 import br.com.listennow.viewmodel.SelectSongsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Collections
@@ -34,7 +36,11 @@ class SelectSongsFragment : CommonFragment<SelectSongsViewModel, FragmentSelectS
 
     override fun getLayout(): Int = R.layout.fragment_select_songs
 
-    override fun loadNavParams() = Unit
+    override fun loadNavParams() {
+        SelectSongsFragmentArgs.fromBundle(requireArguments()).navParams.let {
+            viewModel.navParams = it
+        }
+    }
 
     override fun setViewListeners() {
         binding.selectSongsSave.setOnClickListener {
@@ -52,13 +58,25 @@ class SelectSongsFragment : CommonFragment<SelectSongsViewModel, FragmentSelectS
             setFragmentResult(SELECT_SONGS_FRAGMENT_KEY, bundleOf(SELECT_SONGS_FRAGMENT_RESULT to songsIds))
             findNavController().popBackStack()
         }
+
+        binding.selectSongsEmptySate.binding.emptyStateActionButton.setOnClickListener {
+            findNavController().navigate(SelectSongsFragmentDirections.actionSelectSongsFragmentToSearchNewSongsFragment())
+        }
     }
 
     override fun setViewModelObservers() {
         viewModel.songs.observe(viewLifecycleOwner) { songs ->
             _adapter.loadItems(songs)
+
+            setViewState(songs)
             stopShimmer()
         }
+    }
+
+    private fun setViewState(songs: List<Song>) {
+        stopShimmer()
+        binding.selectSongsRecyclerview.isVisible = songs.isNotEmpty()
+        binding.selectSongsEmptySate.isVisible = songs.isEmpty()
     }
 
     private fun configSearchView() {

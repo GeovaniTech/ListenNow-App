@@ -35,8 +35,8 @@ class SongRepository @Inject constructor (
         return songWebClient.findSongById(id)
     }
 
-    suspend fun getAllFiltering(searchFor: String): List<Song> {
-        return songDao.listByFilters(searchFor)
+    suspend fun getAllFiltering(searchFor: String, ignoreIds: List<String> = emptyList()): List<Song> {
+        return songDao.listByFilters(searchFor, ignoreIds)
     }
 
     suspend fun updateAll(userId: String?) {

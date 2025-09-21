@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.selection.Selection
 import br.com.listennow.database.dao.PlaylistDao
 import br.com.listennow.model.Song
+import br.com.listennow.navparams.SelectSongsNavParams
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +24,9 @@ class SelectSongsViewModel @Inject constructor(
 
     var query: String = ""
 
+    lateinit var navParams: SelectSongsNavParams
+
     fun loadData() = viewModelScope.launch {
-        _songs.postValue(songRepository.getAllFiltering(query))
+        _songs.postValue(songRepository.getAllFiltering(query, navParams.ignoreIds))
     }
 }

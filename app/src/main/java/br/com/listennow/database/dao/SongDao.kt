@@ -26,8 +26,8 @@ interface SongDao {
     @Query("SELECT * FROM Song WHERE videoId = :id")
     suspend fun findById(id: String): Song
 
-    @Query("SELECT * FROM Song WHERE LOWER(name) LIKE  '%' || LOWER(:text) || '%' OR artist LIKE '%' || LOWER(:text) || '%'")
-    suspend fun listByFilters(text: String): List<Song>
+    @Query("SELECT * FROM Song WHERE videoId NOT IN (:ignoreIds) AND (LOWER(name) LIKE  '%' || LOWER(:text) || '%' OR artist LIKE '%' || LOWER(:text) || '%')")
+    suspend fun listByFilters(text: String, ignoreIds: List<String> = emptyList()): List<Song>
 
     @Query("SELECT album as name, artist, thumb FROM Song GROUP BY album, artist")
     suspend fun getAlbums(): List<AlbumItemDecorator>

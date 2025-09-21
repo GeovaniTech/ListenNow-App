@@ -199,6 +199,18 @@
             android:name="br.com.listennow.fragments.SelectSongsFragment"
             android:label="@string/select_songs">
 
+                <argument
+                        android:name="navParams"
+                        app:argType="br.com.listennow.navparams.SelectSongsNavParams"/>
+
+                <action
+                    android:id="@+id/action_selectSongsFragment_to_searchNewSongsFragment"
+                    app:destination="@id/searchNewSongsFragment"
+                    app:enterAnim="@anim/to_right"
+                    app:exitAnim="@anim/to_left"
+                    app:popEnterAnim="@anim/from_left"
+                    app:popExitAnim="@anim/from_right" />
+
                 <action
                     android:id="@+id/action_selectSongsFragment_to_songDetailsFragment"
                     app:destination="@id/songDetailsFragment"

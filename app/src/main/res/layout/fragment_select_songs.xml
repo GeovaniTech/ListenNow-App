@@ -53,6 +53,16 @@
                 android:visibility="gone"
                 android:layout_marginBottom="155dp" />
 
+            <br.com.listennow.components.EmptyState
+                android:id="@+id/select_songs_emptySate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/select_songs_save"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/select_songs_search_bar"
+                app:message="@string/select_songs_empty_state" />
+
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/shimmerList"
                 android:layout_width="match_parent"
@@ -123,16 +133,16 @@
                 android:id="@+id/select_songs_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:icon="@drawable/ic_check"
-                tools:text="Select 13 Song(s)"
-                android:text="@string/select_amount_songs"
-                app:iconTint="@color/white"
-                android:textColor="@color/white"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="171dp"
                 android:backgroundTint="@color/background"
+                android:text="@string/select_amount_songs"
+                android:textColor="@color/white"
+                app:icon="@drawable/ic_check"
+                app:iconTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="171dp" />
+                tools:text="Select 13 Song(s)" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

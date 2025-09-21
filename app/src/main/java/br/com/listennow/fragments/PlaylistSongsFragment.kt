@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,9 +17,11 @@ import br.com.listennow.adapter.SongsAdapter
 import br.com.listennow.databinding.FragmentPlaylistSongsBinding
 import br.com.listennow.foreground.Actions
 import br.com.listennow.model.Song
+import br.com.listennow.navparams.SelectSongsNavParams
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.PlaylistSongsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPlaylistSongsBinding>(), IControllerItemsAdapter {
@@ -47,11 +50,21 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
 
     override fun setViewListeners() {
         binding.playlistSongsAddSong.setOnClickListener {
-            setFragmentResultListener(SelectSongsFragment.SELECT_SONGS_FRAGMENT_KEY) { _, bundle ->
-                val songsIds = bundle.getStringArrayList(SelectSongsFragment.SELECT_SONGS_FRAGMENT_RESULT)
-                viewModel.addSongsToPlaylist(songsIds)
+            viewModel.viewModelScope.launch {
+                setFragmentResultListener(SelectSongsFragment.SELECT_SONGS_FRAGMENT_KEY) { _, bundle ->
+                    val songsIds = bundle.getStringArrayList(SelectSongsFragment.SELECT_SONGS_FRAGMENT_RESULT)
+                    viewModel.addSongsToPlaylist(songsIds)
+                }
+
+                val songsIdsToIgnore = viewModel.getSongsIdsFromPlaylist()
+
+                findNavController().navigate(PlaylistSongsFragmentDirections.actionPlaylistSongsFragmentToSelectSongsFragment(
+                    SelectSongsNavParams(
+                        songsIdsToIgnore
+                    )
+                ))
             }
-            findNavController().navigate(PlaylistSongsFragmentDirections.actionPlaylistSongsFragmentToSelectSongsFragment())
+
         }
     }
 

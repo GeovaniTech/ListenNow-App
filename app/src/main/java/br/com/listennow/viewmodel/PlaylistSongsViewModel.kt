@@ -1,11 +1,9 @@
 package br.com.listennow.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import br.com.listennow.database.dao.PlaylistDao
-import br.com.listennow.model.Playlist
 import br.com.listennow.model.PlaylistSong
 import br.com.listennow.model.Song
 import br.com.listennow.navparams.PlaylistSongsNavParams
@@ -13,7 +11,6 @@ import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.ArrayList
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
@@ -37,7 +34,6 @@ class PlaylistSongsViewModel @Inject constructor(
     }
 
     fun addSongsToPlaylist(songsIds: ArrayList<String>?) = viewModelScope.launch {
-        Log.i("BATATA", "addSongsToPlaylist: $songsIds")
         songsIds?.let {
             val playlistSongs = songsIds.map { PlaylistSong(navParams.playlistId, it) }
             playlistDao.addSongsToPlaylist(playlistSongs)
@@ -47,5 +43,9 @@ class PlaylistSongsViewModel @Inject constructor(
 
     fun postSongsAddedCallback(value: Boolean) {
         _onSongsAddedCallback.postValue(AtomicBoolean(value))
+    }
+
+    suspend fun getSongsIdsFromPlaylist(): List<String> {
+        return songRepository.getSongsFromPlaylist(navParams.playlistId, null).map { it.videoId }
     }
 }
