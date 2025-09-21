@@ -24,6 +24,7 @@ import br.com.listennow.fragments.NewPlaylistFragment.Companion.NEW_PLAYLIST_FRA
 import br.com.listennow.fragments.NewPlaylistFragment.Companion.NEW_PLAYLIST_FRAGMENT_RESULT
 import br.com.listennow.fragments.NewPlaylistFragment.Companion.TAG
 import br.com.listennow.navparams.PlaylistSongsNavParams
+import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.PlaylistsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,6 +43,14 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
     }
 
     override fun setViewListeners() {
+        mainActivity.binding.playBackButtons.setOnClickListener {
+            if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
+                findNavController().navigate(PlaylistsFragmentDirections.actionPlaylistsFragmentToSongDetailsFragment(
+                    SongUtil.actualSong!!.videoId
+                ))
+            }
+        }
+
         binding.playlistsNewPlaylist.setOnClickListener {
             setFragmentResultListener(NEW_PLAYLIST_FRAGMENT_KEY) { _, bundle ->
                 val playlist = bundle.getSerializableValue(NEW_PLAYLIST_FRAGMENT_RESULT, PlaylistDecorator::class.java)!!

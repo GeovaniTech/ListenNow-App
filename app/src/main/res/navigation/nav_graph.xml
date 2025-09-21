@@ -168,6 +168,14 @@
             android:label="@string/playlists_title">
 
                 <action
+                    android:id="@+id/action_playlistsFragment_to_songDetailsFragment"
+                    app:destination="@id/songDetailsFragment"
+                    app:enterAnim="@anim/to_right"
+                    app:exitAnim="@anim/to_left"
+                    app:popEnterAnim="@anim/from_left"
+                    app:popExitAnim="@anim/from_right" />
+
+                <action
                     android:id="@+id/action_playlistsFragment_to_playlistSongsFragment"
                     app:destination="@id/playlistSongsFragment"
                     app:enterAnim="@anim/to_right"
@@ -188,6 +196,14 @@
                 <action
                     android:id="@+id/action_playlistSongsFragment_to_selectSongsFragment"
                     app:destination="@id/selectSongsFragment"
+                    app:enterAnim="@anim/to_right"
+                    app:exitAnim="@anim/to_left"
+                    app:popEnterAnim="@anim/from_left"
+                    app:popExitAnim="@anim/from_right" />
+
+                <action
+                    android:id="@+id/action_playlistSongsFragment_to_songDetailsFragment"
+                    app:destination="@id/songDetailsFragment"
                     app:enterAnim="@anim/to_right"
                     app:exitAnim="@anim/to_left"
                     app:popEnterAnim="@anim/from_left"

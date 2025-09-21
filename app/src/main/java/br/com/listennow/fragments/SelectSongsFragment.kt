@@ -23,6 +23,7 @@ import br.com.listennow.adapter.lookup.SongKeyLookup
 import br.com.listennow.adapter.provider.SongKeyProvider
 import br.com.listennow.databinding.FragmentSelectSongsBinding
 import br.com.listennow.model.Song
+import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.SelectSongsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Collections
@@ -43,6 +44,14 @@ class SelectSongsFragment : CommonFragment<SelectSongsViewModel, FragmentSelectS
     }
 
     override fun setViewListeners() {
+        mainActivity.binding.playBackButtons.setOnClickListener {
+            if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
+                findNavController().navigate(SelectSongsFragmentDirections.actionSelectSongsFragmentToSongDetailsFragment(
+                    SongUtil.actualSong!!.videoId
+                ))
+            }
+        }
+
         binding.selectSongsSave.setOnClickListener {
             if (_adapter.tracker!!.selection.size() == 0) {
                 showSnackBar(R.string.select_songs_msg_select_at_least_one_song)
