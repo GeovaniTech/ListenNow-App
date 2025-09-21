@@ -13,3 +13,9 @@ val MIGRATION_5_6 = object : Migration(5, 6) {
                 "FOREIGN KEY(`videoId`) REFERENCES 'Song' (`videoId`), )")
     }
 }
+
+val MIGRATION_6_7 = object : Migration(6, 7) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE `Song` ADD COLUMN `requestDate` TEXT")
+    }
+}
