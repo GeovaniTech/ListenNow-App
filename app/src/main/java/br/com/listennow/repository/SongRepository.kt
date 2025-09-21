@@ -136,4 +136,15 @@ class SongRepository @Inject constructor (
     suspend fun saveSong(song: Song) {
         songDao.save(song)
     }
+
+    /**
+     * Return all songs from an specific playlist
+     */
+    suspend fun getSongsFromPlaylist(playlistId: String, query: String?): List<Song> {
+        if (query.isNullOrEmpty()) {
+            return songDao.getSongsFromPlaylist(playlistId)?.songs ?: emptyList()
+        }
+
+        return songDao.getSongsFromPlaylistFiltering(playlistId, query)?.songs ?: emptyList()
+    }
 }

@@ -101,4 +101,10 @@
     <string name="playlists_item_artists">Artist(s): %s</string>
     <string name="playlistS_msg_playlist_deleted">Playlist deleted.</string>
     <string name="playlists_no_artists_found">No artists found</string>
+    <string name="playlist_songs_add_songs">Add Songs</string>
+    <string name="playlist_songs">Playlist Songs</string>
+    <string name="playlists_songs_not_found_empty_state">No songs found</string>
+    <string name="select_amount_songs">%1$d selected</string>
+    <string name="select_songs_msg_select_at_least_one_song">Select at least one song for your Playlist</string>
+    <string name="playlist_songs_songs_added_success">Wow. The songs you added are sooooo good!</string>
 </resources>

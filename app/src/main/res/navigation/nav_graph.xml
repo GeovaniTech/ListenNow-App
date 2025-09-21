@@ -167,6 +167,44 @@
             android:name="br.com.listennow.fragments.PlaylistsFragment"
             android:label="@string/playlists_title">
 
+                <action
+                    android:id="@+id/action_playlistsFragment_to_playlistSongsFragment"
+                    app:destination="@id/playlistSongsFragment"
+                    app:enterAnim="@anim/to_right"
+                    app:exitAnim="@anim/to_left"
+                    app:popEnterAnim="@anim/from_left"
+                    app:popExitAnim="@anim/from_right" />
+        </fragment>
 
+        <fragment
+            android:id="@+id/playlistSongsFragment"
+            android:name="br.com.listennow.fragments.PlaylistSongsFragment"
+            android:label="@string/playlist_songs">
+
+                <argument
+                    android:name="navParams"
+                    app:argType="br.com.listennow.navparams.PlaylistSongsNavParams" />
+
+                <action
+                    android:id="@+id/action_playlistSongsFragment_to_selectSongsFragment"
+                    app:destination="@id/selectSongsFragment"
+                    app:enterAnim="@anim/to_right"
+                    app:exitAnim="@anim/to_left"
+                    app:popEnterAnim="@anim/from_left"
+                    app:popExitAnim="@anim/from_right" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/selectSongsFragment"
+            android:name="br.com.listennow.fragments.SelectSongsFragment"
+            android:label="@string/select_songs">
+
+                <action
+                    android:id="@+id/action_selectSongsFragment_to_songDetailsFragment"
+                    app:destination="@id/songDetailsFragment"
+                    app:enterAnim="@anim/to_right"
+                    app:exitAnim="@anim/to_left"
+                    app:popEnterAnim="@anim/from_left"
+                    app:popExitAnim="@anim/from_right" />
         </fragment>
 </navigation>

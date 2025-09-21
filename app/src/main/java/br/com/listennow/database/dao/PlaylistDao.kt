@@ -3,9 +3,11 @@ package br.com.listennow.database.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import br.com.listennow.decorator.PlaylistItemDecorator
 import br.com.listennow.model.Playlist
+import br.com.listennow.model.PlaylistSong
 
 
 @Dao
@@ -32,4 +34,7 @@ interface PlaylistDao {
         FROM Playlist as playlist
     """)
     suspend fun getPlaylists(): List<PlaylistItemDecorator>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addSongsToPlaylist(songs: List<PlaylistSong>)
 }

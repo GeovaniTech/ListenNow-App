@@ -11,7 +11,7 @@ abstract class CommonAdapter<T, B: ViewDataBinding> (
     private val variableId: Int,
     private val itemsController: IControllerItemsAdapter
 ):  RecyclerView.Adapter<DataBindingViewHolder<T, B>>()  {
-    private var items: List<T>? = null
+    var items: List<T>? = null
 
     fun loadItems(items: List<T>) {
         this.items = items
@@ -42,7 +42,7 @@ abstract class CommonAdapter<T, B: ViewDataBinding> (
         }
     }
 
-    private fun addListeners(view: View, position: Int, item: Any?, holder: RecyclerView.ViewHolder, dataBinding: ViewDataBinding) {
+    protected fun addListeners(view: View, position: Int, item: Any?, holder: RecyclerView.ViewHolder, dataBinding: ViewDataBinding) {
         itemsController.onChangeViewItem(view, position, item, holder, dataBinding)
         itemsController.onViewItemClickListener(view, position, item, holder, dataBinding)
     }

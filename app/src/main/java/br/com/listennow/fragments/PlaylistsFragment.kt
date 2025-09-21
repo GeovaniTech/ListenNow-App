@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +23,7 @@ import br.com.listennow.extensions.getSerializableValue
 import br.com.listennow.fragments.NewPlaylistFragment.Companion.NEW_PLAYLIST_FRAGMENT_KEY
 import br.com.listennow.fragments.NewPlaylistFragment.Companion.NEW_PLAYLIST_FRAGMENT_RESULT
 import br.com.listennow.fragments.NewPlaylistFragment.Companion.TAG
+import br.com.listennow.navparams.PlaylistSongsNavParams
 import br.com.listennow.viewmodel.PlaylistsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -98,6 +100,14 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
         dataBinding as FragmentPlaylistsItemBinding
         item as PlaylistItemDecorator
 
+        view.setOnClickListener {
+            findNavController().navigate(PlaylistsFragmentDirections.actionPlaylistsFragmentToPlaylistSongsFragment(
+                PlaylistSongsNavParams(
+                    item.playlistId
+                )
+            ))
+        }
+
         dataBinding.playlistsItemDelete.setOnClickListener {
             viewModel.deletePlaylist(item.playlistId)
         }
@@ -119,7 +129,6 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
             dataBinding.playlistsItemArtists.text = getString(R.string.playlists_item_artists, getString(R.string.playlists_no_artists_found))
         } else {
             dataBinding.playlistsItemArtists.text = getString(R.string.playlists_item_artists, item.artists)
-
         }
     }
 }

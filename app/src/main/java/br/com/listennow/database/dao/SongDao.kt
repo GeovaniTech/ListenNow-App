@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import br.com.listennow.decorator.AlbumItemDecorator
+import br.com.listennow.model.PlaylistWithSongs
 import br.com.listennow.model.Song
 
 @Dao
@@ -39,4 +40,30 @@ interface SongDao {
 
     @Query("SELECT * FROM Song WHERE album = :album AND artist = :artist AND (LOWER(name) LIKE  '%' || LOWER(:query) || '%' OR artist LIKE '%' || LOWER(:query) || '%')")
     suspend fun getSongsFromAlbumFiltering(album: String, artist: String, query: String): List<Song>
+
+    @Query("""
+        SELECT 
+            * 
+        FROM 
+            PlaylistSong AS playlistSong 
+        INNER JOIN 
+            Song as song ON song.videoId = playlistSong.videoId
+        WHERE 
+            playlistSong.playlistId = :playlistId 
+    """)
+    suspend fun getSongsFromPlaylist(playlistId: String): PlaylistWithSongs?
+
+    @Query("""
+        SELECT 
+            * 
+        FROM 
+            PlaylistSong AS playlistSong 
+        INNER JOIN 
+            Song as song ON song.videoId = playlistSong.videoId
+        WHERE 
+            playlistSong.playlistId = :playlistId 
+        AND 
+            (LOWER(name) LIKE  '%' || LOWER(:query) || '%' OR artist LIKE '%' || LOWER(:query) || '%')
+    """)
+    suspend fun getSongsFromPlaylistFiltering(playlistId: String, query: String?): PlaylistWithSongs?
 }
