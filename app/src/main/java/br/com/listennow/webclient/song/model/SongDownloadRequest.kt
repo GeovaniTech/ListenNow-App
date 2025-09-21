@@ -1,5 +1,6 @@
 package br.com.listennow.webclient.song.model
 
 data class SongDownloadRequest(
-    val videoId: String
+    val videoId: String,
+    val clientId: String
 )

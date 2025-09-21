@@ -27,7 +27,7 @@ class SearchYoutubeSongsViewModel @Inject constructor (
 
     suspend fun songSynchronizedSuccessfully(videoId: String): Boolean {
         try {
-            val songResponse = songRepository.findSongByIdOnServer(videoId)
+            val songResponse = songRepository.findSongByIdOnServer(videoId, user?.id!!)
 
             songResponse?.let {
                 val song = songResponse.song

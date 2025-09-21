@@ -37,7 +37,7 @@ class SongWebClient(
 
     suspend fun getDownloadedSong(songId: String): SongDownloadResponse? {
         return try {
-            songService.getSongFile(SongDownloadRequest(songId))
+            songService.getSongFile(SongDownloadRequest(songId, ""))
         } catch (e: Exception) {
             Log.e(TAG, "Error trying to get song ${e.message}")
             null
@@ -61,8 +61,8 @@ class SongWebClient(
         }
     }
 
-    suspend fun findSongById(videoId: String): SongResponse? {
-        return songService.findSongById(SongDownloadRequest(videoId))
+    suspend fun findSongById(videoId: String, userId: String): SongResponse? {
+        return songService.findSongById(SongDownloadRequest(videoId, userId))
     }
 
     suspend fun getSongIdsByUser(userReceiver: String, userWithSongs: String): List<String>? {

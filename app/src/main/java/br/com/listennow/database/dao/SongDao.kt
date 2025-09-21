@@ -17,7 +17,7 @@ interface SongDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(song: List<Song>)
 
-    @Query("SELECT * FROM Song")
+    @Query("SELECT * FROM Song ORDER BY requestDate DESC")
     suspend fun getSongs(): List<Song>
 
     @Delete
@@ -26,7 +26,7 @@ interface SongDao {
     @Query("SELECT * FROM Song WHERE videoId = :id")
     suspend fun findById(id: String): Song
 
-    @Query("SELECT * FROM Song WHERE videoId NOT IN (:ignoreIds) AND (LOWER(name) LIKE  '%' || LOWER(:text) || '%' OR artist LIKE '%' || LOWER(:text) || '%')")
+    @Query("SELECT * FROM Song WHERE videoId NOT IN (:ignoreIds) AND (LOWER(name) LIKE  '%' || LOWER(:text) || '%' OR artist LIKE '%' || LOWER(:text) || '%') ORDER BY requestDate DESC")
     suspend fun listByFilters(text: String, ignoreIds: List<String> = emptyList()): List<Song>
 
     @Query("SELECT album as name, artist, thumb FROM Song GROUP BY album, artist")
@@ -35,10 +35,10 @@ interface SongDao {
     @Query("SELECT album as name, artist, thumb FROM Song WHERE LOWER(name) LIKE  '%' || LOWER(:query) || '%' OR artist LIKE '%' || LOWER(:query) || '%' GROUP BY album, artist")
     suspend fun getAlbumsFiltering(query: String): List<AlbumItemDecorator>
 
-    @Query("SELECT * FROM Song WHERE album = :album AND artist = :artist")
+    @Query("SELECT * FROM Song WHERE album = :album AND artist = :artist ORDER BY requestDate DESC")
     suspend fun getSongsFromAlbum(album: String, artist: String): List<Song>
 
-    @Query("SELECT * FROM Song WHERE album = :album AND artist = :artist AND (LOWER(name) LIKE  '%' || LOWER(:query) || '%' OR artist LIKE '%' || LOWER(:query) || '%')")
+    @Query("SELECT * FROM Song WHERE album = :album AND artist = :artist AND (LOWER(name) LIKE  '%' || LOWER(:query) || '%' OR artist LIKE '%' || LOWER(:query) || '%') ORDER BY requestDate DESC")
     suspend fun getSongsFromAlbumFiltering(album: String, artist: String, query: String): List<Song>
 
     @Query("""
@@ -50,6 +50,8 @@ interface SongDao {
             Song as song ON song.videoId = playlistSong.videoId
         WHERE 
             playlistSong.playlistId = :playlistId 
+            
+        ORDER BY requestDate DESC
     """)
     suspend fun getSongsFromPlaylist(playlistId: String): PlaylistWithSongs?
 
@@ -64,6 +66,8 @@ interface SongDao {
             playlistSong.playlistId = :playlistId 
         AND 
             (LOWER(name) LIKE  '%' || LOWER(:query) || '%' OR artist LIKE '%' || LOWER(:query) || '%')
+            
+        ORDER BY requestDate DESC
     """)
     suspend fun getSongsFromPlaylistFiltering(playlistId: String, query: String?): PlaylistWithSongs?
 }
