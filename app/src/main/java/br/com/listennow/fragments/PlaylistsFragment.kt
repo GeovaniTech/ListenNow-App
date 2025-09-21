@@ -59,6 +59,10 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
             }
             NewPlaylistFragment.newInstance().show(parentFragmentManager, TAG)
         }
+
+        binding.playlistsSeeAlbums.setOnClickListener {
+            findNavController().navigate(PlaylistsFragmentDirections.actionPlaylistsFragmentToAlbumsFragment())
+        }
     }
 
     override fun setViewModelObservers() {

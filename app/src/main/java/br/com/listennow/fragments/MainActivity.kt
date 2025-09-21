@@ -267,8 +267,8 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
-                R.id.albumsFragment -> {
-                    navController.navigate(R.id.albumsFragment, null, navOptions)
+                R.id.playlistsFragment -> {
+                    navController.navigate(R.id.playlistsFragment, null, navOptions)
                     true
                 }
 

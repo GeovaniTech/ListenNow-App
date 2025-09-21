@@ -6,8 +6,8 @@
         android:icon="@drawable/round_add_home_24" />
 
     <item
-        android:id="@+id/albumsFragment"
-        android:title="@string/albums"
+        android:id="@+id/playlistsFragment"
+        android:title="@string/playlists"
         android:icon="@drawable/ic_album" />
 
     <item

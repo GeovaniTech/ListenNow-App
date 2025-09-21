@@ -45,26 +45,13 @@
                 app:queryBackground="@android:color/transparent" />
         </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/albums_see_playlists"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/albums_see_playlists"
-            android:textColor="@color/primary"
-            app:iconTint="@color/primary"
-            app:icon="@drawable/ic_album"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/albums_search_bar"
-            app:layout_constraintStart_toStartOf="parent"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"/>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/albums_recyclerview"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/albums_see_playlists"
+            app:layout_constraintTop_toBottomOf="@id/albums_search_bar"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:listitem="@layout/fragment_albums_item"
             android:layout_marginBottom="155dp"
@@ -75,7 +62,7 @@
             android:id="@+id/shimmerList"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/albums_see_playlists"
+            app:layout_constraintTop_toBottomOf="@id/albums_search_bar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

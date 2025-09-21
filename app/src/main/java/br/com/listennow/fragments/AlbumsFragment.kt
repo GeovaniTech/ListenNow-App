@@ -50,10 +50,6 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
                 ))
             }
         }
-
-        binding.albumsSeePlaylists.setOnClickListener {
-            findNavController().navigate(AlbumsFragmentDirections.actionAlbumsFragmentToPlaylistsFragment())
-        }
     }
 
     private fun configSearchView() {
