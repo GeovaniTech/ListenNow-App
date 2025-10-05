@@ -116,6 +116,8 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
 
                     if (SongUtil.songs.isEmpty()) {
                         setViewState(emptyList())
+
+                        mainActivity.stopNotificationService()
                         mainActivity.configEmptyToolbar()
                     }
 

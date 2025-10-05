@@ -378,6 +378,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun stopNotificationService() {
+        Intent().also {
+            it.setClass(this, SongPlayerService::class.java)
+            stopService(it)
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     fun configToolbar() {
         val buttons = binding.playBackButtons
