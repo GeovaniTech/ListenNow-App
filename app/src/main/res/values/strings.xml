@@ -109,4 +109,9 @@
     <string name="playlist_songs_songs_added_success">Wow. The songs you added are sooooo good!</string>
     <string name="select_songs_empty_state">No song found, try finding a new one</string>
     <string name="playlists_see_albums">See Albums</string>
+    <string name="delete_song_button">Button with trash icon used to delete song</string>
+    <string name="song_deleted_successfully">Song %s deleted Successfully</string>
+    <string name="failed_to_delete_song">Sorry, we could not delete the song %s, try again later.</string>
+    <string name="no_title">No Title</string>
+    <string name="no_artist">No Artist</string>
 </resources>

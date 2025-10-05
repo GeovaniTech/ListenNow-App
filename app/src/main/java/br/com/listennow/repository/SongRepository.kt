@@ -147,4 +147,21 @@ class SongRepository @Inject constructor (
 
         return songDao.getSongsFromPlaylistFiltering(playlistId, query)?.songs ?: emptyList()
     }
+
+    /**
+     * Delete a specific song from API and then from the device
+     */
+    @Throws(Exception::class)
+    suspend fun deleteSong(song: Song, userId: String): Boolean {
+        if (songWebClient.deleteSongFromUserAccount(song.videoId, userId)) {
+            val file = File(song.path)
+            file.delete()
+
+            songDao.delete(song)
+
+            return true
+        }
+
+        return false
+    }
 }

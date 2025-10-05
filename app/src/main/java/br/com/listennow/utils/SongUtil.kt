@@ -53,7 +53,7 @@ object SongUtil {
         mediaPlayer.pause()
     }
 
-    private fun clear() {
+    fun clear() {
         mediaPlayer.stop()
         mediaPlayer.reset()
         mediaPlayer.release()

@@ -47,12 +47,12 @@
                         android:id="@+id/playlists_item_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@{playlistItemDecorator.title}"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Gym"
-                        android:text="@{playlistItemDecorator.title}"
-                        android:textStyle="bold"
-                        android:textSize="18sp"/>
+                        tools:text="Gym" />
 
                     <TextView
                         android:id="@+id/playlists_item_total_songs"

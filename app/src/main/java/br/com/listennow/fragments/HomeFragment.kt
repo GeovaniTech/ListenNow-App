@@ -17,6 +17,7 @@ import br.com.listennow.R
 import br.com.listennow.adapter.SongsAdapter
 import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.databinding.FragmentHomeBinding
+import br.com.listennow.databinding.FragmentSongItemBinding
 import br.com.listennow.foreground.Actions
 import br.com.listennow.listener.OnSwipeTouchListener
 import br.com.listennow.model.Song
@@ -24,6 +25,7 @@ import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import okhttp3.internal.notify
 
 @AndroidEntryPoint
 class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), IControllerItemsAdapter {
@@ -101,6 +103,30 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
                 loadData()
             }
         }
+
+        viewModel.songDeleted.observe(viewLifecycleOwner) { deleted ->
+            deleted?.let {
+                if (it.second.get()) {
+                    val removeSong = it.first
+
+                    val songs = adapter.items!!.toMutableList()
+                    val songIndex = songs.indexOf(removeSong)
+
+                    (binding.songs.adapter as SongsAdapter).removeAt(songIndex)
+
+                    if (SongUtil.songs.isEmpty()) {
+                        setViewState(emptyList())
+                        mainActivity.configEmptyToolbar()
+                    }
+
+                    showSnackBar(getString(R.string.song_deleted_successfully, it.first.name))
+                } else {
+                    showSnackBar(getString(R.string.failed_to_delete_song, it.first.name))
+                }
+            }
+
+            viewModel.updateSongDeletedCallback(null)
+        }
     }
 
     private fun setViewState(songs: List<Song>) {
@@ -174,7 +200,9 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         buttons.setOnTouchListener(object: OnSwipeTouchListener(requireContext()) {
             // Here I could create a feature to play the previous and next songs depending of the swipe
             override fun onSwipeRight() {
-                mainActivity.startNotificationService(Actions.NEXT)
+                if (SongUtil.songs.isNotEmpty()){
+                    mainActivity.startNotificationService(Actions.NEXT)
+                }
             }
         })
     }
@@ -187,10 +215,15 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         dataBinding: ViewDataBinding
     ) {
         item as Song
+        dataBinding as FragmentSongItemBinding
 
         view.setOnClickListener {
             SongUtil.readSong(requireContext(), item)
             mainActivity.startNotificationService(Actions.PLAY_SPECIFIC)
+        }
+
+        dataBinding.deleteSongButton.setOnClickListener {
+            viewModel.deleteSong(item)
         }
     }
 
@@ -200,5 +233,10 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         item: Any?,
         holder: RecyclerView.ViewHolder,
         dataBinding: ViewDataBinding
-    ) {}
+    ) {
+        item as Song
+        dataBinding as FragmentSongItemBinding
+
+        dataBinding.deleteSongButton.visibility = View.VISIBLE
+    }
 }

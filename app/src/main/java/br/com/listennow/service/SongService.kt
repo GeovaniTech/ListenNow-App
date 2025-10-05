@@ -1,12 +1,14 @@
 package br.com.listennow.service
 
+import br.com.listennow.webclient.common.model.CommonResponse
+import br.com.listennow.webclient.song.model.DeleteSongRequest
 import br.com.listennow.webclient.song.model.SearchDownloadSongRequest
 import br.com.listennow.webclient.song.model.SearchYTSongRequest
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
-import br.com.listennow.webclient.song.model.SongDownloadRequest
-import br.com.listennow.webclient.song.model.SongDownloadResponse
 import br.com.listennow.webclient.song.model.SongCopyRequest
 import br.com.listennow.webclient.song.model.SongCopyResponse
+import br.com.listennow.webclient.song.model.SongDownloadRequest
+import br.com.listennow.webclient.song.model.SongDownloadResponse
 import br.com.listennow.webclient.song.model.SongIdsRequest
 import br.com.listennow.webclient.song.model.SongIdsResponse
 import br.com.listennow.webclient.song.model.SongRequest
@@ -36,4 +38,7 @@ interface SongService {
 
     @POST("songs/copy")
     suspend fun copySongsFromOtherUser(@Body songCopyRequest: SongCopyRequest): SongCopyResponse
+
+    @POST("user/songs/delete")
+    suspend fun deleteSongFromUserAccount(@Body deleteSongRequest: DeleteSongRequest): CommonResponse
 }

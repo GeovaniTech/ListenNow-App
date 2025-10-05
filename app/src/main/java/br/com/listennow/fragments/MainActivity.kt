@@ -116,8 +116,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setViewModelObservers() {
         viewModel.actualSong.observe(this) { song ->
-            song?.let {
+            if (song != null) {
                 configSongToolbar(song, SongUtil.isPlaying())
+            } else {
+                configEmptyToolbar()
             }
         }
 
@@ -299,6 +301,14 @@ class MainActivity : AppCompatActivity() {
         } else {
             binding.play.setBackgroundResource(R.drawable.ic_play)
         }
+    }
+
+    fun configEmptyToolbar() {
+        binding.listSongsTitle.text = getString(R.string.no_title)
+        binding.listSongsArtist.text = getString(R.string.no_artist)
+        binding.play.setBackgroundResource(R.drawable.ic_play)
+
+        Glide.with(applicationContext).load(R.drawable.icon).into(binding.homeThumbSongDetails)
     }
 
     private fun configPhoneDisconnectedReceiver() {

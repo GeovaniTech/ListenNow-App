@@ -54,12 +54,12 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/fragment_song_item_artist_song_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="7dp"
                     android:layout_marginTop="4dp"
                     app:layout_constrainedWidth="true"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/delete_song_button"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toEndOf="@+id/list_songs_cardView_thumb"
                     app:layout_constraintTop_toTopOf="parent">
@@ -92,6 +92,19 @@
                         app:layout_constraintTop_toBottomOf="@+id/list_songs_title"
                         tools:text="The Goo Goo Dolls" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <ImageView
+                    android:id="@+id/delete_song_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="@string/delete_song_button"
+                    android:background="@drawable/bg_red"
+                    android:src="@drawable/ic_delete"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/fragment_song_item_artist_song_name"
+                    android:visibility="gone" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

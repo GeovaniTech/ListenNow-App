@@ -4,6 +4,7 @@ import android.util.Log
 import br.com.listennow.model.Song
 import br.com.listennow.service.SongService
 import br.com.listennow.webclient.enums.StatusMessage
+import br.com.listennow.webclient.song.model.DeleteSongRequest
 import br.com.listennow.webclient.song.model.SearchDownloadSongRequest
 import br.com.listennow.webclient.song.model.SearchYTSongRequest
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
@@ -83,5 +84,17 @@ class SongWebClient(
             Log.e(TAG, "Error trying to copy songs from another user. UserReceiverId: $userReceiver. Error: ${e.message}")
             false
         }
+    }
+
+    suspend fun deleteSongFromUserAccount(videoId: String, userId: String): Boolean {
+        try {
+            val response = songService.deleteSongFromUserAccount(DeleteSongRequest(videoId, userId))
+
+            return response.message == StatusMessage.SONG_DELETED_FROM_USER_ACCOUNT_SUCCESSFULLY.message
+        } catch (e: Exception) {
+            Log.e(TAG, "Error trying to delete song from user account on Web Server. Error: ${e.message}")
+        }
+
+        return false
     }
 }
