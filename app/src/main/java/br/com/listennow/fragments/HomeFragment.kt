@@ -39,7 +39,7 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
     }
 
     override fun setViewListeners() {
-        configToolbar()
+        mainActivity.configToolbar()
         configSearchView()
 
         mainActivity.binding.playBackButtons.setOnClickListener {
@@ -191,20 +191,6 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.syncSongs()
         }
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun configToolbar() {
-        val buttons = mainActivity.binding.playBackButtons
-
-        buttons.setOnTouchListener(object: OnSwipeTouchListener(requireContext()) {
-            // Here I could create a feature to play the previous and next songs depending of the swipe
-            override fun onSwipeRight() {
-                if (SongUtil.songs.isNotEmpty()){
-                    mainActivity.startNotificationService(Actions.NEXT)
-                }
-            }
-        })
     }
 
     override fun onViewItemClickListener(

@@ -1,6 +1,7 @@
 package br.com.listennow.fragments
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DownloadManager
 import android.app.NotificationChannel
@@ -29,6 +30,7 @@ import br.com.listennow.R
 import br.com.listennow.databinding.ActivityMainBinding
 import br.com.listennow.foreground.Actions
 import br.com.listennow.foreground.SongPlayerService
+import br.com.listennow.listener.OnSwipeTouchListener
 import br.com.listennow.model.Song
 import br.com.listennow.receiver.AppVersionUpdateReceiver
 import br.com.listennow.receiver.HeadsetStateReceiver
@@ -374,6 +376,19 @@ class MainActivity : AppCompatActivity() {
 
             startService(it)
         }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    fun configToolbar() {
+        val buttons = binding.playBackButtons
+
+        buttons.setOnTouchListener(object: OnSwipeTouchListener(this@MainActivity) {
+            override fun onSwipeRight() {
+                if (SongUtil.songs.isNotEmpty()){
+                    startNotificationService(Actions.NEXT)
+                }
+            }
+        })
     }
 
     fun showBottomMenuAndPlayButtons() {

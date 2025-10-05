@@ -10,6 +10,10 @@
             android:id="@+id/action_global_to_errorFragment"
             app:destination="@id/errorFragment" />
 
+        <action
+            android:id="@+id/action_global_to_songDetails"
+            app:destination="@id/songDetailsFragment" />
+
         <!-- Fragments-->
         <fragment
             android:id="@+id/homeFragment"

@@ -3,10 +3,13 @@ package br.com.listennow.foreground
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.os.Bundle
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.navigation.NavDeepLinkBuilder
 import br.com.listennow.R
 import br.com.listennow.fragments.MainActivity
+import br.com.listennow.fragments.SongDetailsFragmentDirections
 import br.com.listennow.receiver.enums.IntentEnums
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.utils.SongUtil
@@ -93,6 +96,7 @@ class SongPlayerService: Service() {
                 .setContentTitle(SongUtil.actualSong!!.name)
                 .setContentText(SongUtil.actualSong!!.artist)
                 .setSmallIcon(R.drawable.ic_notification_icon)
+                .setContentIntent(getSongDetailPendingIntent())
                 .addAction(
                     R.drawable.ic_notification_icon,
                     getString(R.string.play),
@@ -140,6 +144,7 @@ class SongPlayerService: Service() {
                 .setContentTitle(SongUtil.actualSong!!.name)
                 .setContentText(SongUtil.actualSong!!.artist)
                 .setSmallIcon(R.drawable.ic_notification_icon)
+                .setContentIntent(getSongDetailPendingIntent())
                 .addAction(
                     R.drawable.ic_notification_icon,
                     getString(R.string.stop),
@@ -192,6 +197,7 @@ class SongPlayerService: Service() {
                 .setContentTitle(SongUtil.actualSong!!.name)
                 .setContentText(SongUtil.actualSong!!.artist)
                 .setSmallIcon(R.drawable.ic_notification_icon)
+                .setContentIntent(getSongDetailPendingIntent())
                 .addAction(
                     R.drawable.ic_notification_icon,
                     getString(R.string.stop),
@@ -211,6 +217,18 @@ class SongPlayerService: Service() {
             callUpdateSongReceiver()
         }
         return START_STICKY
+    }
+
+    private fun getSongDetailPendingIntent(): PendingIntent {
+        val bundle = Bundle()
+        bundle.putString("songId", SongUtil.actualSong!!.videoId)
+
+        return NavDeepLinkBuilder(this)
+            .setComponentName(MainActivity::class.java)
+            .setGraph(R.navigation.nav_graph)
+            .setDestination(R.id.songDetailsFragment)
+            .setArguments(bundle)
+            .createPendingIntent()
     }
 
     private fun callUpdateSongReceiver(isPlaying: Boolean = true) {

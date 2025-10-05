@@ -26,6 +26,8 @@ class SongDetailsFragment : CommonFragment<SongDetailsViewModel, FragmentSongDet
                 loadData()
             }
         }
+
+        mainActivity.configToolbar()
     }
 
     override fun setViewModelObservers() {
