@@ -426,7 +426,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     *
+     * Start listening to sounds and voice commands
      */
     private fun startSpeechRecognizer() {
         if (SpeechRecognizer.isRecognitionAvailable(this)) {
