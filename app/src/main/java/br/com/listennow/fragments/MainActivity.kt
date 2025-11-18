@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DownloadManager
+import android.app.Notification.Action
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -16,8 +17,12 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -73,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         onLoadLastSong()
         checkForAppUpdate()
         createMediaSession()
+        startSpeechRecognizer()
     }
 
     private fun createMediaSession() {
@@ -242,6 +248,8 @@ class MainActivity : AppCompatActivity() {
                 100
             )
         }
+
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 101)
     }
 
     private fun setUpBottomNavigation(navController: NavController) {
@@ -412,15 +420,88 @@ class MainActivity : AppCompatActivity() {
         viewModel.checkAppUpdate()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaSession.release()
+    }
+
+    /**
+     *
+     */
+    private fun startSpeechRecognizer() {
+        if (SpeechRecognizer.isRecognitionAvailable(this)) {
+            val speech = SpeechRecognizer.createSpeechRecognizer(this)
+
+            speech.setRecognitionListener(object : RecognitionListener {
+                override fun onReadyForSpeech(params: Bundle?) {
+
+                }
+
+                override fun onBeginningOfSpeech() {
+
+                }
+
+                override fun onRmsChanged(rmsdB: Float) {
+
+                }
+
+                override fun onBufferReceived(buffer: ByteArray?) {
+
+                }
+
+                override fun onEndOfSpeech() {
+
+                }
+
+                override fun onError(error: Int) {
+                    startSpeechRecognizer()
+                }
+
+                override fun onResults(results: Bundle?) {
+                    val data: ArrayList<String>? = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+
+                    data?.forEach { voiceCommand ->
+                        handleVoiceCommand(voiceCommand)
+                    }
+
+                    startSpeechRecognizer()
+                }
+
+                override fun onPartialResults(partialResults: Bundle?) {
+                }
+
+                override fun onEvent(eventType: Int, params: Bundle?) {
+                }
+            })
+
+            val recognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+                putExtra(
+                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+                )
+            }
+
+            speech.startListening(recognizerIntent)
+        }
+    }
+
+    /**
+     * Method responsible for executing the actions
+     */
+    fun handleVoiceCommand(command: String) {
+        val lower = command.lowercase()
+
+        when {
+            listOf("next", "skip", "forward").any { it in lower } -> startNotificationService(Actions.NEXT)
+            listOf("pause", "stop").any { it in lower } -> startNotificationService(Actions.STOP)
+            listOf("resume", "play").any { it in lower } -> startNotificationService(Actions.PLAY)
+        }
+    }
+
     companion object {
         const val DOWNLOAD_SONG_NOTIFICATION_CHANNEl = "DownloadSongNotification"
         const val IMPORT_ALL_SONGS_FOREGROUND_SERVICE_NOTIFICATION_CHANNEl = "ImportAllSongsForegroundServiceNotification"
         const val SONG_PLAYER_NOTIFICATION_CHANNEL = "SongPlayerNotificationChannel"
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        mediaSession.release()
+        const val TAG = "MainActivity"
     }
 }
