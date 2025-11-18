@@ -114,4 +114,5 @@
     <string name="failed_to_delete_song">Sorry, we could not delete the song %s, try again later.</string>
     <string name="no_title">No Title</string>
     <string name="no_artist">No Artist</string>
+    <string name="start_car_mod">Start Car Mode</string>
 </resources>

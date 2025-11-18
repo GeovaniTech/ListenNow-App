@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -41,6 +42,7 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
     override fun setViewListeners() {
         mainActivity.configToolbar()
         configSearchView()
+        configCarMode()
 
         mainActivity.binding.playBackButtons.setOnClickListener {
             if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
@@ -54,6 +56,28 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
 
         binding.fragmentHomeButtonFindNewSong.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchNewSongs())
+        }
+    }
+
+    private fun configCarMode() {
+        configCarModeStyle()
+
+        binding.carModeButton.setOnClickListener {
+            if (mainActivity.speechRecognizer != null) {
+                mainActivity.endSpeechRecognizer()
+            } else {
+                mainActivity.startSpeechRecognizer()
+            }
+
+            configCarModeStyle()
+        }
+    }
+
+    private fun configCarModeStyle() {
+        if (mainActivity.speechRecognizer != null) {
+            binding.carModeButton.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.red)
+        } else {
+            binding.carModeButton.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.esmerald)
         }
     }
 

@@ -56,6 +56,8 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MainActivityViewModel>()
     private lateinit var mediaSession: MediaSessionCompat
+    var speechRecognizer: SpeechRecognizer? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -78,7 +80,6 @@ class MainActivity : AppCompatActivity() {
         onLoadLastSong()
         checkForAppUpdate()
         createMediaSession()
-        startSpeechRecognizer()
     }
 
     private fun createMediaSession() {
@@ -428,11 +429,11 @@ class MainActivity : AppCompatActivity() {
     /**
      * Start listening to sounds and voice commands
      */
-    private fun startSpeechRecognizer() {
+    fun startSpeechRecognizer() {
         if (SpeechRecognizer.isRecognitionAvailable(this)) {
-            val speech = SpeechRecognizer.createSpeechRecognizer(this)
+            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
 
-            speech.setRecognitionListener(object : RecognitionListener {
+            speechRecognizer?.setRecognitionListener(object : RecognitionListener {
                 override fun onReadyForSpeech(params: Bundle?) {
 
                 }
@@ -481,8 +482,13 @@ class MainActivity : AppCompatActivity() {
                 )
             }
 
-            speech.startListening(recognizerIntent)
+            speechRecognizer?.startListening(recognizerIntent)
         }
+    }
+
+    fun endSpeechRecognizer() {
+        speechRecognizer?.destroy()
+        speechRecognizer = null
     }
 
     /**
