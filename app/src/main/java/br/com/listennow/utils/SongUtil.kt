@@ -64,8 +64,14 @@ object SongUtil {
     }
 
     private fun getRandomSong(): Song {
-        val position = (0 until (songs.size)).random()
-        return songs[position]
+        lateinit var song: Song
+
+        do {
+            val position = (0 until (songs.size)).random()
+            song = songs[position]
+        } while (song == actualSong && songs.size > 1)
+
+        return song
     }
 
     fun playRandomSong(){
