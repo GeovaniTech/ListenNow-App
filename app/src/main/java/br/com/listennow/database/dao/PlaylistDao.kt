@@ -27,9 +27,12 @@ interface PlaylistDao {
                     WHERE playlistId = playlist.playlistId
                 ) as totalSongs,
                 (
-                    SELECT group_concat(song.artist, ', ') FROM PlaylistSong as pl
-                    INNER JOIN Song as song ON song.videoId = pl.videoId
-                    WHERE playlistId = playlist.playlistId
+                    SELECT group_concat(artist, ', ') FROM (
+                        SELECT DISTINCT song.artist as artist FROM PlaylistSong as pl
+                        INNER JOIN Song as song ON song.videoId = pl.videoId
+                        WHERE playlistId = playlist.playlistId
+                        GROUP BY song.artist
+                    )
                 ) as artists
         FROM Playlist as playlist
     """)
