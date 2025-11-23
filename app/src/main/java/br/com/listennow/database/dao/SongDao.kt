@@ -70,4 +70,11 @@ interface SongDao {
         ORDER BY requestDate DESC
     """)
     suspend fun getSongsFromPlaylistFiltering(playlistId: String, query: String?): PlaylistWithSongs?
+
+    @Query("""
+        SELECT
+            videoId
+        FROM Song
+    """)
+    suspend fun getUserSongsIds(): List<String>
 }

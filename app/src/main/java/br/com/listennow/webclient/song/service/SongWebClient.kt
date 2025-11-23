@@ -22,9 +22,11 @@ class SongWebClient(
         const val TAG = "SongWebClient"
     }
 
-    suspend fun getAll(userId: String): List<Song>? {
+    suspend fun getAll(userId: String, ignoreIds: List<String> = emptyList()): List<Song>? {
         return try {
-            val songResponse = songService.getAll(SongRequest(userId))
+
+            Log.i(TAG, "getAll: ${ignoreIds}")
+            val songResponse = songService.getAll(SongRequest(userId, ignoreIds))
 
             songResponse.map {
                 it.song
