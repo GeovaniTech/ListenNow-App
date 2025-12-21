@@ -29,6 +29,9 @@ class PlaylistSongsViewModel @Inject constructor(
     private var _onSongsAddedCallback: MutableLiveData<AtomicBoolean> = MutableLiveData(AtomicBoolean(false))
     val onSongsAddedCallback: LiveData<AtomicBoolean> get() = _onSongsAddedCallback
 
+    private var _onSongsDeletedCallback: MutableLiveData<AtomicBoolean> = MutableLiveData(AtomicBoolean(false))
+    val onSongsDeletedCallback: LiveData<AtomicBoolean> get() = _onSongsDeletedCallback
+
     fun loadData() = viewModelScope.launch {
         _songs.postValue(songRepository.getSongsFromPlaylist(navParams.playlistId, query))
     }
@@ -45,7 +48,16 @@ class PlaylistSongsViewModel @Inject constructor(
         _onSongsAddedCallback.postValue(AtomicBoolean(value))
     }
 
+    fun postSongsDeletedCallback(value: Boolean) {
+        _onSongsDeletedCallback.postValue(AtomicBoolean(value))
+    }
+
     suspend fun getSongsIdsFromPlaylist(): List<String> {
         return songRepository.getSongsFromPlaylist(navParams.playlistId, null).map { it.videoId }
+    }
+
+    fun deleteSong(item: Song) = viewModelScope.launch {
+        playlistDao.deleteSongFromPlaylist(item.videoId, navParams.playlistId)
+        _onSongsDeletedCallback.postValue(AtomicBoolean(true))
     }
 }

@@ -115,4 +115,5 @@
     <string name="no_title">No Title</string>
     <string name="no_artist">No Artist</string>
     <string name="start_car_mod">Start Car Mode</string>
+    <string name="playlist_songs_song_deleted_message">Song deleted successfully</string>
 </resources>

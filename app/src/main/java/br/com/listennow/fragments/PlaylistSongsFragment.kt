@@ -15,6 +15,7 @@ import br.com.listennow.R
 import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.adapter.SongsAdapter
 import br.com.listennow.databinding.FragmentPlaylistSongsBinding
+import br.com.listennow.databinding.FragmentSongItemBinding
 import br.com.listennow.foreground.Actions
 import br.com.listennow.model.Song
 import br.com.listennow.navparams.SelectSongsNavParams
@@ -22,6 +23,7 @@ import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.PlaylistSongsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 
 @AndroidEntryPoint
 class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPlaylistSongsBinding>(), IControllerItemsAdapter {
@@ -92,6 +94,15 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
                 showSnackBar(R.string.playlist_songs_songs_added_success)
             }
         }
+
+        viewModel.onSongsDeletedCallback.observe(viewLifecycleOwner) { success ->
+            if (success.get()) {
+                viewModel.loadData()
+                viewModel.postSongsDeletedCallback(false)
+
+                showSnackBar(R.string.playlist_songs_song_deleted_message)
+            }
+        }
     }
 
     private fun setViewState(songs: List<Song>) {
@@ -115,10 +126,15 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
         dataBinding: ViewDataBinding
     ) {
         item as Song
+        dataBinding as FragmentSongItemBinding
 
         view.setOnClickListener {
             SongUtil.readSong(requireContext(), item)
             mainActivity.startNotificationService(Actions.PLAY_SPECIFIC)
+        }
+
+        dataBinding.deleteSongButton.setOnClickListener {
+            viewModel.deleteSong(item)
         }
     }
 
@@ -128,5 +144,9 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
         item: Any?,
         holder: RecyclerView.ViewHolder,
         dataBinding: ViewDataBinding
-    ) = Unit
+    ) {
+        dataBinding as FragmentSongItemBinding
+
+        dataBinding.deleteSongButton.visibility = View.VISIBLE
+    }
 }
