@@ -14,6 +14,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <attribution android:tag="@string/empty" android:label="@string/app_plays_audio" />
+    <attribution android:tag="audioPlayback" android:label="@string/app_plays_audio" />
+
     <queries>
         <intent>
             <action

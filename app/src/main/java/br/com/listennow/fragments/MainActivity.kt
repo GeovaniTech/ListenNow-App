@@ -61,6 +61,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            createAttributionContext("audioPlayback")
+        }
+
         setTheme(R.style.Theme_ListenNow)
         setContentView(binding.root)
 

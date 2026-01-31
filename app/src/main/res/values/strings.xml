@@ -116,4 +116,6 @@
     <string name="no_artist">No Artist</string>
     <string name="start_car_mod">Start Car Mode</string>
     <string name="playlist_songs_song_deleted_message">Song deleted successfully</string>
+    <string name="app_plays_audio">This App Plays Audio</string>
+    <string name="empty"></string>
 </resources>
