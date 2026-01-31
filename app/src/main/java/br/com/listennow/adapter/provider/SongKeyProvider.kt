@@ -8,7 +8,7 @@ class SongKeyProvider(private val adapter: SongsAdapter) : ItemKeyProvider<Strin
         return adapter.items!![position].videoId
     }
 
-    override fun getPosition(key: String?): Int {
+    override fun getPosition(key: String): Int {
        return adapter.items!!.indexOfFirst { it.videoId == key }
     }
 

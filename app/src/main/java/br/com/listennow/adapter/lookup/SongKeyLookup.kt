@@ -21,7 +21,7 @@ class SongKeyLookup(private val recyclerView: RecyclerView) : ItemDetailsLookup<
                 return holder.itemBindKey
             }
 
-            override fun inSelectionHotspot(e: MotionEvent?): Boolean {
+            override fun inSelectionHotspot(e: MotionEvent): Boolean {
                 return true
             }
         }

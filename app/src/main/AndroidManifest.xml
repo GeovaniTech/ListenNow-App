@@ -35,7 +35,7 @@
 
         <receiver
             android:name="br.com.listennow.receiver.HeadsetStateReceiver"
-            android:exported="true">
+            android:exported="false">
 
             <intent-filter>
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />

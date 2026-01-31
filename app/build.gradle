@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace 'br.com.listennow'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "br.com.listennow"
         minSdk 26
-        targetSdk 34
+        targetSdk 36
         versionCode 2
         versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -44,24 +44,24 @@ android {
     buildFeatures {
         viewBinding true
         dataBinding true
+        buildConfig true
     }
 }
 
 dependencies {
-    def nav_version = '2.8.3'
     implementation "androidx.recyclerview:recyclerview-selection:1.2.0"
     implementation 'androidx.media:media:1.7.0'
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
-    implementation 'com.google.dagger:hilt-android:2.52'
-    kapt 'com.google.dagger:hilt-compiler:2.52'
+    implementation 'com.google.dagger:hilt-android:2.58'
+    kapt 'com.google.dagger:hilt-compiler:2.58'
     implementation 'com.squareup.retrofit2:retrofit:2.11.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.11.0'
     implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
     implementation "com.squareup.okhttp3:logging-interceptor:4.9.3"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
-    implementation 'androidx.room:room-ktx:2.6.1'
-    kapt 'androidx.room:room-compiler:2.6.1'
+    implementation 'androidx.room:room-ktx:2.8.4'
+    kapt 'androidx.room:room-compiler:2.8.4'
     implementation 'androidx.datastore:datastore-preferences:1.1.1'
     implementation 'io.coil-kt:coil:2.7.0'
     implementation 'org.json:json:20240303'
@@ -74,6 +74,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.9.7"
+    implementation "androidx.navigation:navigation-ui-ktx:2.9.7"
 }

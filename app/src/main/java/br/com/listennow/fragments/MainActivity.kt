@@ -47,13 +47,13 @@ import br.com.listennow.webclient.appversion.model.LastVersionAvailableAppRespon
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.atomic.AtomicBoolean
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
-
     private val viewModel by viewModels<MainActivityViewModel>()
     private lateinit var mediaSession: MediaSessionCompat
     var speechRecognizer: SpeechRecognizer? = null
@@ -176,7 +176,7 @@ class MainActivity : AppCompatActivity() {
         version: LastVersionAvailableAppResponse,
         dialog: DialogInterface
     ) {
-        val request = DownloadManager.Request(Uri.parse(version.url))
+        val request = DownloadManager.Request(version.url.toUri())
         val subPath = "listennow-update-${version.name}.apk"
 
         request.setTitle(
@@ -202,7 +202,8 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(
             receiver, IntentFilter(
                 IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
-            )
+            ),
+            RECEIVER_NOT_EXPORTED
         )
 
         dialog.dismiss()
@@ -224,21 +225,17 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
             if (!Environment.isExternalStorageManager()) {
                 try {
-                    val uri = Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+                    val uri = ("package:" + BuildConfig.APPLICATION_ID).toUri()
                     val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri)
                     intent.addCategory("android.intent.category.DEFAULT")
-                    intent.setData(
-                        Uri.parse(
-                            String.format(
-                                "package:%s",
-                                applicationContext.packageName
-                            )
-                        )
-                    )
+                    intent.data = String.format(
+                        "package:%s",
+                        applicationContext.packageName
+                    ).toUri()
                     startActivity(intent)
                 } catch (ex: Exception) {
                     val intent = Intent()
-                    intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                    intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
                     startActivity(intent)
                 }
             }
@@ -296,7 +293,7 @@ class MainActivity : AppCompatActivity() {
 
         receiver.mainActivity = this
 
-        registerReceiver(receiver, receiverFilter)
+        registerReceiver(receiver, receiverFilter, RECEIVER_NOT_EXPORTED)
     }
 
     fun configSongToolbar(song: Song, isPlaying: Boolean) {
@@ -331,7 +328,7 @@ class MainActivity : AppCompatActivity() {
             startNotificationService(Actions.STOP)
         }
 
-        registerReceiver(receiver, receiverFilter)
+        registerReceiver(receiver, receiverFilter, RECEIVER_NOT_EXPORTED)
     }
 
     private fun createDownloadSongNotificationChannel() {
