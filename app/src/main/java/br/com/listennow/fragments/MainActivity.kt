@@ -199,12 +199,20 @@ class MainActivity : AppCompatActivity() {
             newApkName = subPath
         )
 
-        registerReceiver(
-            receiver, IntentFilter(
-                IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
-            ),
-            RECEIVER_NOT_EXPORTED
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(
+                receiver, IntentFilter(
+                    IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+                ),
+                RECEIVER_NOT_EXPORTED
+            )
+        } else {
+            registerReceiver(
+                receiver, IntentFilter(
+                    IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+                )
+            )
+        }
 
         dialog.dismiss()
     }
@@ -293,7 +301,11 @@ class MainActivity : AppCompatActivity() {
 
         receiver.mainActivity = this
 
-        registerReceiver(receiver, receiverFilter, RECEIVER_NOT_EXPORTED)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(receiver, receiverFilter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(receiver, receiverFilter)
+        }
     }
 
     fun configSongToolbar(song: Song, isPlaying: Boolean) {
@@ -328,7 +340,11 @@ class MainActivity : AppCompatActivity() {
             startNotificationService(Actions.STOP)
         }
 
-        registerReceiver(receiver, receiverFilter, RECEIVER_NOT_EXPORTED)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(receiver, receiverFilter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(receiver, receiverFilter)
+        }
     }
 
     private fun createDownloadSongNotificationChannel() {
@@ -505,6 +521,5 @@ class MainActivity : AppCompatActivity() {
         const val DOWNLOAD_SONG_NOTIFICATION_CHANNEl = "DownloadSongNotification"
         const val IMPORT_ALL_SONGS_FOREGROUND_SERVICE_NOTIFICATION_CHANNEl = "ImportAllSongsForegroundServiceNotification"
         const val SONG_PLAYER_NOTIFICATION_CHANNEL = "SongPlayerNotificationChannel"
-        const val TAG = "MainActivity"
     }
 }

@@ -30,8 +30,8 @@
         tools:targetApi="31"
         android:name=".hilt.ListenNowApplication">
 
-        <service android:name="br.com.listennow.foreground.ImportAllSongsService" />
-        <service android:name=".foreground.SongPlayerService" />
+        <service android:name="br.com.listennow.foreground.ImportAllSongsService" android:foregroundServiceType="dataSync" />
+        <service android:name=".foreground.SongPlayerService" android:foregroundServiceType="mediaPlayback" />
 
         <receiver
             android:name="br.com.listennow.receiver.HeadsetStateReceiver"
