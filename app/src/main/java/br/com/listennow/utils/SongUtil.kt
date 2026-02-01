@@ -19,8 +19,6 @@ object SongUtil {
 
             actualSong = song
 
-            val myUri = song.path.toUri()
-
             mediaPlayer = MediaPlayer().apply {
                 setAudioAttributes(
                     AudioAttributes.Builder()
@@ -30,7 +28,12 @@ object SongUtil {
                 )
             }
 
-            mediaPlayer.setDataSource(context, myUri)
+            if (song.path.startsWith("content://")) {
+                mediaPlayer.setDataSource(context, song.path.toUri())
+            } else {
+                mediaPlayer.setDataSource(song.path)
+            }
+
             mediaPlayer.prepareAsync()
             mediaPlayer.setOnPreparedListener {
                 mediaPlayer.start()
