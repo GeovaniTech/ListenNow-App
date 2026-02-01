@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DownloadManager
-import android.app.Notification.Action
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -12,7 +11,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -22,12 +20,12 @@ import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.navigation.NavController
+import androidx.core.net.toUri
+import androidx.core.view.WindowCompat
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import br.com.listennow.BuildConfig
@@ -47,7 +45,6 @@ import br.com.listennow.webclient.appversion.model.LastVersionAvailableAppRespon
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.atomic.AtomicBoolean
-import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -61,17 +58,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            createAttributionContext("audioPlayback")
-        }
-
-        setTheme(R.style.Theme_ListenNow)
-        setContentView(binding.root)
-
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragment_container_view_listennow) as NavHostFragment
-
-        setUpBottomNavigation(navHostFragment.navController)
+        createAttrsContext()
+        setUpTheme()
+        applyInsetsEdgeToEdge()
+        setUpBottomNavigation()
         askPermissions()
         configPhoneDisconnectedReceiver()
         configUpdateSongOnViewReceiver()
@@ -84,6 +74,12 @@ class MainActivity : AppCompatActivity() {
         onLoadLastSong()
         checkForAppUpdate()
         createMediaSession()
+    }
+
+    private fun createAttrsContext() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            createAttributionContext("audioPlayback")
+        }
     }
 
     private fun createMediaSession() {
@@ -268,7 +264,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpBottomNavigation(navController: NavController) {
+    private fun setUpBottomNavigation() {
+        val navHost = supportFragmentManager.findFragmentById(R.id.fragment_container_view_listennow) as NavHostFragment
+        val navController = navHost.navController
+
         val menu = binding.playBackBottomNavigation
 
         val navOptions = NavOptions.Builder()
@@ -525,6 +524,15 @@ class MainActivity : AppCompatActivity() {
             listOf("pause", "stop").any { it in lower } -> startNotificationService(Actions.STOP)
             listOf("resume", "play").any { it in lower } -> startNotificationService(Actions.PLAY)
         }
+    }
+
+    private fun setUpTheme() {
+        setTheme(R.style.Theme_ListenNow)
+        setContentView(binding.root)
+    }
+
+    private fun applyInsetsEdgeToEdge() {
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
     }
 
     companion object {
