@@ -9,6 +9,7 @@ import android.app.NotificationManager
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
         createAttrsContext()
         setUpTheme()
-        applyInsetsEdgeToEdge()
+        applyEdgeToEdge()
         setUpBottomNavigation()
         askPermissions()
         configPhoneDisconnectedReceiver()
@@ -532,8 +533,20 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
     }
 
-    private fun applyInsetsEdgeToEdge() {
-        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
+    private fun applyEdgeToEdge() {
+        val currentNightMode: Int = getResources()
+            .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        when (currentNightMode) {
+            Configuration.UI_MODE_NIGHT_NO -> {
+                WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true
+
+            }
+            Configuration.UI_MODE_NIGHT_YES -> {
+                WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
+
+            }
+        }
     }
 
     companion object {

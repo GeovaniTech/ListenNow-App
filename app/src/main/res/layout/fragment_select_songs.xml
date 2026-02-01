@@ -25,7 +25,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/container_under_search_select_songs"
-                android:background="@color/design_default_color_surface"
+                android:background="@color/container"
                 app:layout_constraintVertical_chainStyle="packed"
                 app:layout_constraintVertical_bias="0">
 

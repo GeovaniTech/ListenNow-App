@@ -30,7 +30,7 @@
             android:id="@+id/play_back_buttons"
             android:layout_width="match_parent"
             android:layout_height="72dp"
-            android:background="@color/playBackButtonsColor"
+            android:background="@color/container"
             android:clickable="true"
             android:focusable="true"
             app:layout_constraintBottom_toTopOf="@+id/play_back_bottom_navigation"

@@ -24,7 +24,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:background="@color/design_default_color_surface"
+                android:background="@color/container"
                 app:layout_constraintVertical_chainStyle="packed"
                 app:layout_constraintVertical_bias="0">
 
