@@ -1,16 +1,38 @@
 # ListenNow App
 
-Mobile Music Player where we can also download songs from Youtube Music. The songs are synched with my API, so if you delete the app and you download It again, you will still have your songs. And if in case you delete the songs from the device and not from the App, the songs will be synchronized again.
+ListenNow is a modern Android Music Player that allows you to manage your local library and seamlessly download/synchronize songs from YouTube Music through a dedicated API.
 
-## Architecture
+## 🚀 Features
 
-+ Kotlin
-+ Fragments
-+ ViewModels
-+ Repository
-+ Room
-+ Dependency Injection with Hilt
-+ Retrofit - Connection with [My API](https://github.com/GeovaniTech/Listennow-Api)
+- **YouTube Music Integration:** Search and download songs directly from YouTube Music.
+- **Cloud Synchronization:** Your music library is synced with the [ListenNow API](https://github.com/GeovaniTech/Listennow-Api). If you reinstall the app or delete local files, your library is automatically restored.
+- **Playlist Management:** Create and organize your favorite songs into custom playlists.
+- **Smart Background Playback:** Features a foreground service with media notifications and MediaSession integration for seamless control from the lock screen or Bluetooth devices.
+- **Audio Intelligence:** 
+    - Automatically pauses when headphones are disconnected.
+    - Supports voice commands for hands-free interaction.
+- **Seamless UX:** 
+    - Dark/Light mode support.
+    - Intuitive swipe gestures for navigation.
+    - Modern UI built with Material Design components.
+
+## 📱 SDK Support
+
+- **Minimum SDK:** 26 (Android 8.0 Oreo)
+- **Target SDK:** 36 (Android 15)
+
+## 🛠 Tech Stack
+
+- **Language:** [Kotlin](https://kotlinlang.org/)
+- **Architecture:** MVVM (Model-View-ViewModel) with Repository pattern.
+- **Dependency Injection:** [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
+- **Database:** [Room](https://developer.android.com/training/data-storage/room) for local persistence.
+- **Networking:** [Retrofit](https://square.github.io/retrofit/) & [Moshi](https://github.com/square/moshi) for API communication.
+- **Image Loading:** [Glide](https://github.com/bumptech/glide) & [Coil](https://coil-kt.github.io/coil/)
+- **Navigation:** [Jetpack Navigation Component](https://developer.android.com/guide/navigation)
+- **UI:** Fragments, ViewBinding, and DataBinding.
+
+## 📸 Screenshots
 
 ### Home - Songs already added
 ![Home - Songs Already Synced](https://github.com/user-attachments/assets/0362086c-ee7b-414e-b503-f79ac9ea6c07)
