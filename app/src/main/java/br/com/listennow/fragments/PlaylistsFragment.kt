@@ -127,6 +127,16 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
         binding.playlistsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.playlistsRecyclerview.setHasFixedSize(true)
         binding.playlistsRecyclerview.adapter = _adapter
+
+        binding.playlistsRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy < 0 && !binding.playlistsNewPlaylist.isShown) {
+                    binding.playlistsNewPlaylist.show()
+                } else if (dy > 0 && binding.playlistsNewPlaylist.isShown) {
+                    binding.playlistsNewPlaylist.hide()
+                }
+            }
+        })
     }
 
     private fun configAdapter() {
