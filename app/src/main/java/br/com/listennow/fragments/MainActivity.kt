@@ -234,6 +234,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun askPermissions() {
+        val permissions = mutableListOf<String>()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS)
+        }
+
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
             if (!Environment.isExternalStorageManager()) {
                 try {
@@ -252,14 +258,14 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } else {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                100
-            )
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
 
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 101)
+        permissions.add(Manifest.permission.RECORD_AUDIO)
+
+        if (permissions.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, permissions.toTypedArray(), 100)
+        }
     }
 
     private fun setUpBottomNavigation(navController: NavController) {
