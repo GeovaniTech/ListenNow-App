@@ -196,6 +196,16 @@ class SelectSongsFragment : CommonFragment<SelectSongsViewModel, FragmentSelectS
         binding.selectSongsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.selectSongsRecyclerview.setHasFixedSize(true)
         binding.selectSongsRecyclerview.adapter = _adapter
+
+        binding.selectSongsRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy < 0 && !binding.selectSongsSave.isShown) {
+                    binding.selectSongsSave.show()
+                } else if (dy > 0 && binding.selectSongsSave.isShown) {
+                    binding.selectSongsSave.hide()
+                }
+            }
+        })
     }
 
     private fun createAdapter() {
