@@ -39,7 +39,7 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         ViewCompat.setOnApplyWindowInsetsListener(
             binding.cardSearchSongs
         ) { v, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
 
             v.setPadding(
                 v.paddingLeft,
@@ -57,6 +57,7 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
             val systemBars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
                         or WindowInsetsCompat.Type.displayCutout()
+                        or WindowInsetsCompat.Type.ime()
             )
             v.setPadding(
                 v.paddingLeft,

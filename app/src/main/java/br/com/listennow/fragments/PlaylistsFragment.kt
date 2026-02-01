@@ -41,7 +41,7 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
         ViewCompat.setOnApplyWindowInsetsListener(
             binding.playlistsSearchBar
         ) { v, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
 
             v.setPadding(
                 v.paddingLeft,
@@ -59,6 +59,7 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
             val systemBars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
                         or WindowInsetsCompat.Type.displayCutout()
+                        or WindowInsetsCompat.Type.ime()
             )
             v.setPadding(
                 v.paddingLeft,
