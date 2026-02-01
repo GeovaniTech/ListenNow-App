@@ -206,6 +206,16 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         binding.songs.layoutManager = LinearLayoutManager(requireContext())
         binding.songs.setHasFixedSize(true)
         binding.songs.adapter = adapter
+
+        binding.songs.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy < 0 && !binding.carModeButton.isShown) {
+                    binding.carModeButton.show()
+                } else if (dy > 0 && binding.carModeButton.isShown) {
+                    binding.carModeButton.hide()
+                }
+            }
+        })
     }
 
     private fun createAdapter() {
