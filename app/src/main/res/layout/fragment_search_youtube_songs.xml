@@ -45,7 +45,8 @@
             android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_search_songs">
+            app:layout_constraintTop_toBottomOf="@id/card_search_songs"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listSongsYT"
