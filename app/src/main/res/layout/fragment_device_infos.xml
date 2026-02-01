@@ -14,125 +14,133 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fragment_device_infos_main_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
-
-        <TextView
-            android:id="@+id/fragment_device_infos_title_textview"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:text="@string/fragment_device_infos_title"
-            android:textSize="25sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/fragment_device_infos_id_use_case_textview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="15sp"
-            android:text="@string/fragment_device_infos_use_cause_for_id_message"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_device_infos_title_textview" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/fragment_device_infos_id_text_input"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:enabled="false"
-            android:hint="@string/fragment_device_infos_your_id"
-            app:layout_constraintEnd_toStartOf="@+id/fragment_device_infos_copy_imageview"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_device_infos_id_use_case_textview">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:text="@{userId}" />
-        </com.google.android.material.textfield.TextInputLayout>
+        android:fitsSystemWindows="true"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/fragment_device_infos_copy_imageview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/round_outline"
-            android:clipToOutline="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:padding="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/fragment_device_infos_id_text_input"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/fragment_device_infos_id_text_input"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_device_infos_id_use_case_textview">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
 
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:background="@drawable/ic_copy_24"
-                android:backgroundTint="@color/iconColor"
+            <TextView
+                android:id="@+id/fragment_device_infos_title_textview"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:text="@string/fragment_device_infos_title"
+                android:textSize="25sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/fragment_device_infos_copy_songs_device_id_text_input"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="@string/fragment_device_infos_device_id_to_download_songs"
-            app:layout_constraintEnd_toStartOf="@+id/fragment_device_infos_download_songs_imageview"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_device_infos_id_text_input">
-
-            <com.google.android.material.textfield.TextInputEditText
+            <TextView
+                android:id="@+id/fragment_device_infos_id_use_case_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:text="@={downloadDeviceId}"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/fragment_device_infos_download_songs_imageview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/round_outline"
-            android:clipToOutline="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:padding="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/fragment_device_infos_copy_songs_device_id_text_input"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/fragment_device_infos_copy_songs_device_id_text_input"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_device_infos_id_text_input">
-
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:background="@drawable/baseline_cloud_download_24"
-                android:backgroundTint="@color/iconColor"
+                android:layout_marginTop="10dp"
+                android:textSize="15sp"
+                android:text="@string/fragment_device_infos_use_cause_for_id_message"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_device_infos_title_textview" />
 
-        <TextView
-            android:id="@+id/fragment_device_infos_app_version_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/gray"
-            android:textSize="13sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_device_infos_copy_songs_device_id_text_input"
-            tools:text="App Version: 1.0.0" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fragment_device_infos_id_text_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:enabled="false"
+                android:hint="@string/fragment_device_infos_your_id"
+                app:layout_constraintEnd_toStartOf="@+id/fragment_device_infos_copy_imageview"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_device_infos_id_use_case_textview">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:text="@{userId}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragment_device_infos_copy_imageview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/round_outline"
+                android:clipToOutline="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_device_infos_id_text_input"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/fragment_device_infos_id_text_input"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_device_infos_id_use_case_textview">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/ic_copy_24"
+                    android:backgroundTint="@color/iconColor"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/fragment_device_infos_copy_songs_device_id_text_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="@string/fragment_device_infos_device_id_to_download_songs"
+                app:layout_constraintEnd_toStartOf="@+id/fragment_device_infos_download_songs_imageview"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_device_infos_id_text_input">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:text="@={downloadDeviceId}"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fragment_device_infos_download_songs_imageview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/round_outline"
+                android:clipToOutline="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/fragment_device_infos_copy_songs_device_id_text_input"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/fragment_device_infos_copy_songs_device_id_text_input"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_device_infos_id_text_input">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/baseline_cloud_download_24"
+                    android:backgroundTint="@color/iconColor"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/fragment_device_infos_app_version_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/gray"
+                android:textSize="13sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_device_infos_copy_songs_device_id_text_input"
+                tools:text="App Version: 1.0.0" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
