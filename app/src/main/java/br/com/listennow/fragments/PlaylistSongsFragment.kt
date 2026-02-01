@@ -83,6 +83,16 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
         binding.playlistSongsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.playlistSongsRecyclerview.setHasFixedSize(true)
         binding.playlistSongsRecyclerview.adapter = _adapter
+
+        binding.playlistSongsRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy < 0 && !binding.playlistSongsAddSong.isShown) {
+                    binding.playlistSongsAddSong.show()
+                } else if (dy > 0 && binding.playlistSongsAddSong.isShown) {
+                    binding.playlistSongsAddSong.hide()
+                }
+            }
+        })
     }
 
     override fun setViewListeners() {
