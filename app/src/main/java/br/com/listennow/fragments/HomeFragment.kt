@@ -1,11 +1,12 @@
 package br.com.listennow.fragments
 
-import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,18 +16,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.listennow.BR
 import br.com.listennow.R
-import br.com.listennow.adapter.SongsAdapter
 import br.com.listennow.adapter.IControllerItemsAdapter
+import br.com.listennow.adapter.SongsAdapter
 import br.com.listennow.databinding.FragmentHomeBinding
 import br.com.listennow.databinding.FragmentSongItemBinding
 import br.com.listennow.foreground.Actions
-import br.com.listennow.listener.OnSwipeTouchListener
 import br.com.listennow.model.Song
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import okhttp3.internal.notify
 
 @AndroidEntryPoint
 class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), IControllerItemsAdapter {
@@ -35,6 +34,39 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
     override val viewModel: HomeViewModel by viewModels()
 
     override fun getLayout(): Int = R.layout.fragment_home
+
+    override fun applyInsetsEdgeToEdge() {
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.cardSearchSongs
+        ) { v, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+
+            v.setPadding(
+                v.paddingLeft,
+                statusBarInsets.top,
+                v.paddingRight,
+                v.paddingBottom
+            )
+
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.refreshSongs
+        ) { v, insets ->
+            val systemBars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.setPadding(
+                v.paddingLeft,
+                v.paddingTop,
+                v.paddingRight,
+                systemBars.bottom
+            )
+            insets
+        }
+    }
 
     override fun loadNavParams() {
     }

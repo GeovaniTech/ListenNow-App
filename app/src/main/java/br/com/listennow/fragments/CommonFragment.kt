@@ -10,7 +10,6 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
@@ -39,6 +38,8 @@ abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBindi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        applyInsetsEdgeToEdge()
 
         // Avoid looping if user does not exist yet
         if (getLayout() != R.layout.fragment_error) {
@@ -120,4 +121,6 @@ abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBindi
     abstract fun loadData()
     open fun loadBindingVariables() {}
     open fun configView() {}
+
+    open fun applyInsetsEdgeToEdge() {}
 }
