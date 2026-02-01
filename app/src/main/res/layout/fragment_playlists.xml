@@ -18,7 +18,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-             app:layout_constraintBottom_toTopOf="@id/container_under_playlists_search_bar"
+            app:layout_constraintBottom_toTopOf="@id/container_under_playlists_search_bar"
             android:background="@color/design_default_color_surface"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintVertical_bias="0">
@@ -54,7 +54,8 @@
                 app:iconTint="@color/text"
                 app:icon="@drawable/ic_album"
                 android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@id/playlists_search_bar"
+                app:layout_constraintTop_toTopOf="parent"
+
                 app:layout_constraintStart_toStartOf="parent"
                 style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"/>
 
@@ -75,7 +76,7 @@
                 android:layout_height="0dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/playlists_search_bar"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:message="@string/albums_no_playlists_found_empty_state"
                 android:layout_marginBottom="155dp"

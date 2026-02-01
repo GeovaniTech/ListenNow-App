@@ -4,6 +4,8 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
@@ -32,6 +34,39 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
     override fun getLayout(): Int = R.layout.fragment_albums
 
     override fun loadNavParams() = Unit
+
+    override fun applyInsetsEdgeToEdge() {
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.albumsSearchBar
+        ) { v, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+
+            v.setPadding(
+                v.paddingLeft,
+                statusBarInsets.top,
+                v.paddingRight,
+                v.paddingBottom
+            )
+
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.containerUnderSearchAlbums
+        ) { v, insets ->
+            val systemBars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.setPadding(
+                v.paddingLeft,
+                v.paddingTop,
+                v.paddingRight,
+                systemBars.bottom
+            )
+            insets
+        }
+    }
 
     override fun configView() {
         configSearchView()
