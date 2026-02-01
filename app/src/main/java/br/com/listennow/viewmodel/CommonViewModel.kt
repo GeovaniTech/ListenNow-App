@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import br.com.listennow.model.User
 import br.com.listennow.repository.UserRepository
 
-abstract class CommonViewModel constructor(
+abstract class CommonViewModel(
     private val userRepository: UserRepository
 ): ViewModel() {
     var user: User? = null

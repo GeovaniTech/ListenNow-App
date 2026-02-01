@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package br.com.listennow.extensions
 
 import android.os.Build

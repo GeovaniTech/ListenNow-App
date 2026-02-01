@@ -39,7 +39,7 @@ class ImportAllSongsService: Service() {
         startForeground(NotificationUtil.getUniqueNotificationId(), notification)
 
         CoroutineScope(Dispatchers.IO).launch {
-            songsIds.windowed(20, 20, partialWindows = true).forEachIndexed{ index, chunk ->
+            songsIds.windowed(20, 20, partialWindows = true).forEachIndexed{ _, chunk ->
                 if (songRepository.copySongsFromAnotherDevice(userReceiver!!, chunk)) {
                     songRepository.updateAll(userReceiver)
                 }

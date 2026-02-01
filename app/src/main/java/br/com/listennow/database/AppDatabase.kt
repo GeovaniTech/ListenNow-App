@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import br.com.listennow.converters.DateConverters
 import br.com.listennow.database.dao.PlaylistDao
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.database.dao.UserDao

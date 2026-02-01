@@ -2,7 +2,6 @@ package br.com.listennow.fragments
 
 import android.os.Handler
 import android.os.HandlerThread
-import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
@@ -28,7 +27,6 @@ import br.com.listennow.model.Song
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.SelectSongsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Collections
 
 @AndroidEntryPoint
 class SelectSongsFragment : CommonFragment<SelectSongsViewModel, FragmentSelectSongsBinding>(), IControllerItemsAdapter {
@@ -137,8 +135,8 @@ class SelectSongsFragment : CommonFragment<SelectSongsViewModel, FragmentSelectS
             override fun onQueryTextChange(filter: String?): Boolean {
                 startShimmer()
 
-                handler.removeCallbacksAndMessages(null);
-                handler.postDelayed(Runnable {
+                handler.removeCallbacksAndMessages(null)
+                handler.postDelayed({
                     filter?.let {
                         viewModel.query = it
                         viewModel.loadData()

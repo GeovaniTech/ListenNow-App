@@ -1,7 +1,6 @@
 package br.com.listennow.fragments
 
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -25,7 +24,6 @@ import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.PlaylistSongsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 
 @AndroidEntryPoint
 class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPlaylistSongsBinding>(), IControllerItemsAdapter {

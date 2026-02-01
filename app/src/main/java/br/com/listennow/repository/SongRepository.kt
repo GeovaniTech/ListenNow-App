@@ -1,23 +1,17 @@
 package br.com.listennow.repository
 
 import android.os.Environment
-import android.os.OutcomeReceiver
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.decorator.AlbumItemDecorator
 import br.com.listennow.model.Song
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import br.com.listennow.webclient.song.model.SongResponse
 import br.com.listennow.webclient.song.service.SongWebClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.util.Base64
 import javax.inject.Inject
-import kotlin.jvm.Throws
 
 class SongRepository @Inject constructor (
     private val songDao: SongDao,

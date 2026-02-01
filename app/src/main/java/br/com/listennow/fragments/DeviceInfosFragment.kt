@@ -73,12 +73,12 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
 
                 val dialogBuilder = AlertDialog.Builder(requireContext())
 
-                val positiveButtonClick = { dialog: DialogInterface, which: Int ->
-                    startImportSongsForegroundService(userReceiver, userWithSongs, songsIds)
+                val positiveButtonClick = { dialog: DialogInterface, _: Int ->
+                    startImportSongsForegroundService(userReceiver, songsIds)
                     dialog.dismiss()
                 }
 
-                val negativeButtonClick = { dialog: DialogInterface, which: Int ->
+                val negativeButtonClick = { dialog: DialogInterface, _: Int ->
                     dialog.dismiss()
                 }
 
@@ -93,7 +93,7 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
         }
     }
 
-    private fun startImportSongsForegroundService(userReceiver: String, userWithSongs: String, songsids: List<String>) {
+    private fun startImportSongsForegroundService(userReceiver: String, songsIds: List<String>) {
         Intent().also {
             it.setClass(requireContext(), ImportAllSongsService::class.java)
 
@@ -102,11 +102,11 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
                 userReceiver
             )
 
-            it.putStringArrayListExtra(ImportAllSongsService.ImportAllSongsData.SONGS_IDS.value, ArrayList(songsids))
+            it.putStringArrayListExtra(ImportAllSongsService.ImportAllSongsData.SONGS_IDS.value, ArrayList(songsIds))
 
             mainActivity.startService(it)
 
-            showSnackBar(getString(R.string.importing_all_songs_from_another_device, songsids.size))
+            showSnackBar(getString(R.string.importing_all_songs_from_another_device, songsIds.size))
         }
     }
 

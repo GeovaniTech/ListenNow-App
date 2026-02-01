@@ -123,8 +123,8 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel, F
 
             override fun onQueryTextChange(filter: String?): Boolean {
                 startShimmer()
-                handler.removeCallbacksAndMessages(null);
-                handler.postDelayed(Runnable {
+                handler.removeCallbacksAndMessages(null)
+                handler.postDelayed({
                     filter?.let {
                         viewModel.viewModelScope.launch {
                             viewModel.loadYoutubeSongs(it)
@@ -203,7 +203,7 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel, F
 
                 manager.notify(notificationId, notificationBuilder.build())
 
-                Thread(Runnable {
+                Thread {
                     val retries = 10
                     var attempts = 0
 
@@ -228,7 +228,7 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel, F
                             }
                         }
                     }
-                }).start()
+                }.start()
             }
         }
     }

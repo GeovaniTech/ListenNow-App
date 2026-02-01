@@ -1,8 +1,6 @@
 package br.com.listennow.webclient.song.model
 
-import br.com.listennow.converters.DateConverters
 import br.com.listennow.model.Song
-import java.time.LocalDateTime
 
 class SongResponse(
     private val video_id: String,

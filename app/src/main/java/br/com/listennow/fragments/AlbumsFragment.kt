@@ -101,8 +101,8 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
             override fun onQueryTextChange(filter: String?): Boolean {
                 startShimmer()
 
-                handler.removeCallbacksAndMessages(null);
-                handler.postDelayed(Runnable {
+                handler.removeCallbacksAndMessages(null)
+                handler.postDelayed({
                     filter?.let {
                         viewModel.searchFilter = filter
                         viewModel.loadData()

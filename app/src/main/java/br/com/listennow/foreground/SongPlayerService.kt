@@ -9,7 +9,6 @@ import androidx.core.app.NotificationCompat
 import androidx.navigation.NavDeepLinkBuilder
 import br.com.listennow.R
 import br.com.listennow.fragments.MainActivity
-import br.com.listennow.fragments.SongDetailsFragmentDirections
 import br.com.listennow.receiver.enums.IntentEnums
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.utils.SongUtil

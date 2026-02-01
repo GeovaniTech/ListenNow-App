@@ -127,8 +127,8 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
             override fun onQueryTextChange(filter: String?): Boolean {
                 startShimmer()
 
-                handler.removeCallbacksAndMessages(null);
-                handler.postDelayed(Runnable {
+                handler.removeCallbacksAndMessages(null)
+                handler.postDelayed({
                     filter?.let {
                         viewModel.songFilter = filter
                         viewModel.viewModelScope.launch {

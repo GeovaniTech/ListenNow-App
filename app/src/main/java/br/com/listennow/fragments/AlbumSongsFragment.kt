@@ -6,7 +6,6 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +19,6 @@ import br.com.listennow.model.Song
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.AlbumSongsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AlbumSongsFragment : CommonFragment<AlbumSongsViewModel, FragmentAlbumSongsBinding>(), IControllerItemsAdapter {
@@ -62,8 +60,8 @@ class AlbumSongsFragment : CommonFragment<AlbumSongsViewModel, FragmentAlbumSong
             override fun onQueryTextChange(filter: String?): Boolean {
                 startShimmer()
 
-                handler.removeCallbacksAndMessages(null);
-                handler.postDelayed(Runnable {
+                handler.removeCallbacksAndMessages(null)
+                handler.postDelayed({
                     filter?.let {
                         viewModel.searchFilter = it
                         viewModel.loadData()

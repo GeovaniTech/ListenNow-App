@@ -6,7 +6,6 @@ import android.app.AlertDialog
 import android.app.DownloadManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
@@ -20,6 +19,7 @@ import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -248,6 +248,7 @@ class MainActivity : AppCompatActivity() {
                     ).toUri()
                     startActivity(intent)
                 } catch (ex: Exception) {
+                    Log.e(TAG, "askPermissions: ${ex.message}")
                     val intent = Intent()
                     intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
                     startActivity(intent)
@@ -366,7 +367,7 @@ class MainActivity : AppCompatActivity() {
                 setSound(null, null)
             }
         val notificationManager: NotificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -380,7 +381,7 @@ class MainActivity : AppCompatActivity() {
                 setSound(null, null)
             }
         val notificationManager: NotificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -396,7 +397,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         val notificationManager: NotificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -539,5 +540,6 @@ class MainActivity : AppCompatActivity() {
         const val DOWNLOAD_SONG_NOTIFICATION_CHANNEl = "DownloadSongNotification"
         const val IMPORT_ALL_SONGS_FOREGROUND_SERVICE_NOTIFICATION_CHANNEl = "ImportAllSongsForegroundServiceNotification"
         const val SONG_PLAYER_NOTIFICATION_CHANNEL = "SongPlayerNotificationChannel"
+        const val TAG = "MainActivity"
     }
 }

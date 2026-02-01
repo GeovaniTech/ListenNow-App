@@ -3,8 +3,8 @@ package br.com.listennow.utils
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import br.com.listennow.model.Song
 
 object SongUtil {
@@ -19,7 +19,7 @@ object SongUtil {
 
             actualSong = song
 
-            val myUri = Uri.parse(song.path)
+            val myUri = song.path.toUri()
 
             mediaPlayer = MediaPlayer().apply {
                 setAudioAttributes(
@@ -40,7 +40,7 @@ object SongUtil {
                 onNextSong?.invoke(getRandomSong())
             }
         } catch (e: Exception) {
-            Log.e("SongUtil", "readSong: Failed to read song", )
+            Log.e("SongUtil", "readSong: Failed to read song ${e.message}")
             onNextSong?.invoke(getRandomSong())
         }
     }

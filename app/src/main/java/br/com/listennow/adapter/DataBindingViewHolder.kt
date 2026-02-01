@@ -4,6 +4,7 @@ import android.graphics.Color
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import br.com.listennow.model.interfaces.IModelKey
+import androidx.core.graphics.toColorInt
 
 class DataBindingViewHolder<T, B: ViewDataBinding>(
     val binding: B,
@@ -24,7 +25,7 @@ class DataBindingViewHolder<T, B: ViewDataBinding>(
         binding.root.isActivated = isActivated
 
         if (isActivated) {
-            itemView.setBackgroundColor(Color.parseColor("#228BE6")) // blue highlight
+            itemView.setBackgroundColor("#228BE6".toColorInt()) // blue highlight
         } else {
             itemView.setBackgroundColor(Color.TRANSPARENT) // default
         }

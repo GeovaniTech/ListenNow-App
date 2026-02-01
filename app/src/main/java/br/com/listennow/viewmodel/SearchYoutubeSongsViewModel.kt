@@ -37,7 +37,7 @@ class SearchYoutubeSongsViewModel @Inject constructor (
 
             return true
         } catch (e: Exception) {
-            Log.e(TAG, "songSynchronizedSuccessfully: Error trying to sync song after immediately download ${e.stackTrace}", )
+            Log.e(TAG, "songSynchronizedSuccessfully: Error trying to sync song after immediately download ${e.message}")
         }
 
         return false
