@@ -8,6 +8,9 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -46,11 +49,44 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel, F
         )
     }
 
-    override fun loadNavParams() {
+    override fun loadNavParams() = Unit
+
+    override fun applyInsetsEdgeToEdge() {
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.cardSearchSongs
+        ) { v, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+
+            v.setPadding(
+                v.paddingLeft,
+                statusBarInsets.top,
+                v.paddingRight,
+                v.paddingBottom
+            )
+
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.containerUnderSearchSongsYoutube
+        ) { v, insets ->
+            val systemBars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.setPadding(
+                v.paddingLeft,
+                v.paddingTop,
+                v.paddingRight,
+                systemBars.bottom
+            )
+            insets
+        }
     }
 
     override fun setViewListeners() {
         configSearchSongs()
+        binding.fragmentSearchYoutubeSongsEmptyState.hideAction()
 
         mainActivity.binding.playBackButtons.setOnClickListener {
             if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
@@ -102,8 +138,7 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel, F
 
     private fun startShimmer() {
         binding.listSongsYT.visibility = View.GONE
-        binding.fragmentSearchYoutubeSongsEmptyText.visibility = View.GONE
-        binding.fragmentSearchYoutubeSongsEmptyImage.visibility = View.GONE
+        binding.fragmentSearchYoutubeSongsEmptyState.isVisible = false
         binding.shimmerList.visibility = View.VISIBLE
         binding.shimmerList.startShimmer()
     }
@@ -114,14 +149,12 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel, F
             binding.shimmerList.visibility = View.GONE
 
             if (songs.isNullOrEmpty()) {
-                binding.fragmentSearchYoutubeSongsEmptyImage.visibility = View.VISIBLE
-                binding.fragmentSearchYoutubeSongsEmptyText.visibility = View.VISIBLE
+                binding.fragmentSearchYoutubeSongsEmptyState.isVisible = true
                 binding.listSongsYT.visibility = View.GONE
             } else {
                 adapter.loadItems(songs)
 
-                binding.fragmentSearchYoutubeSongsEmptyImage.visibility = View.GONE
-                binding.fragmentSearchYoutubeSongsEmptyText.visibility = View.GONE
+                binding.fragmentSearchYoutubeSongsEmptyState.isVisible = false
                 binding.listSongsYT.visibility = View.VISIBLE
             }
         }
