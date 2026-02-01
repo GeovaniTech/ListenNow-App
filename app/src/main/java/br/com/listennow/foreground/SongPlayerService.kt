@@ -234,6 +234,7 @@ class SongPlayerService: Service() {
     private fun callUpdateSongReceiver(isPlaying: Boolean = true) {
         val intent = Intent(IntentEnums.INTENT_UPDATE_SONG.toString())
         intent.putExtra(Actions.IS_PLAYING.toString(), isPlaying)
+        intent.setPackage(packageName)
         sendBroadcast(intent)
     }
 }
