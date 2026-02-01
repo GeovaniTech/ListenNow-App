@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.setFragmentResult
@@ -40,6 +42,39 @@ class SelectSongsFragment : CommonFragment<SelectSongsViewModel, FragmentSelectS
     override fun loadNavParams() {
         SelectSongsFragmentArgs.fromBundle(requireArguments()).navParams.let {
             viewModel.navParams = it
+        }
+    }
+
+    override fun applyInsetsEdgeToEdge() {
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.selectSongsSearchBar
+        ) { v, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+
+            v.setPadding(
+                v.paddingLeft,
+                statusBarInsets.top,
+                v.paddingRight,
+                v.paddingBottom
+            )
+
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.containerUnderSearchSelectSongs
+        ) { v, insets ->
+            val systemBars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.setPadding(
+                v.paddingLeft,
+                v.paddingTop,
+                v.paddingRight,
+                systemBars.bottom
+            )
+            insets
         }
     }
 
