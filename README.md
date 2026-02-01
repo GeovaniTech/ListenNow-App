@@ -19,7 +19,7 @@ ListenNow is a modern Android Music Player that allows you to manage your local 
 ## 📱 SDK Support
 
 - **Minimum SDK:** 26 (Android 8.0 Oreo)
-- **Target SDK:** 36 (Android 15)
+- **Target SDK:** 36 (Android 16)
 
 ## 🛠 Tech Stack
 
@@ -45,3 +45,4 @@ ListenNow is a modern Android Music Player that allows you to manage your local 
 
 ### Inside a playlist
 ![inside a playlist](https://github.com/user-attachments/assets/0bd608ea-83be-429e-99d4-f53a054189bd)
+
