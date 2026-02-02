@@ -25,6 +25,7 @@ ListenNow is a modern Android Music Player that allows you to manage your local 
 
 - **Language:** [Kotlin](https://kotlinlang.org/)
 - **Architecture:** MVVM (Model-View-ViewModel) with Repository pattern.
+- **Firebase Crashlytics:** [Crashlytics](https://firebase.google.com/products/crashlytics) for monitoring logs.
 - **Dependency Injection:** [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
 - **Database:** [Room](https://developer.android.com/training/data-storage/room) for local persistence.
 - **Networking:** [Retrofit](https://square.github.io/retrofit/) & [Moshi](https://github.com/square/moshi) for API communication.
@@ -45,4 +46,5 @@ ListenNow is a modern Android Music Player that allows you to manage your local 
 
 ### Inside a playlist
 ![inside a playlist](https://github.com/user-attachments/assets/0bd608ea-83be-429e-99d4-f53a054189bd)
+
 
