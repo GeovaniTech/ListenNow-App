@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -49,7 +51,12 @@ android {
 }
 
 dependencies {
-    implementation "androidx.recyclerview:recyclerview-selection:1.2.0"
+     // Firebase
+    implementation platform('com.google.firebase:firebase-bom:34.8.0')
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
+
+    implementation 'androidx.recyclerview:recyclerview-selection:1.2.0'
     implementation 'androidx.media:media:1.7.1'
     implementation 'com.github.bumptech.glide:glide:5.0.5'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
