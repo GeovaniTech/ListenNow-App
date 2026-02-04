@@ -35,8 +35,9 @@ interface PlaylistDao {
                     )
                 ) as artists
         FROM Playlist as playlist
+        WHERE LOWER(playlist.name) LIKE  '%' || LOWER(:query) || '%'
     """)
-    suspend fun getPlaylists(): List<PlaylistItemDecorator>
+    suspend fun getPlaylists(query: String): List<PlaylistItemDecorator>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addSongsToPlaylist(songs: List<PlaylistSong>)

@@ -89,7 +89,7 @@
     <string name="albums_search_bar_hint">Search for album or artist name</string>
     <string name="albums_see_playlists">See Playlists</string>
     <string name="playlists_new_playlist">New Playlist</string>
-    <string name="playlists_search_bar_hint">Search for playlist or song name</string>
+    <string name="playlists_search_bar_hint">Search for playlist name</string>
     <string name="albums_no_playlists_found_empty_state">No playlists found</string>
     <string name="playlists_title">Playlists</string>
     <string name="playlists_new_playlist_title">Title</string>

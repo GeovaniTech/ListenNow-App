@@ -22,8 +22,10 @@ class PlaylistsViewModel @Inject constructor(
     private var _statusCallback: MutableLiveData<EnumPlaylistActionStatus> = MutableLiveData()
     val statusCallback: LiveData<EnumPlaylistActionStatus> get() = _statusCallback
 
+    var queryFilter: String = ""
+
     fun loadData() = viewModelScope.launch {
-        _playlists.postValue(playlistDao.getPlaylists())
+        _playlists.postValue(playlistDao.getPlaylists(queryFilter))
     }
 
     fun deletePlaylist(playlistId: String) = viewModelScope.launch {

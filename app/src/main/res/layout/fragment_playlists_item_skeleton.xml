@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="2dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/playlists_item_image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="#dddddd"
+                    android:importantForAccessibility="no"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toEndOf="@id/playlists_item_image"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_margin="4dp">
+
+                    <View
+                        android:id="@+id/playlists_item_name"
+                        android:layout_width="200dp"
+                        android:layout_height="20dp"
+                        android:background="#dddddd"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Gym" />
+
+                    <View
+                        android:id="@+id/playlists_item_total_songs"
+                        android:layout_width="100dp"
+                        android:layout_height="15dp"
+                        android:layout_marginTop="3dp"
+                        android:background="#dddddd"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/playlists_item_name"
+                        tools:text="18 Song(s)" />
+
+                    <View
+                        android:id="@+id/playlists_item_divider"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:backgroundTint="@color/primary"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/playlists_item_total_songs" />
+
+                    <View
+                        android:id="@+id/playlists_item_artists"
+                        android:layout_width="200dp"
+                        android:layout_height="20dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:background="#dddddd"
+                        android:textSize="13sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/playlists_item_divider"
+                        tools:text="Artist(s): Linkin Park, Taylor Swift, Coldplay, Bon Jovi" />
+
+                    <ImageView
+                        android:id="@+id/playlists_item_delete"
+                        android:layout_height="24dp"
+                        android:layout_width="24dp"
+                        android:importantForAccessibility="no"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="#dddddd"
+                        android:padding="2dp"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,6 +1,9 @@
 package br.com.listennow.fragments
 
+import android.os.Handler
+import android.os.HandlerThread
 import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -16,6 +19,7 @@ import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.adapter.PlaylistsAdapter
 import br.com.listennow.databinding.FragmentPlaylistsBinding
 import br.com.listennow.databinding.FragmentPlaylistsItemBinding
+import br.com.listennow.decorator.AlbumItemDecorator
 import br.com.listennow.decorator.PlaylistDecorator
 import br.com.listennow.decorator.PlaylistItemDecorator
 import br.com.listennow.enums.EnumPlaylistActionStatus
@@ -73,7 +77,42 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
 
     override fun configView() {
         configRecyclerView()
+        configSearchView()
         binding.playlistsEmptyState.hideAction()
+    }
+
+    private fun configSearchView() {
+        val handlerThread = HandlerThread("Song Delay")
+        handlerThread.start()
+        val looper = handlerThread.looper
+        val handler = Handler(looper)
+
+        binding.playlistsSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(filter: String?): Boolean {
+                startShimmer()
+
+                handler.removeCallbacksAndMessages(null)
+                handler.postDelayed({
+                    filter?.let {
+                        viewModel.queryFilter = filter
+                        viewModel.loadData()
+                    }
+                }, 700)
+
+                return true
+            }
+        })
+    }
+
+    private fun startShimmer() {
+        binding.playlistsRecyclerview.visibility = View.GONE
+        binding.playlistsEmptyState.visibility = View.GONE
+        binding.shimmerList.visibility = View.VISIBLE
+        binding.shimmerList.startShimmer()
     }
 
     override fun setViewListeners() {
@@ -101,9 +140,7 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
 
     override fun setViewModelObservers() {
         viewModel.playlists.observe(viewLifecycleOwner) { playlists ->
-            binding.playlistsEmptyState.isVisible = playlists.isEmpty()
-            binding.playlistsRecyclerview.isVisible = playlists.isNotEmpty()
-
+            setViewState(playlists)
             _adapter.loadItems(playlists)
         }
 
@@ -116,6 +153,13 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
                 else -> {}
             }
         }
+    }
+
+    private fun setViewState(albums: List<PlaylistItemDecorator>) {
+        binding.shimmerList.stopShimmer()
+        binding.shimmerList.visibility = View.GONE
+        binding.playlistsEmptyState.isVisible = albums.isEmpty()
+        binding.playlistsRecyclerview.isVisible = albums.isNotEmpty()
     }
 
     override fun loadData() {
