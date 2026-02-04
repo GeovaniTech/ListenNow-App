@@ -1,6 +1,9 @@
 package br.com.listennow.fragments
 
+import android.os.Handler
+import android.os.HandlerThread
 import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -73,7 +76,42 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
 
     override fun configView() {
         configRecyclerView()
+        configSearchView()
         binding.playlistsSongsEmptyState.hideAction()
+    }
+
+    private fun configSearchView() {
+        val handlerThread = HandlerThread("Song Delay")
+        handlerThread.start()
+        val looper = handlerThread.looper
+        val handler = Handler(looper)
+
+        binding.playlistSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(filter: String?): Boolean {
+                startShimmer()
+
+                handler.removeCallbacksAndMessages(null)
+                handler.postDelayed({
+                    filter?.let {
+                        viewModel.query = filter
+                        viewModel.loadData()
+                    }
+                }, 700)
+
+                return true
+            }
+        })
+    }
+
+    private fun startShimmer() {
+        binding.playlistSongsRecyclerview.visibility = View.GONE
+        binding.playlistsSongsEmptyState.visibility = View.GONE
+        binding.shimmerList.visibility = View.VISIBLE
+        binding.shimmerList.startShimmer()
     }
 
     private fun configRecyclerView() {

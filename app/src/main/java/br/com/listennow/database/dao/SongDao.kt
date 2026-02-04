@@ -56,22 +56,6 @@ interface SongDao {
     suspend fun getSongsFromPlaylist(playlistId: String): PlaylistWithSongs?
 
     @Query("""
-        SELECT 
-            * 
-        FROM 
-            PlaylistSong AS playlistSong 
-        INNER JOIN 
-            Song as song ON song.videoId = playlistSong.videoId
-        WHERE 
-            playlistSong.playlistId = :playlistId 
-        AND 
-            (LOWER(name) LIKE  '%' || LOWER(:query) || '%' OR artist LIKE '%' || LOWER(:query) || '%')
-            
-        ORDER BY requestDate DESC
-    """)
-    suspend fun getSongsFromPlaylistFiltering(playlistId: String, query: String?): PlaylistWithSongs?
-
-    @Query("""
         SELECT
             videoId
         FROM Song

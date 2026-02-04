@@ -139,7 +139,7 @@ class SongRepository @Inject constructor (
             return songDao.getSongsFromPlaylist(playlistId)?.songs ?: emptyList()
         }
 
-        return songDao.getSongsFromPlaylistFiltering(playlistId, query)?.songs ?: emptyList()
+        return songDao.getSongsFromPlaylist(playlistId)?.songs?.filter { song ->  song.name.lowercase().contains(query.lowercase()) || song.artist.lowercase().contains(query.lowercase()) } ?: emptyList()
     }
 
     /**
