@@ -28,11 +28,7 @@ object SongUtil {
                 )
             }
 
-            if (song.path.startsWith("content://")) {
-                mediaPlayer.setDataSource(context, song.path.toUri())
-            } else {
-                mediaPlayer.setDataSource(song.path)
-            }
+            mediaPlayer.setDataSource(context, song.path.toUri())
 
             mediaPlayer.prepareAsync()
             mediaPlayer.setOnPreparedListener {

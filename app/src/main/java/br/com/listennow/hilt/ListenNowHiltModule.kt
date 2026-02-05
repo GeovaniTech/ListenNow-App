@@ -10,6 +10,7 @@ import br.com.listennow.repository.UserRepository
 import br.com.listennow.service.AppVersionService
 import br.com.listennow.service.SongService
 import br.com.listennow.service.UserService
+import br.com.listennow.utils.MediaStoreUtil
 import br.com.listennow.webclient.appversion.service.AppVersionWebClient
 import br.com.listennow.webclient.client.service.UserWebClient
 import br.com.listennow.webclient.song.service.SongWebClient
@@ -32,11 +33,13 @@ object ListenNowHiltModule {
     @Provides
     fun provideSongRepository(
         songDao: SongDao,
-        songWebClient: SongWebClient
+        songWebClient: SongWebClient,
+        mediaStore: MediaStoreUtil
     ): SongRepository {
         return SongRepository(
             songDao,
-            songWebClient
+            songWebClient,
+            mediaStore
         )
     }
 
@@ -115,5 +118,12 @@ object ListenNowHiltModule {
         return AppVersionWebClient(
             retrofit.create(AppVersionService::class.java)
         )
+    }
+
+    @Provides
+    fun provideMediaStore(
+        @ApplicationContext context: Context
+    ): MediaStoreUtil {
+        return MediaStoreUtil(context.contentResolver)
     }
 }

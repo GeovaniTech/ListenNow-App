@@ -27,38 +27,40 @@ class SongPlayerService: Service() {
 
     override fun onBind(intent: Intent?): IBinder? = null
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val stopIntent = Intent().also {
-            it.setClass(this, SongPlayerService::class.java)
-            it.action = Actions.STOP.toString()
-        }
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        intent?.let {
+            val stopIntent = Intent().also {
+                it.setClass(this, SongPlayerService::class.java)
+                it.action = Actions.STOP.toString()
+            }
 
-        val playIntent = Intent().also {
-            it.setClass(this, SongPlayerService::class.java)
-            it.action = Actions.PLAY.toString()
-        }
+            val playIntent = Intent().also {
+                it.setClass(this, SongPlayerService::class.java)
+                it.action = Actions.PLAY.toString()
+            }
 
-        val nextIntent = Intent().also {
-            it.setClass(this, SongPlayerService::class.java)
-            it.action = Actions.NEXT.toString()
-        }
+            val nextIntent = Intent().also {
+                it.setClass(this, SongPlayerService::class.java)
+                it.action = Actions.NEXT.toString()
+            }
 
-        val pendingIntentNext = PendingIntent.getService(this, 1, nextIntent,
-            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
+            val pendingIntentNext = PendingIntent.getService(this, 1, nextIntent,
+                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
 
-        val pendingIntentStop = PendingIntent.getService(this, 1, stopIntent,
-            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
+            val pendingIntentStop = PendingIntent.getService(this, 1, stopIntent,
+                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
 
-        val pendingIntentPlay: PendingIntent = PendingIntent.getService(this, 1, playIntent,
-            PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
+            val pendingIntentPlay: PendingIntent = PendingIntent.getService(this, 1, playIntent,
+                PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
 
-        configureNextSongAutomatically(pendingIntentStop, pendingIntentNext)
+            configureNextSongAutomatically(pendingIntentStop, pendingIntentNext)
 
-        when (intent.action.toString()) {
-            Actions.PLAY.toString() -> play(pendingIntentStop, pendingIntentNext)
-            Actions.NEXT.toString() -> next(pendingIntentStop, pendingIntentNext)
-            Actions.STOP.toString() -> stop(pendingIntentPlay, pendingIntentNext)
-            Actions.PLAY_SPECIFIC.toString() -> playSpecific(pendingIntentStop, pendingIntentNext)
+            when (intent.action.toString()) {
+                Actions.PLAY.toString() -> play(pendingIntentStop, pendingIntentNext)
+                Actions.NEXT.toString() -> next(pendingIntentStop, pendingIntentNext)
+                Actions.STOP.toString() -> stop(pendingIntentPlay, pendingIntentNext)
+                Actions.PLAY_SPECIFIC.toString() -> playSpecific(pendingIntentStop, pendingIntentNext)
+            }
         }
 
         return START_STICKY

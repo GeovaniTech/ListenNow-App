@@ -1,21 +1,20 @@
 package br.com.listennow.repository
 
-import android.os.Environment
 import android.util.Log
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.decorator.AlbumItemDecorator
 import br.com.listennow.model.Song
+import br.com.listennow.utils.MediaStoreUtil
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import br.com.listennow.webclient.song.model.SongResponse
 import br.com.listennow.webclient.song.service.SongWebClient
-import java.io.File
-import java.io.FileOutputStream
 import java.util.Base64
 import javax.inject.Inject
 
 class SongRepository @Inject constructor (
     private val songDao: SongDao,
-    private val songWebClient: SongWebClient
+    private val songWebClient: SongWebClient,
+    private val mediaStore: MediaStoreUtil
 ) {
     suspend fun getAll(): List<Song> {
         return songDao.getSongs()
@@ -39,7 +38,9 @@ class SongRepository @Inject constructor (
                 songs.map { song ->
                     handleSongFromServer(song)
                 }
-                songDao.save(songs)
+                songDao.save(songs.filter { song ->
+                    song.path.isNotEmpty()
+                })
             }
         }
     }
@@ -59,31 +60,29 @@ class SongRepository @Inject constructor (
         val songNameWithoutSpecialCharacters = regexNoSpecialCharacters.replace(song.name, "")
         val artistNameWithoutSpecialCharacters = regexNoSpecialCharacters.replace(song.artist, "")
 
-        val path =
-            "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).path}/ $songNameWithoutSpecialCharacters - $artistNameWithoutSpecialCharacters.mp3"
+        val fileName = "$songNameWithoutSpecialCharacters - $artistNameWithoutSpecialCharacters.mp3"
 
-        song.path = path
-
-        val file = File(path)
-
-        if (!file.exists()) {
+        if (!mediaStore.existsSong(fileName)) {
             val response = songWebClient.getDownloadedSong(song.videoId)
 
             response?.let { songDownload ->
                 val result = runCatching {
                     val decodedBytes = Base64.getDecoder().decode(songDownload.file)
-                    val fileOutputStream = FileOutputStream(path)
-                    fileOutputStream.write(decodedBytes)
-                    fileOutputStream.close()
+                    val uri = mediaStore.writeSong(fileName, decodedBytes)
+
+                    song.path = uri
                 }
 
                 if (result.isFailure) {
                     Log.e(
-                        "SongRepository",
-                        "updateAll: Failed to download song, verify the song name ${result.exceptionOrNull()}}",
+                        TAG,
+                        "updateAll: Failed to download song, verify the song name ${result.exceptionOrNull()?.message}}",
                     )
                 }
             }
+        } else {
+            song.path = mediaStore.getSongUri(fileName).toString()
+            Log.i(TAG, "handleSongFromServer: Song already exists on device: $fileName")
         }
     }
 
@@ -148,14 +147,14 @@ class SongRepository @Inject constructor (
     @Throws(Exception::class)
     suspend fun deleteSong(song: Song, userId: String): Boolean {
         if (songWebClient.deleteSongFromUserAccount(song.videoId, userId)) {
-            val file = File(song.path)
-            file.delete()
-
             songDao.delete(song)
-
             return true
         }
 
         return false
+    }
+
+    companion object {
+        const val TAG = "SongRepository"
     }
 }

@@ -14,17 +14,16 @@ import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.provider.Settings
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavOptions
@@ -237,26 +236,8 @@ class MainActivity : AppCompatActivity() {
             permissions.add(Manifest.permission.POST_NOTIFICATIONS)
         }
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-            if (!Environment.isExternalStorageManager()) {
-                try {
-                    val uri = ("package:" + BuildConfig.APPLICATION_ID).toUri()
-                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri)
-                    intent.addCategory("android.intent.category.DEFAULT")
-                    intent.data = String.format(
-                        "package:%s",
-                        applicationContext.packageName
-                    ).toUri()
-                    startActivity(intent)
-                } catch (ex: Exception) {
-                    Log.e(TAG, "askPermissions: ${ex.message}")
-                    val intent = Intent()
-                    intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
-                    startActivity(intent)
-                }
-            }
-        } else {
-            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
 
         permissions.add(Manifest.permission.RECORD_AUDIO)
@@ -407,7 +388,7 @@ class MainActivity : AppCompatActivity() {
             it.setClass(this, SongPlayerService::class.java)
             it.action = action.toString()
 
-            startService(it)
+            ContextCompat.startForegroundService(this, it)
         }
     }
 
