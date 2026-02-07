@@ -1,6 +1,8 @@
 package br.com.listennow.foreground
 
+import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
@@ -27,21 +29,36 @@ class ImportAllSongsService: Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val userReceiver = intent.getStringExtra(ImportAllSongsData.USER_RECEIVER.value)
         val songsIds = intent.getStringArrayListExtra(ImportAllSongsData.SONGS_IDS.value)!!
+        val importedSongs = mutableListOf<String>()
+
 
         val title = getString(R.string.importing_songs)
-        val description = getString(R.string.importing_all_songs_from_another_device, songsIds.size)
+        var description = getString(R.string.importing_all_songs_from_another_device, songsIds.size)
 
-        val notification = notificationBuilder(title, description).run {
-            setProgress(0, 0, true)
+        var notification = notificationBuilder(title, description).run {
+            setProgress(songsIds.size, 0, false)
             build()
         }
 
-        startForeground(NotificationUtil.getUniqueNotificationId(), notification)
+        val notificationId = NotificationUtil.getUniqueNotificationId()
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        startForeground(notificationId, notification)
 
         CoroutineScope(Dispatchers.IO).launch {
             songsIds.windowed(20, 20, partialWindows = true).forEachIndexed{ _, chunk ->
                 if (songRepository.copySongsFromAnotherDevice(userReceiver!!, chunk)) {
                     songRepository.updateAll(userReceiver)
+
+                    importedSongs.addAll(chunk)
+                    description = getString(R.string.importing_all_songs_from_another_device, songsIds.size - importedSongs.size)
+
+                    notification = notificationBuilder(title, description).run {
+                        setProgress(songsIds.size, importedSongs.size, false)
+                        build()
+                    }
+
+                    notificationManager.notify(notificationId, notification)
                 }
             }
 
