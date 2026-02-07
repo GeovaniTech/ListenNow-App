@@ -305,7 +305,10 @@ class MainActivity : AppCompatActivity() {
         binding.listSongsArtist.text = song.artist
 
         if (applicationContext != null) {
-            Glide.with(applicationContext).load(song.thumb).into(binding.homeThumbSongDetails)
+            Glide.with(applicationContext)
+                .load(song.thumb)
+                .error(R.drawable.icon)
+                .into(binding.homeThumbSongDetails)
         }
 
         if (isPlaying) {

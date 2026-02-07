@@ -3,6 +3,7 @@ package br.com.listennow.foreground
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
@@ -81,13 +82,15 @@ class SongPlayerService: Service() {
         CoroutineScope(Dispatchers.IO).launch {
             SongUtil.pause()
 
-            val futureTarget = Glide.with(applicationContext)
-                .asBitmap()
-                .load(SongUtil.actualSong!!.thumb)
-                .submit()
+            val thumb = try {
+                Glide.with(applicationContext)
+                    .asBitmap()
+                    .load(SongUtil.actualSong!!.thumb)
+                    .submit()
+                    .get()
 
-            val bitmap = withContext(Dispatchers.IO) {
-                futureTarget.get()
+            } catch (_: Exception) {
+                null
             }
 
             val notification = NotificationCompat.Builder(
@@ -108,12 +111,10 @@ class SongPlayerService: Service() {
                     getString(R.string.next),
                     pendingIntentNext
                 )
-                .setLargeIcon(bitmap)
+                .setLargeIcon(thumb ?: BitmapFactory.decodeResource(resources, R.drawable.icon))
                 .setDefaults(0)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .build()
-
-            Glide.with(applicationContext).clear(futureTarget)
 
             startForeground(1, notification)
             callUpdateSongReceiver(isPlaying = false)
@@ -129,13 +130,15 @@ class SongPlayerService: Service() {
         SongUtil.playRandomSong()
 
         CoroutineScope(Dispatchers.IO).launch {
-            val futureTarget = Glide.with(applicationContext)
-                .asBitmap()
-                .load(SongUtil.actualSong!!.thumb)
-                .submit()
+            val thumb = try {
+                Glide.with(applicationContext)
+                    .asBitmap()
+                    .load(SongUtil.actualSong!!.thumb)
+                    .submit()
+                    .get()
 
-            val bitmap = withContext(Dispatchers.IO) {
-                futureTarget.get()
+            } catch (_: Exception) {
+                null
             }
 
             val notification = NotificationCompat.Builder(
@@ -156,12 +159,10 @@ class SongPlayerService: Service() {
                     getString(R.string.next),
                     pendingIntentNext
                 )
-                .setLargeIcon(bitmap)
+                .setLargeIcon(thumb ?: BitmapFactory.decodeResource(resources, R.drawable.icon))
                 .setDefaults(0)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .build()
-
-            Glide.with(applicationContext).clear(futureTarget)
 
             startForeground(1, notification)
             callUpdateSongReceiver()
@@ -182,13 +183,15 @@ class SongPlayerService: Service() {
         pendingIntentNext: PendingIntent?
     ): Int {
         CoroutineScope(Dispatchers.IO).launch {
-            val futureTarget = Glide.with(applicationContext)
-                .asBitmap()
-                .load(SongUtil.actualSong!!.thumb)
-                .submit()
+            val thumb = try {
+                Glide.with(applicationContext)
+                    .asBitmap()
+                    .load(SongUtil.actualSong!!.thumb)
+                    .submit()
+                    .get()
 
-            val bitmap = withContext(Dispatchers.IO) {
-                futureTarget.get()
+            } catch (_: Exception) {
+                null
             }
 
             val notification = NotificationCompat.Builder(
@@ -209,10 +212,8 @@ class SongPlayerService: Service() {
                     getString(R.string.next),
                     pendingIntentNext
                 )
-                .setLargeIcon(bitmap)
+                .setLargeIcon(thumb ?: BitmapFactory.decodeResource(resources, R.drawable.icon))
                 .build()
-
-            Glide.with(applicationContext).clear(futureTarget)
 
             startForeground(1, notification)
             callUpdateSongReceiver()
