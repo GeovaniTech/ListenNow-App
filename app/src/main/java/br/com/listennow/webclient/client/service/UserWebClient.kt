@@ -17,7 +17,7 @@ class UserWebClient(
             val response = userService.add(UserAddRequest(userId))
             response.message
         } catch (e: Exception) {
-            Log.e(TAG, "addUser: Error trying to add user to Server ${e.stackTrace}")
+            Log.e(TAG, "addUser: Error trying to add user to Server ${e.message}")
             return StatusMessage.FAILED_TO_CONNECT_API.message
         }
     }

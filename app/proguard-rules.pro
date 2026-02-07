@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class br.com.listennow.webclient.appversion.model.** { *; }
+-keep class br.com.listennow.webclient.client.model.** { *; }
+-keep class br.com.listennow.webclient.common.model.** { *; }
+-keep class br.com.listennow.webclient.song.model.** { *; }
