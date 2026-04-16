@@ -518,6 +518,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun applyEdgeToEdge() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
+
         val currentNightMode: Int = getResources()
             .configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 
