@@ -1,6 +1,7 @@
 package br.com.listennow.hilt
 
 import android.content.Context
+import br.com.listennow.BuildConfig
 import br.com.listennow.database.AppDatabase
 import br.com.listennow.database.dao.PlaylistDao
 import br.com.listennow.database.dao.SongDao
@@ -21,6 +22,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -67,6 +69,14 @@ object ListenNowHiltModule {
 
         val client = OkHttpClient.Builder()
             .addInterceptor(logging)
+            .addNetworkInterceptor(Interceptor { chain ->
+                val request = chain.request()
+                    .newBuilder()
+                    .header("Api-Key", BuildConfig.API_KEY)
+                    .build()
+
+                chain.proceed(request)
+            })
             .build()
 
         val moshi = Moshi.Builder()
