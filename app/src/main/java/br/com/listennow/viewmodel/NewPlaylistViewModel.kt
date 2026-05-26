@@ -7,6 +7,7 @@ import br.com.listennow.database.dao.PlaylistDao
 import br.com.listennow.decorator.PlaylistDecorator
 import br.com.listennow.enums.EnumPlaylistActionStatus
 import br.com.listennow.model.Playlist
+import br.com.listennow.repository.PlaylistRepository
 import br.com.listennow.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NewPlaylistViewModel @Inject constructor(
     userRepository: UserRepository,
-    private val playlistDao: PlaylistDao
+    private val playlistRepository: PlaylistRepository
 ): CommonViewModel(userRepository) {
     val playlist: PlaylistDecorator = PlaylistDecorator()
 
@@ -30,10 +31,10 @@ class NewPlaylistViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            playlistDao.save(Playlist(
-                playlistId = UUID.randomUUID().toString(),
-                name = playlist.title!!
-            ))
+            playlistRepository.create(
+                playlistName = playlist.title!!,
+                clientId = user!!.id
+            )
 
             _statusCallback.postValue(EnumPlaylistActionStatus.PLAYLIST_SAVED_SUCCESSFULLY)
         }

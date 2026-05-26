@@ -6,14 +6,17 @@ import br.com.listennow.database.AppDatabase
 import br.com.listennow.database.dao.PlaylistDao
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.database.dao.UserDao
+import br.com.listennow.repository.PlaylistRepository
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
 import br.com.listennow.service.AppVersionService
+import br.com.listennow.service.PlaylistService
 import br.com.listennow.service.SongService
 import br.com.listennow.service.UserService
 import br.com.listennow.utils.MediaStoreUtil
 import br.com.listennow.webclient.appversion.service.AppVersionWebClient
 import br.com.listennow.webclient.client.service.UserWebClient
+import br.com.listennow.webclient.playlist.PlaylistWebClient
 import br.com.listennow.webclient.song.service.SongWebClient
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -102,6 +105,26 @@ object ListenNowHiltModule {
         @ApplicationContext context: Context
     ): PlaylistDao {
         return AppDatabase.getInstance(context).playlistDao()
+    }
+
+    @Provides
+    fun providePlaylistWebClient(
+        retrofit: Retrofit
+    ): PlaylistWebClient {
+        return PlaylistWebClient(
+            retrofit.create(PlaylistService::class.java)
+        )
+    }
+
+    @Provides
+    fun providePlaylistRepository(
+        playlistDao: PlaylistDao,
+        playlistWebClient: PlaylistWebClient
+    ): PlaylistRepository {
+        return PlaylistRepository(
+            playlistDao,
+            playlistWebClient
+        )
     }
 
     @Provides
