@@ -1,10 +1,12 @@
 package br.com.listennow.repository
 
 import br.com.listennow.database.dao.PlaylistDao
+import br.com.listennow.decorator.PlaylistItemDecorator
 import br.com.listennow.model.Playlist
 import br.com.listennow.model.PlaylistSong
 import br.com.listennow.webclient.playlist.PlaylistWebClient
 import br.com.listennow.webclient.playlist.model.PlaylistCreateRequest
+import br.com.listennow.webclient.playlist.model.PlaylistDeleteRequest
 import br.com.listennow.webclient.playlist.model.PlaylistDeleteSongsRequest
 import br.com.listennow.webclient.playlist.model.PlaylistInsertSongsRequest
 
@@ -61,5 +63,21 @@ class PlaylistRepository(
                 playlistDao.deleteSongFromPlaylist(videoId, playlistId)
             }
         }
+    }
+
+    suspend fun delete(playlistId: String) {
+        val playlistDeletedOnServer = playlistWebClient.delete(
+            PlaylistDeleteRequest(
+                playlistId = playlistId
+            )
+        )
+
+        if (playlistDeletedOnServer) {
+            playlistDao.delete(playlistId)
+        }
+    }
+
+    suspend fun getLocalPlaylistItemDecorator(query: String): List<PlaylistItemDecorator> {
+        return playlistDao.getPlaylists(query)
     }
 }

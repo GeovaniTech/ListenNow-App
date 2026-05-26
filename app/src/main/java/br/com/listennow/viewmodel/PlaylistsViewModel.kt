@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.listennow.database.dao.PlaylistDao
 import br.com.listennow.decorator.PlaylistItemDecorator
 import br.com.listennow.enums.EnumPlaylistActionStatus
+import br.com.listennow.repository.PlaylistRepository
 import br.com.listennow.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -14,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PlaylistsViewModel @Inject constructor(
     userRepository: UserRepository,
-    private val playlistDao: PlaylistDao
+    private val playlistRepository: PlaylistRepository
 ): CommonViewModel(userRepository) {
     private var _playlists: MutableLiveData<List<PlaylistItemDecorator>> = MutableLiveData()
     val playlists: LiveData<List<PlaylistItemDecorator>> get() = _playlists
@@ -25,11 +26,11 @@ class PlaylistsViewModel @Inject constructor(
     var queryFilter: String = ""
 
     fun loadData() = viewModelScope.launch {
-        _playlists.postValue(playlistDao.getPlaylists(queryFilter))
+        _playlists.postValue(playlistRepository.getLocalPlaylistItemDecorator(queryFilter))
     }
 
     fun deletePlaylist(playlistId: String) = viewModelScope.launch {
-        playlistDao.delete(playlistId)
+        playlistRepository.delete(playlistId)
         _statusCallback.postValue(EnumPlaylistActionStatus.PLAYLIST_DELETED)
     }
 }

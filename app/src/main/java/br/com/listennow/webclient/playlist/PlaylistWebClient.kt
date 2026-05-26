@@ -3,6 +3,7 @@ package br.com.listennow.webclient.playlist
 import br.com.listennow.service.PlaylistService
 import br.com.listennow.webclient.playlist.exception.PlaylistRestException
 import br.com.listennow.webclient.playlist.model.PlaylistCreateRequest
+import br.com.listennow.webclient.playlist.model.PlaylistDeleteRequest
 import br.com.listennow.webclient.playlist.model.PlaylistDeleteSongsRequest
 import br.com.listennow.webclient.playlist.model.PlaylistInsertSongsRequest
 
@@ -30,6 +31,12 @@ class PlaylistWebClient(
         val deleteSongsResponse = playlistService.deleteSongsFromPlaylist(playlistDeleteSongsRequest)
 
         return deleteSongsResponse.isSuccessful
+    }
+
+    suspend fun delete(playlistDeleteRequest: PlaylistDeleteRequest): Boolean {
+        val deleteResponse = playlistService.delete(playlistDeleteRequest)
+
+        return deleteResponse.isSuccessful
     }
 
     companion object {
