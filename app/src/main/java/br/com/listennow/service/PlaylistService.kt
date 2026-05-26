@@ -2,9 +2,12 @@ package br.com.listennow.service
 
 import br.com.listennow.webclient.playlist.model.PlaylistCreateRequest
 import br.com.listennow.webclient.playlist.model.PlaylistCreateResponse
+import br.com.listennow.webclient.playlist.model.PlaylistDeleteSongsRequest
 import br.com.listennow.webclient.playlist.model.PlaylistInsertSongsRequest
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.HTTP
 import retrofit2.http.PUT
 
 interface PlaylistService {
@@ -13,4 +16,7 @@ interface PlaylistService {
 
     @PUT(value = "playlist/add/songs")
     suspend fun insertSongsIntoPlaylist(@Body insertSongsRequest: PlaylistInsertSongsRequest): Response<Void>
+
+    @HTTP(method = "DELETE", path = "playlist/delete/songs", hasBody = true)
+    suspend fun deleteSongsFromPlaylist(@Body deleteSongsRequest: PlaylistDeleteSongsRequest): Response<Void>
 }

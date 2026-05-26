@@ -12,6 +12,7 @@ import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.Arrays
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
@@ -60,7 +61,7 @@ class PlaylistSongsViewModel @Inject constructor(
     }
 
     fun deleteSong(item: Song) = viewModelScope.launch {
-//        playlistDao.deleteSongFromPlaylist(item.videoId, navParams.playlistId)
+        playlistRepository.deleteSongsFromPlaylist(navParams.playlistId, listOf(item.videoId))
         _onSongsDeletedCallback.postValue(AtomicBoolean(true))
     }
 }

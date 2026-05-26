@@ -5,6 +5,7 @@ import br.com.listennow.model.Playlist
 import br.com.listennow.model.PlaylistSong
 import br.com.listennow.webclient.playlist.PlaylistWebClient
 import br.com.listennow.webclient.playlist.model.PlaylistCreateRequest
+import br.com.listennow.webclient.playlist.model.PlaylistDeleteSongsRequest
 import br.com.listennow.webclient.playlist.model.PlaylistInsertSongsRequest
 
 class PlaylistRepository(
@@ -44,6 +45,21 @@ class PlaylistRepository(
                     )
                 }
             )
+        }
+    }
+
+    suspend fun deleteSongsFromPlaylist(playlistId: String, songs: List<String>) {
+        val songsDeleteFromServer = playlistWebClient.deleteSongsFromPlaylist(
+            PlaylistDeleteSongsRequest(
+                playlistId = playlistId,
+                songs = songs
+            )
+        )
+
+        if (songsDeleteFromServer) {
+            songs.forEach { videoId ->
+                playlistDao.deleteSongFromPlaylist(videoId, playlistId)
+            }
         }
     }
 }
