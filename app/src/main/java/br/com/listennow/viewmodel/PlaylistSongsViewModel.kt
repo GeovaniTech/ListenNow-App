@@ -7,6 +7,7 @@ import br.com.listennow.database.dao.PlaylistDao
 import br.com.listennow.model.PlaylistSong
 import br.com.listennow.model.Song
 import br.com.listennow.navparams.PlaylistSongsNavParams
+import br.com.listennow.repository.PlaylistRepository
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,7 @@ import javax.inject.Inject
 class PlaylistSongsViewModel @Inject constructor(
     userRepository: UserRepository,
     private val songRepository: SongRepository,
-    private val playlistDao: PlaylistDao
+    private val playlistRepository: PlaylistRepository
 ): CommonViewModel(userRepository) {
     lateinit var navParams: PlaylistSongsNavParams
     var query: String? = null
@@ -37,9 +38,11 @@ class PlaylistSongsViewModel @Inject constructor(
     }
 
     fun addSongsToPlaylist(songsIds: ArrayList<String>?) = viewModelScope.launch {
-        songsIds?.let {
-            val playlistSongs = songsIds.map { PlaylistSong(navParams.playlistId, it) }
-            playlistDao.addSongsToPlaylist(playlistSongs)
+        songsIds?.let { songs ->
+            playlistRepository.insertSongsIntoPlaylist(
+                playlistId = navParams.playlistId,
+                songs = songs
+            )
             postSongsAddedCallback(true)
         }
     }
@@ -57,7 +60,7 @@ class PlaylistSongsViewModel @Inject constructor(
     }
 
     fun deleteSong(item: Song) = viewModelScope.launch {
-        playlistDao.deleteSongFromPlaylist(item.videoId, navParams.playlistId)
+//        playlistDao.deleteSongFromPlaylist(item.videoId, navParams.playlistId)
         _onSongsDeletedCallback.postValue(AtomicBoolean(true))
     }
 }

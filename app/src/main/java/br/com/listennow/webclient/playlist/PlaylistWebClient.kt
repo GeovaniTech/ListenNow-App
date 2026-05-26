@@ -3,6 +3,7 @@ package br.com.listennow.webclient.playlist
 import br.com.listennow.service.PlaylistService
 import br.com.listennow.webclient.playlist.exception.PlaylistRestException
 import br.com.listennow.webclient.playlist.model.PlaylistCreateRequest
+import br.com.listennow.webclient.playlist.model.PlaylistInsertSongsRequest
 
 class PlaylistWebClient(
     private val playlistService: PlaylistService
@@ -20,5 +21,11 @@ class PlaylistWebClient(
 
     companion object {
         const val TAG = "PlaylistWebClient"
+    }
+
+    suspend fun insertSongsIntoPlaylist(playlistInsertSongsRequest: PlaylistInsertSongsRequest): Boolean {
+        val insertSongsResponse = playlistService.insertSongsIntoPlaylist(playlistInsertSongsRequest)
+
+        return insertSongsResponse.isSuccessful
     }
 }
