@@ -33,4 +33,11 @@ class PlaylistsViewModel @Inject constructor(
         playlistRepository.delete(playlistId)
         _statusCallback.postValue(EnumPlaylistActionStatus.PLAYLIST_DELETED)
     }
+
+    fun refreshPlaylists() {
+        viewModelScope.launch {
+            playlistRepository.syncUserPlaylists(user!!.id)
+            loadData()
+        }
+    }
 }

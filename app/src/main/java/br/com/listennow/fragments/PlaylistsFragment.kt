@@ -19,7 +19,6 @@ import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.adapter.PlaylistsAdapter
 import br.com.listennow.databinding.FragmentPlaylistsBinding
 import br.com.listennow.databinding.FragmentPlaylistsItemBinding
-import br.com.listennow.decorator.AlbumItemDecorator
 import br.com.listennow.decorator.PlaylistDecorator
 import br.com.listennow.decorator.PlaylistItemDecorator
 import br.com.listennow.enums.EnumPlaylistActionStatus
@@ -136,12 +135,17 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
         binding.playlistsSeeAlbums.setOnClickListener {
             findNavController().navigate(PlaylistsFragmentDirections.actionPlaylistsFragmentToAlbumsFragment())
         }
+
+        binding.playlistsRefresh.setOnRefreshListener {
+            viewModel.refreshPlaylists()
+        }
     }
 
     override fun setViewModelObservers() {
         viewModel.playlists.observe(viewLifecycleOwner) { playlists ->
             setViewState(playlists)
             _adapter.loadItems(playlists)
+            binding.playlistsRefresh.isRefreshing = false
         }
 
         viewModel.statusCallback.observe(viewLifecycleOwner) { status ->

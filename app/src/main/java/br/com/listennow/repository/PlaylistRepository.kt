@@ -8,6 +8,7 @@ import br.com.listennow.webclient.playlist.PlaylistWebClient
 import br.com.listennow.webclient.playlist.model.PlaylistCreateRequest
 import br.com.listennow.webclient.playlist.model.PlaylistDeleteRequest
 import br.com.listennow.webclient.playlist.model.PlaylistDeleteSongsRequest
+import br.com.listennow.webclient.playlist.model.PlaylistGetRequest
 import br.com.listennow.webclient.playlist.model.PlaylistInsertSongsRequest
 
 class PlaylistRepository(
@@ -79,5 +80,38 @@ class PlaylistRepository(
 
     suspend fun getLocalPlaylistItemDecorator(query: String): List<PlaylistItemDecorator> {
         return playlistDao.getPlaylists(query)
+    }
+
+    suspend fun syncUserPlaylists(clientId: String) {
+        val playlistsIgnore = playlistDao.getPlaylists("").map { it.playlistId }
+
+        val userPlaylistsOnServer = playlistWebClient.getUserPlaylists(
+            PlaylistGetRequest(
+                clientId = clientId,
+                ignoreIds = playlistsIgnore,
+            )
+        )
+
+        val playlists = userPlaylistsOnServer.map { serverPlaylist ->
+            Playlist(
+                playlistId = serverPlaylist.id,
+                name = serverPlaylist.name
+            )
+        }
+
+        playlistDao.save(playlists)
+
+        playlists.forEach { playlist ->
+            val songs = userPlaylistsOnServer.first { p -> p.id == playlist.playlistId }.songs
+
+            playlistDao.addSongsToPlaylist(
+                songs.map { videoId ->
+                    PlaylistSong(
+                        playlistId = playlist.playlistId,
+                        videoId = videoId
+                    )
+                }
+            )
+        }
     }
 }

@@ -5,6 +5,8 @@ import br.com.listennow.webclient.playlist.exception.PlaylistRestException
 import br.com.listennow.webclient.playlist.model.PlaylistCreateRequest
 import br.com.listennow.webclient.playlist.model.PlaylistDeleteRequest
 import br.com.listennow.webclient.playlist.model.PlaylistDeleteSongsRequest
+import br.com.listennow.webclient.playlist.model.PlaylistGetRequest
+import br.com.listennow.webclient.playlist.model.PlaylistGetResponse
 import br.com.listennow.webclient.playlist.model.PlaylistInsertSongsRequest
 
 class PlaylistWebClient(
@@ -39,7 +41,13 @@ class PlaylistWebClient(
         return deleteResponse.isSuccessful
     }
 
-    companion object {
-        const val TAG = "PlaylistWebClient"
+    suspend fun getUserPlaylists(getUserPlaylistGetRequest: PlaylistGetRequest): List<PlaylistGetResponse> {
+        val playlistsResponse = playlistService.getPlaylistsFromUser(getUserPlaylistGetRequest)
+
+        if (playlistsResponse.isSuccessful) {
+            return playlistsResponse.body()!!
+        }
+
+        throw PlaylistRestException("Error trying to get all playlists from user.")
     }
 }

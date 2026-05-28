@@ -1,7 +1,6 @@
 package br.com.listennow.database.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -12,8 +11,11 @@ import br.com.listennow.model.PlaylistSong
 
 @Dao
 interface PlaylistDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(playlist: Playlist)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun save(playlists: List<Playlist>)
 
     @Query("DELETE FROM Playlist WHERE playlistId = :playlistId")
     suspend fun delete(playlistId: String)
