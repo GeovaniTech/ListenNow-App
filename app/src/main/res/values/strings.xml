@@ -61,7 +61,7 @@
     <string name="app_version">App Version: %s</string>
     <string name="fragment_device_infos_use_cause_for_id_message">You can use your device ID to listen your songs in another device.</string>
     <string name="fragment_device_infos_device_id_to_download_songs">Device ID to Download Songs/Playlists</string>
-    <string name="importing_all_songs_from_another_device">Importing %d songs from another device</string>
+    <string name="importing_all_songs_from_another_device">The import has started, you can check the notifications to follow the progress.</string>
     <string name="importing_songs">Importing Songs</string>
     <string name="fragment_device_infos_device_id_must_not_be_null">Device ID must not be empty, specify the device id that you want to download songs</string>
     <string name="fragment_Device_infos_device_id_must_be_different_than_yours">The device ID must be different than yours</string>
