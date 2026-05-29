@@ -112,7 +112,7 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
 
             mainActivity.startService(it)
 
-            showSnackBar(getString(R.string.importing_all_songs_from_another_device, songsIds.size))
+            showSnackBar(getString(R.string.importing_all_songs_from_another_device))
         }
     }
 
