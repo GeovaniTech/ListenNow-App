@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import br.com.listennow.repository.PlaylistRepository
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
-import br.com.listennow.webclient.playlist.model.PlaylistCopyRequest
 import br.com.listennow.webclient.playlist.model.PlaylistCountRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
