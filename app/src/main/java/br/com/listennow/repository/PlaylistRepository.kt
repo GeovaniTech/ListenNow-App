@@ -66,10 +66,11 @@ class PlaylistRepository(
         }
     }
 
-    suspend fun delete(playlistId: String) {
+    suspend fun delete(playlistId: String, userId: String) {
         val playlistDeletedOnServer = playlistWebClient.delete(
             PlaylistDeleteRequest(
-                playlistId = playlistId
+                playlistId = playlistId,
+                clientId = userId
             )
         )
 

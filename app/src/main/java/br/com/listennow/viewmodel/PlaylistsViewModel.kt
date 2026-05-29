@@ -30,7 +30,7 @@ class PlaylistsViewModel @Inject constructor(
     }
 
     fun deletePlaylist(playlistId: String) = viewModelScope.launch {
-        playlistRepository.delete(playlistId)
+        playlistRepository.delete(playlistId, user!!.id)
         _statusCallback.postValue(EnumPlaylistActionStatus.PLAYLIST_DELETED)
     }
 
