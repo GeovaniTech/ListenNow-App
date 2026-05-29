@@ -2,6 +2,8 @@ package br.com.listennow.webclient.playlist
 
 import br.com.listennow.service.PlaylistService
 import br.com.listennow.webclient.playlist.exception.PlaylistRestException
+import br.com.listennow.webclient.playlist.model.PlaylistCopyRequest
+import br.com.listennow.webclient.playlist.model.PlaylistCountRequest
 import br.com.listennow.webclient.playlist.model.PlaylistCreateRequest
 import br.com.listennow.webclient.playlist.model.PlaylistDeleteRequest
 import br.com.listennow.webclient.playlist.model.PlaylistDeleteSongsRequest
@@ -49,5 +51,19 @@ class PlaylistWebClient(
         }
 
         throw PlaylistRestException("Error trying to get all playlists from user.")
+    }
+
+    suspend fun copyPlaylistFromAnotherDevice(copyRequest: PlaylistCopyRequest): Boolean {
+        return playlistService.copyPlaylistsFromAnotherDevice(copyRequest).isSuccessful
+    }
+
+    suspend fun countPlaylistsToImport(countRequest: PlaylistCountRequest): Int {
+        val countResponse = playlistService.getCountPlaylistsToImport(countRequest)
+
+        if (countResponse.isSuccessful) {
+            return countResponse.body()!!.count
+        }
+
+        throw PlaylistRestException("Error trying to count playlists to import")
     }
 }

@@ -60,18 +60,18 @@
     <string name="fragment_device_infos_id_copied_successfully">Device ID copied!</string>
     <string name="app_version">App Version: %s</string>
     <string name="fragment_device_infos_use_cause_for_id_message">You can use your device ID to listen your songs in another device.</string>
-    <string name="fragment_device_infos_device_id_to_download_songs">Device ID to Download Songs</string>
+    <string name="fragment_device_infos_device_id_to_download_songs">Device ID to Download Songs/Playlists</string>
     <string name="importing_all_songs_from_another_device">Importing %d songs from another device</string>
     <string name="importing_songs">Importing Songs</string>
-    <string name="fragment_device_infos_device_id_must_not_be_null">Device ID must not be null, specify the device id that you want to download songs</string>
+    <string name="fragment_device_infos_device_id_must_not_be_null">Device ID must not be empty, specify the device id that you want to download songs</string>
     <string name="fragment_Device_infos_device_id_must_be_different_than_yours">The device ID must be different than yours</string>
     <string name="message_it_was_not_possible_to_execute_this_action">It was not possible to execute this action, please verify your internet connection</string>
     <string name="attention">Attention</string>
-    <string name="dialog_download_songs_title">Are you sure about download these song(s)?</string>
-    <string name="dialog_download_songs_message">We found %d songs to download, you want to proceed the download?</string>
+    <string name="dialog_download_songs_title">Are you sure?</string>
+    <string name="dialog_download_songs_message">We found %d songs and %d playlists to download, you want to proceed the download?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="fragment_device_infos_no_songs_found_to_download_with_id">No new songs found for the provided ID. Please, check if the device contains any songs to download.</string>
+    <string name="fragment_device_infos_no_songs_found_to_download_with_id">No new songs/playlists found for the provided ID.</string>
     <string name="song_player_notification">Song Player on Notification Bar</string>
     <string name="import_all_songs_from_another_device">Import All Songs From Another Device Notification</string>
     <string name="download_started_notification">Download Started Notification</string>
@@ -118,4 +118,6 @@
     <string name="playlist_songs_song_deleted_message">Song deleted successfully</string>
     <string name="app_plays_audio">This App Plays Audio</string>
     <string name="empty"></string>
+    <string name="importing_playlists">Importing Playlists</string>
+    <string name="finishing_importing_playlists">Almost done, importing all playlists</string>
 </resources>

@@ -60,13 +60,14 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
 
             viewLifecycleOwner.lifecycleScope.launch {
                 val songsIds = viewModel.getSongIdsSongsByUser(userReceiver, userWithSongs)
+                val countPlaylistToImport = viewModel.getCountPlaylistsToImport(userWithSongs)
 
                 if (songsIds == null) {
                     showSnackBar(R.string.message_it_was_not_possible_to_execute_this_action)
                     return@launch
                 }
 
-                if (songsIds.isEmpty()) {
+                if (songsIds.isEmpty() && countPlaylistToImport == 0) {
                     showSnackBar(R.string.fragment_device_infos_no_songs_found_to_download_with_id)
                     return@launch
                 }
@@ -74,7 +75,7 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
                 val dialogBuilder = AlertDialog.Builder(requireContext())
 
                 val positiveButtonClick = { dialog: DialogInterface, _: Int ->
-                    startImportSongsForegroundService(userReceiver, songsIds)
+                    startImportSongsForegroundService(userReceiver, userWithSongs, songsIds)
                     dialog.dismiss()
                 }
 
@@ -84,7 +85,7 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
 
                 with(dialogBuilder) {
                     setTitle(getString(R.string.dialog_download_songs_title))
-                    setMessage(getString(R.string.dialog_download_songs_message, songsIds.size))
+                    setMessage(getString(R.string.dialog_download_songs_message, songsIds.size, countPlaylistToImport))
                     setPositiveButton(R.string.yes, DialogInterface.OnClickListener(positiveButtonClick))
                     setNegativeButton(R.string.no, DialogInterface.OnClickListener(negativeButtonClick))
                     show()
@@ -93,13 +94,18 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
         }
     }
 
-    private fun startImportSongsForegroundService(userReceiver: String, songsIds: List<String>) {
+    private fun startImportSongsForegroundService(userReceiver: String, userWithData: String, songsIds: List<String>) {
         Intent().also {
             it.setClass(requireContext(), ImportAllSongsService::class.java)
 
             it.putExtra(
                 ImportAllSongsService.ImportAllSongsData.USER_RECEIVER.value,
                 userReceiver
+            )
+
+            it.putExtra(
+                ImportAllSongsService.ImportAllSongsData.USER_COPY_FROM_ID.value,
+                userWithData
             )
 
             it.putStringArrayListExtra(ImportAllSongsService.ImportAllSongsData.SONGS_IDS.value, ArrayList(songsIds))

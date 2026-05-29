@@ -5,6 +5,8 @@ import br.com.listennow.decorator.PlaylistItemDecorator
 import br.com.listennow.model.Playlist
 import br.com.listennow.model.PlaylistSong
 import br.com.listennow.webclient.playlist.PlaylistWebClient
+import br.com.listennow.webclient.playlist.model.PlaylistCopyRequest
+import br.com.listennow.webclient.playlist.model.PlaylistCountRequest
 import br.com.listennow.webclient.playlist.model.PlaylistCreateRequest
 import br.com.listennow.webclient.playlist.model.PlaylistDeleteRequest
 import br.com.listennow.webclient.playlist.model.PlaylistDeleteSongsRequest
@@ -114,5 +116,24 @@ class PlaylistRepository(
                 }
             )
         }
+    }
+
+    suspend fun copyPlaylistsFromAnotherDevice(clientReceiverId: String, clientCopyFromId: String) {
+        val playlistsCopiedSuccessfully = playlistWebClient.copyPlaylistFromAnotherDevice(
+            copyRequest = PlaylistCopyRequest(
+                clientReceiverId = clientReceiverId,
+                clientWithPlaylistsId = clientCopyFromId
+            )
+        )
+
+        if (playlistsCopiedSuccessfully) {
+            syncUserPlaylists(
+                clientId = clientReceiverId
+            )
+        }
+    }
+
+    suspend fun getCountPlaylistsToImport(countRequest: PlaylistCountRequest): Int {
+        return playlistWebClient.countPlaylistsToImport(countRequest)
     }
 }

@@ -6,8 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.room.util.getColumnIndex
 import br.com.listennow.R
 import br.com.listennow.fragments.MainActivity
+import br.com.listennow.repository.PlaylistRepository
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.utils.NotificationUtil
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,13 +26,17 @@ class ImportAllSongsService: Service() {
     @Inject
     lateinit var songRepository: SongRepository
 
+    @Inject
+    lateinit var playlistRepository: PlaylistRepository
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val userReceiver = intent.getStringExtra(ImportAllSongsData.USER_RECEIVER.value)
+        val userReceiver = intent.getStringExtra(ImportAllSongsData.USER_RECEIVER.value)!!
+        val userWithData = intent.getStringExtra(ImportAllSongsData.USER_COPY_FROM_ID.value)!!
         val songsIds = intent.getStringArrayListExtra(ImportAllSongsData.SONGS_IDS.value)!!
-        val importedSongs = mutableListOf<String>()
 
+        val importedSongs = mutableListOf<String>()
 
         val title = getString(R.string.importing_songs)
         var description = getString(R.string.importing_all_songs_from_another_device, songsIds.size)
@@ -41,13 +47,13 @@ class ImportAllSongsService: Service() {
         }
 
         val notificationId = NotificationUtil.getUniqueNotificationId()
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         startForeground(notificationId, notification)
 
         CoroutineScope(Dispatchers.IO).launch {
             songsIds.windowed(20, 20, partialWindows = true).forEachIndexed{ _, chunk ->
-                if (songRepository.copySongsFromAnotherDevice(userReceiver!!, chunk)) {
+                if (songRepository.copySongsFromAnotherDevice(userReceiver, chunk)) {
                     songRepository.updateAll(userReceiver)
 
                     importedSongs.addAll(chunk)
@@ -61,6 +67,21 @@ class ImportAllSongsService: Service() {
                     notificationManager.notify(notificationId, notification)
                 }
             }
+
+            notification = notificationBuilder(
+                title = getString(R.string.importing_playlists),
+                description = getString(R.string.finishing_importing_playlists)
+            ).run {
+                setProgress(0,0, true)
+                build()
+            }
+
+            notificationManager.notify(notificationId, notification)
+
+            playlistRepository.copyPlaylistsFromAnotherDevice(
+                clientReceiverId = userReceiver,
+                clientCopyFromId = userWithData
+            )
 
             stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
@@ -83,6 +104,7 @@ class ImportAllSongsService: Service() {
 
     enum class ImportAllSongsData(val value: String) {
         USER_RECEIVER("USER_RECEIVER"),
-        SONGS_IDS("SONGS_IDS")
+        SONGS_IDS("SONGS_IDS"),
+        USER_COPY_FROM_ID("USER_COPY_FROM_ID")
     }
 }

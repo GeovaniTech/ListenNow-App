@@ -1,5 +1,8 @@
 package br.com.listennow.service
 
+import br.com.listennow.webclient.playlist.model.PlaylistCopyRequest
+import br.com.listennow.webclient.playlist.model.PlaylistCountRequest
+import br.com.listennow.webclient.playlist.model.PlaylistCountResponse
 import br.com.listennow.webclient.playlist.model.PlaylistCreateRequest
 import br.com.listennow.webclient.playlist.model.PlaylistCreateResponse
 import br.com.listennow.webclient.playlist.model.PlaylistDeleteRequest
@@ -28,4 +31,10 @@ interface PlaylistService {
 
     @POST(value = "playlist/get")
     suspend fun getPlaylistsFromUser(@Body getPlaylistsRequest: PlaylistGetRequest): Response<List<PlaylistGetResponse>>
+
+    @POST(value = "playlist/copy")
+    suspend fun copyPlaylistsFromAnotherDevice(@Body copyRequest: PlaylistCopyRequest): Response<Void>
+
+    @POST(value = "playlist/count")
+    suspend fun getCountPlaylistsToImport(@Body countRequest: PlaylistCountRequest): Response<PlaylistCountResponse>
 }
