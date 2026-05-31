@@ -278,7 +278,13 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         }
 
         dataBinding.deleteSongButton.setOnClickListener {
-            viewModel.deleteSong(item)
+            showAlertDialog(
+                title = getString(R.string.are_you_sure),
+                message = getString(R.string.home_are_you_sure_about_deleting_song, item.name),
+                positiveClick = {
+                    viewModel.deleteSong(item)
+                }
+            )
         }
     }
 

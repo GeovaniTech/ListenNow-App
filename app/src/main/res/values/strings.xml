@@ -120,4 +120,6 @@
     <string name="empty"></string>
     <string name="importing_playlists">Importing Playlists</string>
     <string name="finishing_importing_playlists">Almost done, importing all playlists</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="home_are_you_sure_about_deleting_song">You are about to delete the song %s from your device. You really want to proceed?</string>
 </resources>

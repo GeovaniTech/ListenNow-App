@@ -1,6 +1,8 @@
 package br.com.listennow.fragments
 
 import android.app.ActionBar.LayoutParams
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -112,6 +114,43 @@ abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBindi
 
     fun setFullWidth() {
         dialog?.window?.setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+    }
+
+    fun showAlertDialog(title: String,
+                        message: String,
+                        positiveClick: (() -> Unit)? = null,
+                        negativeClick: (() -> Unit)? = null) {
+
+        val dialogBuilder = AlertDialog.Builder(requireContext())
+
+        with(dialogBuilder) {
+            setTitle(title)
+            setMessage(message)
+
+            positiveClick?.let {
+                val positiveListener = { _: DialogInterface, _: Int ->
+                    positiveClick.invoke()
+                }
+
+                setPositiveButton(R.string.yes, positiveListener)
+            }
+
+            if (negativeClick == null) {
+                val dismissButtonClick = { dialog: DialogInterface, _: Int ->
+                    dialog.dismiss()
+                }
+
+                setNegativeButton(R.string.no, dismissButtonClick)
+            } else {
+                val negativeListener = { _: DialogInterface, _: Int ->
+                    negativeClick.invoke()
+                }
+
+                setNegativeButton(R.string.no, negativeListener)
+            }
+
+            show()
+        }
     }
 
     abstract fun getLayout(): Int
