@@ -214,7 +214,13 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
         }
 
         dataBinding.playlistsItemDelete.setOnClickListener {
-            viewModel.deletePlaylist(item.playlistId)
+            showAlertDialog(
+                title = getString(R.string.are_you_sure),
+                message = getString(R.string.are_you_sure_about_delete_playlist, item.title),
+                positiveClick = {
+                    viewModel.deletePlaylist(item.playlistId)
+                }
+            )
         }
     }
 
