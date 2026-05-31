@@ -9,6 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.room.util.getColumnIndex
 import br.com.listennow.R
 import br.com.listennow.fragments.MainActivity
+import br.com.listennow.receiver.enums.IntentEnums
 import br.com.listennow.repository.PlaylistRepository
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.utils.NotificationUtil
@@ -83,11 +84,19 @@ class ImportAllSongsService: Service() {
                 clientCopyFromId = userWithData
             )
 
+            callImportHasFinished()
+
             stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
         }
 
         return START_STICKY
+    }
+
+    private fun callImportHasFinished() {
+        val intent = Intent(IntentEnums.INTENT_IMPORT_FINISHED.toString())
+        intent.setPackage(packageName)
+        sendBroadcast(intent)
     }
 
     private fun notificationBuilder(
@@ -101,10 +110,6 @@ class ImportAllSongsService: Service() {
             .setContentTitle(title)
             .setContentText(description)
             .setSmallIcon(R.drawable.ic_notification_icon)
-
-    private fun showNotificationImportedFinished() {
-
-    }
 
     enum class ImportAllSongsData(val value: String) {
         USER_RECEIVER("USER_RECEIVER"),

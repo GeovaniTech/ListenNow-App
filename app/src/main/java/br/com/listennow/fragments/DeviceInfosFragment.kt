@@ -4,8 +4,11 @@ import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Context.RECEIVER_NOT_EXPORTED
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -13,6 +16,8 @@ import br.com.listennow.BuildConfig
 import br.com.listennow.R
 import br.com.listennow.databinding.FragmentDeviceInfosBinding
 import br.com.listennow.foreground.ImportAllSongsService
+import br.com.listennow.receiver.ImportDataFinishedReceiver
+import br.com.listennow.receiver.enums.IntentEnums
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.DeviceInfosViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,6 +88,8 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
                     dialog.dismiss()
                 }
 
+                configImportFinishedReceiver()
+
                 with(dialogBuilder) {
                     setTitle(getString(R.string.dialog_download_songs_title))
                     setMessage(getString(R.string.dialog_download_songs_message, songsIds.size, countPlaylistToImport))
@@ -91,6 +98,19 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
                     show()
                 }
             }
+        }
+    }
+
+    private fun configImportFinishedReceiver() {
+        val receiver = ImportDataFinishedReceiver()
+        val filter = IntentFilter(
+            IntentEnums.INTENT_IMPORT_FINISHED.toString()
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireContext().registerReceiver(receiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            requireContext().registerReceiver(receiver, filter)
         }
     }
 
