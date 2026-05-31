@@ -39,7 +39,7 @@ class ImportAllSongsService: Service() {
         val importedSongs = mutableListOf<String>()
 
         val title = getString(R.string.importing_songs)
-        var description = getString(R.string.importing_all_songs_from_another_device, songsIds.size)
+        var description = getString(R.string.importing_songs_from_another_device, songsIds.size)
 
         var notification = notificationBuilder(title, description).run {
             setProgress(songsIds.size, 0, false)
@@ -57,7 +57,7 @@ class ImportAllSongsService: Service() {
                     songRepository.updateAll(userReceiver)
 
                     importedSongs.addAll(chunk)
-                    description = getString(R.string.importing_all_songs_from_another_device, songsIds.size - importedSongs.size)
+                    description = getString(R.string.importing_songs_from_another_device, songsIds.size - importedSongs.size)
 
                     notification = notificationBuilder(title, description).run {
                         setProgress(songsIds.size, importedSongs.size, false)
@@ -101,6 +101,10 @@ class ImportAllSongsService: Service() {
             .setContentTitle(title)
             .setContentText(description)
             .setSmallIcon(R.drawable.ic_notification_icon)
+
+    private fun showNotificationImportedFinished() {
+
+    }
 
     enum class ImportAllSongsData(val value: String) {
         USER_RECEIVER("USER_RECEIVER"),
