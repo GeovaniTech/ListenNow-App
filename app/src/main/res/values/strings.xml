@@ -126,4 +126,5 @@
     <string name="are_you_sure_about_delete_playlist">You are about to the delete the playlist %s. You really want to proceed?</string>
     <string name="import_has_finished">Import has finished</string>
     <string name="import_has_finished_message">You\'re all set! We finished importing all songs and playlists from the other device.</string>
+    <string name="fragment_tuner_title">Tuner\n</string>
 </resources>

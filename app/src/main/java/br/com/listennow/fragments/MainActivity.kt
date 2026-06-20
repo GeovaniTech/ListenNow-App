@@ -282,6 +282,11 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
+                R.id.tunerFragment -> {
+                    navController.navigate(R.id.tunerFragment, null, navOptions)
+                    true
+                }
+
                 else -> false
             }
         }
