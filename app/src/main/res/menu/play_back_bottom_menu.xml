@@ -16,11 +16,6 @@
         android:icon="@drawable/ic_search" />
 
     <item
-        android:id="@+id/tunerFragment"
-        android:title="@string/fragment_tuner_title"
-        android:icon="@drawable/ic_music_note_24" />
-
-    <item
         android:id="@+id/deviceInfosFragment"
         android:title="@string/fragment_device_infos_title"
         android:icon="@drawable/ic_device_info_24" />

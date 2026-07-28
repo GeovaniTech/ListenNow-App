@@ -239,9 +239,4 @@
                     app:popEnterAnim="@anim/from_left"
                     app:popExitAnim="@anim/from_right" />
         </fragment>
-
-        <fragment
-            android:id="@+id/tunerFragment"
-            android:name="br.com.listennow.fragments.TunerFragment"
-            android:label="@string/fragment_tuner_title" />
 </navigation>
