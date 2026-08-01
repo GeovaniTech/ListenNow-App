@@ -24,15 +24,12 @@ class SongWebClient(
 
     suspend fun getAll(userId: String, ignoreIds: List<String> = emptyList()): List<Song>? {
         return try {
-
-            Log.i(TAG, "getAll: $ignoreIds")
             val songResponse = songService.getAll(SongRequest(userId, ignoreIds))
 
             songResponse.map {
                 it.song
             }
         } catch (e: Exception) {
-
             Log.e(TAG, "Error trying to get songs from API ${e.message}")
             null
         }

@@ -119,7 +119,6 @@
     <string name="playlist_songs_song_deleted_message">Song deleted successfully</string>
     <string name="app_plays_audio">This App Plays Audio</string>
     <string name="empty"></string>
-    <string name="importing_playlists">Importing Playlists</string>
     <string name="finishing_importing_playlists">Almost done, importing all playlists</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="home_are_you_sure_about_deleting_song">You are about to delete the song %s from your device. You really want to proceed?</string>
@@ -127,4 +126,9 @@
     <string name="import_has_finished">Import has finished</string>
     <string name="import_has_finished_message">You\'re all set! We finished importing all songs and playlists from the other device.</string>
     <string name="fragment_tuner_title">Tuner\n</string>
+    <string name="importing_songs_has_finished">Yup! We finished importing all songs from the other device.</string>
+    <string name="get_ready_to_listen_to_your_songs">You\'re songs are ready for you, we just finished importing every single one for you.</string>
+    <string name="importing_playlists">Importing playlists...</string>
+    <string name="importing_playlists_has_finished">You ready? All playlists were imported!</string>
+    <string name="what_mood_are_you_in">What mood are you in? Come listen to one of your awesome playlists!</string>
 </resources>

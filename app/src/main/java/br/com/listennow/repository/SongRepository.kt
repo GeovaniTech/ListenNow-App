@@ -35,7 +35,7 @@ class SongRepository @Inject constructor (
     suspend fun updateAll(userId: String?) {
         userId?.let {
             songWebClient.getAll(it, songDao.getUserSongsIds())?.let { songs ->
-                songs.map { song ->
+                songs.forEach { song ->
                     handleSongFromServer(song)
                 }
                 songDao.save(songs.filter { song ->

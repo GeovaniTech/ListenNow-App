@@ -6,20 +6,24 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.RECEIVER_NOT_EXPORTED
 import android.content.DialogInterface
-import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import br.com.listennow.BuildConfig
 import br.com.listennow.R
 import br.com.listennow.databinding.FragmentDeviceInfosBinding
-import br.com.listennow.foreground.ImportAllSongsService
 import br.com.listennow.receiver.ImportDataFinishedReceiver
 import br.com.listennow.receiver.enums.IntentEnums
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.DeviceInfosViewModel
+import br.com.listennow.workmanager.DataSyncFromUserWorker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -80,7 +84,7 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
                 val dialogBuilder = AlertDialog.Builder(requireContext())
 
                 val positiveButtonClick = { dialog: DialogInterface, _: Int ->
-                    startImportSongsForegroundService(userReceiver, userWithSongs, songsIds)
+                    startDataSyncFromUserWorker(userReceiver, userWithSongs, songsIds)
                     dialog.dismiss()
                 }
 
@@ -114,27 +118,29 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
         }
     }
 
-    private fun startImportSongsForegroundService(userReceiver: String, userWithData: String, songsIds: List<String>) {
-        Intent().also {
-            it.setClass(requireContext(), ImportAllSongsService::class.java)
-
-            it.putExtra(
-                ImportAllSongsService.ImportAllSongsData.USER_RECEIVER.value,
-                userReceiver
+    private fun startDataSyncFromUserWorker(userReceiver: String, userWithData: String, songsIds: List<String>) {
+        val request = OneTimeWorkRequestBuilder<DataSyncFromUserWorker>()
+            .setInputData(
+                workDataOf(
+                    DataSyncFromUserWorker.ID_USER_RECEIVER to userReceiver,
+                    DataSyncFromUserWorker.ID_USER_WITH_DATA to userWithData,
+                    DataSyncFromUserWorker.SONGS_IDS to songsIds.toTypedArray()
+                )
             )
-
-            it.putExtra(
-                ImportAllSongsService.ImportAllSongsData.USER_COPY_FROM_ID.value,
-                userWithData
+            .setConstraints(
+                Constraints(
+                    requiredNetworkType = NetworkType.CONNECTED,
+                    requiresBatteryNotLow = true
+                )
             )
+            .build()
 
-            it.putStringArrayListExtra(ImportAllSongsService.ImportAllSongsData.SONGS_IDS.value, ArrayList(songsIds))
+        val workManager = WorkManager.getInstance(requireContext())
+        workManager.enqueue(request)
 
-            mainActivity.startService(it)
-
-            showSnackBar(getString(R.string.importing_all_songs_from_another_device))
-        }
+        showSnackBar(getString(R.string.importing_all_songs_from_another_device))
     }
+
 
     override fun setViewModelObservers() {
         viewModel.userId.observe(viewLifecycleOwner) {
