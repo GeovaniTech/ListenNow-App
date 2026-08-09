@@ -21,6 +21,7 @@ import br.com.listennow.R
 import br.com.listennow.databinding.FragmentDeviceInfosBinding
 import br.com.listennow.receiver.ImportDataFinishedReceiver
 import br.com.listennow.receiver.enums.IntentEnums
+import br.com.listennow.utils.NetworkUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.DeviceInfosViewModel
 import br.com.listennow.workmanager.DataSyncFromUserWorker
@@ -54,53 +55,57 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
         }
 
         binding.fragmentDeviceInfosDownloadSongsImageview.setOnClickListener {
-            val userReceiver = viewModel.userId.value!!
-            val userWithSongs= binding.downloadDeviceId
+            if (NetworkUtil.isInternetAvailable(requireContext())) {
+                val userReceiver = viewModel.userId.value!!
+                val userWithSongs= binding.downloadDeviceId
 
-            if (userWithSongs.isNullOrEmpty()) {
-                showSnackBar(R.string.fragment_device_infos_device_id_must_not_be_null)
-                return@setOnClickListener
-            }
-
-            if (userWithSongs == viewModel.userId.value) {
-                showSnackBar(R.string.fragment_Device_infos_device_id_must_be_different_than_yours)
-                return@setOnClickListener
-            }
-
-            viewLifecycleOwner.lifecycleScope.launch {
-                val songsIds = viewModel.getSongIdsSongsByUser(userReceiver, userWithSongs)
-                val countPlaylistToImport = viewModel.getCountPlaylistsToImport(userWithSongs)
-
-                if (songsIds == null) {
-                    showSnackBar(R.string.message_it_was_not_possible_to_execute_this_action)
-                    return@launch
+                if (userWithSongs.isNullOrEmpty()) {
+                    showSnackBar(R.string.fragment_device_infos_device_id_must_not_be_null)
+                    return@setOnClickListener
                 }
 
-                if (songsIds.isEmpty() && countPlaylistToImport == 0) {
-                    showSnackBar(R.string.fragment_device_infos_no_songs_found_to_download_with_id)
-                    return@launch
+                if (userWithSongs == viewModel.userId.value) {
+                    showSnackBar(R.string.fragment_Device_infos_device_id_must_be_different_than_yours)
+                    return@setOnClickListener
                 }
 
-                val dialogBuilder = AlertDialog.Builder(requireContext())
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val songsIds = viewModel.getSongIdsSongsByUser(userReceiver, userWithSongs)
+                    val countPlaylistToImport = viewModel.getCountPlaylistsToImport(userWithSongs)
 
-                val positiveButtonClick = { dialog: DialogInterface, _: Int ->
-                    startDataSyncFromUserWorker(userReceiver, userWithSongs, songsIds)
-                    dialog.dismiss()
+                    if (songsIds == null) {
+                        showSnackBar(R.string.message_it_was_not_possible_to_execute_this_action)
+                        return@launch
+                    }
+
+                    if (songsIds.isEmpty() && countPlaylistToImport == 0) {
+                        showSnackBar(R.string.fragment_device_infos_no_songs_found_to_download_with_id)
+                        return@launch
+                    }
+
+                    val dialogBuilder = AlertDialog.Builder(requireContext())
+
+                    val positiveButtonClick = { dialog: DialogInterface, _: Int ->
+                        startDataSyncFromUserWorker(userReceiver, userWithSongs, songsIds)
+                        dialog.dismiss()
+                    }
+
+                    val negativeButtonClick = { dialog: DialogInterface, _: Int ->
+                        dialog.dismiss()
+                    }
+
+                    configImportFinishedReceiver()
+
+                    with(dialogBuilder) {
+                        setTitle(getString(R.string.dialog_download_songs_title))
+                        setMessage(getString(R.string.dialog_download_songs_message, songsIds.size, countPlaylistToImport))
+                        setPositiveButton(R.string.yes, DialogInterface.OnClickListener(positiveButtonClick))
+                        setNegativeButton(R.string.no, DialogInterface.OnClickListener(negativeButtonClick))
+                        show()
+                    }
                 }
-
-                val negativeButtonClick = { dialog: DialogInterface, _: Int ->
-                    dialog.dismiss()
-                }
-
-                configImportFinishedReceiver()
-
-                with(dialogBuilder) {
-                    setTitle(getString(R.string.dialog_download_songs_title))
-                    setMessage(getString(R.string.dialog_download_songs_message, songsIds.size, countPlaylistToImport))
-                    setPositiveButton(R.string.yes, DialogInterface.OnClickListener(positiveButtonClick))
-                    setNegativeButton(R.string.no, DialogInterface.OnClickListener(negativeButtonClick))
-                    show()
-                }
+            } else {
+                viewModel.updateExceptionMessage(getString(R.string.check_internet_connection))
             }
         }
     }
