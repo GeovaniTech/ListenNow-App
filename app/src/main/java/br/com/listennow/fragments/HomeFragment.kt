@@ -22,6 +22,7 @@ import br.com.listennow.databinding.FragmentHomeBinding
 import br.com.listennow.databinding.FragmentSongItemBinding
 import br.com.listennow.foreground.Actions
 import br.com.listennow.model.Song
+import br.com.listennow.utils.NetworkUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -84,7 +85,12 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         }
 
         binding.refreshSongs.setOnRefreshListener {
-            syncSongs()
+            if (NetworkUtil.isInternetAvailable(requireContext())) {
+                syncSongs()
+            } else {
+                viewModel.updateSyncingState(false)
+                viewModel.updateExceptionMessage(getString(R.string.check_internet_connection))
+            }
         }
 
         binding.fragmentHomeButtonFindNewSong.setOnClickListener {

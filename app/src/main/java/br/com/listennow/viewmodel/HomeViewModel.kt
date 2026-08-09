@@ -23,7 +23,7 @@ class HomeViewModel @Inject constructor (
     val filteredSongs: LiveData<List<Song>> get() = _filteredSongs
 
     private var _syncing: MutableLiveData<AtomicBoolean> = MutableLiveData(AtomicBoolean(false))
-    val syncing: LiveData<AtomicBoolean> get() = _syncing
+    val syncing: LiveData<AtomicBoolean> get () = _syncing
 
     var songFilter: String? = null
 
@@ -40,7 +40,13 @@ class HomeViewModel @Inject constructor (
 
     suspend fun syncSongs() {
         _syncing.postValue(AtomicBoolean(true))
-        songRepository.updateAll(user?.id)
+
+        try {
+            songRepository.updateAll(user?.id)
+        } catch (e: Exception) {
+            updateExceptionMessage(e.message)
+        }
+
         _syncing.postValue(AtomicBoolean(false))
     }
 
@@ -55,5 +61,9 @@ class HomeViewModel @Inject constructor (
 
     fun updateSongDeletedCallback(value: Pair<Song, AtomicBoolean>? = null) {
         _songDeleted.postValue(value)
+    }
+
+    fun updateSyncingState(syncing: Boolean) {
+        _syncing.postValue(AtomicBoolean(syncing))
     }
 }

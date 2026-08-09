@@ -53,7 +53,20 @@ abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBindi
         configView()
         loadData()
         setViewModelObservers()
+        setExceptionViewModelObserver()
         loadBindingVariables()
+    }
+
+    /**
+     * Observes a new exception message to show a snackbar
+     */
+    private fun setExceptionViewModelObserver() {
+        viewModel.exceptionMessage.observe(viewLifecycleOwner) { exceptionMessage ->
+            if (exceptionMessage != null) {
+                showSnackBar(exceptionMessage)
+                viewModel.updateExceptionMessage()
+            }
+        }
     }
 
     private fun loadUser() {
