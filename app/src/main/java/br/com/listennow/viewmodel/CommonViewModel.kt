@@ -14,6 +14,9 @@ abstract class CommonViewModel(
     private var _exceptionMessage: MutableLiveData<String?> = MutableLiveData(null)
     val exceptionMessage: LiveData<String?> get() = _exceptionMessage
 
+    private var _exceptionResMessage: MutableLiveData<Int?> = MutableLiveData(null)
+    val exceptionResMessage: LiveData<Int?> get() = _exceptionResMessage
+
     var user: User? = null
 
     suspend fun loadUser() {
@@ -33,5 +36,12 @@ abstract class CommonViewModel(
      */
      fun updateExceptionMessage(message:  String? = null) {
         _exceptionMessage.postValue(message)
+    }
+
+    /**
+     * Sets or clear the exceptionMessage from UI sung in resource string
+     */
+    fun updateExceptionResMessage(resMessage:  Int? = null) {
+        _exceptionResMessage.postValue(resMessage)
     }
 }

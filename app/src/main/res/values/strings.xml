@@ -132,4 +132,5 @@
     <string name="importing_playlists_has_finished">You ready? All playlists were imported!</string>
     <string name="what_mood_are_you_in">What mood are you in? Come listen to one of your awesome playlists!</string>
     <string name="check_internet_connection">To use this feature you need internet connection. Check your (Wifi/4g).</string>
+    <string name="invalid_device_id">The provided id is not valid. You need to copy the exact same value from another device.</string>
 </resources>

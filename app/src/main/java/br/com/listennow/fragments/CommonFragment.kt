@@ -67,6 +67,13 @@ abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBindi
                 viewModel.updateExceptionMessage()
             }
         }
+
+        viewModel.exceptionResMessage.observe(viewLifecycleOwner) { exceptionMessage ->
+            if (exceptionMessage != null) {
+                showSnackBar(exceptionMessage)
+                viewModel.updateExceptionResMessage()
+            }
+        }
     }
 
     private fun loadUser() {
