@@ -1,6 +1,9 @@
 package br.com.listennow.viewmodel
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import br.com.listennow.repository.SongRepository
@@ -8,6 +11,8 @@ import br.com.listennow.repository.UserRepository
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import androidx.core.net.toUri
+import br.com.listennow.R
 
 @HiltViewModel
 class SearchYoutubeSongsViewModel @Inject constructor (
@@ -44,6 +49,7 @@ class SearchYoutubeSongsViewModel @Inject constructor (
     }
 
     companion object {
+        const val YOUTUBE_BASE_URL = "https://youtube.com/watch?v="
         const val TAG = "SearchYoutubeSongsViewModel"
     }
 }

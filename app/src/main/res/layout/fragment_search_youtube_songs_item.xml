@@ -51,7 +51,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="7dp"
                 android:layout_marginTop="4dp"
-                app:layout_constraintEnd_toStartOf="@+id/list_songs_search_sync"
+                app:layout_constraintEnd_toStartOf="@+id/container_buttons_sync_youtube"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -85,31 +85,65 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/list_songs_search_sync"
+                android:id="@+id/container_buttons_sync_youtube"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toEndOf="@+id/fragment_search_youtube_songs_artist_song_name_constraint"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginEnd="16dp"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:padding="5dp"
-                android:background="@drawable/round_outline"
-                android:clipToOutline="true">
+                app:layout_constraintStart_toEndOf="@id/fragment_search_youtube_songs_artist_song_name_constraint">
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/baseline_cloud_download_24"
-                    android:backgroundTint="@color/iconColor"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/list_songs_search_youtube"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/list_songs_search_sync"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:foreground="?android:attr/selectableItemBackground"
+
+                    android:padding="5dp"
+                    android:background="@drawable/round_outline"
+                    android:clipToOutline="true">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/ic_youtube_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/list_songs_search_sync"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toEndOf="@+id/list_songs_search_youtube"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="16dp"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:padding="5dp"
+                    android:background="@drawable/round_outline"
+                    android:clipToOutline="true">
+
+                    <ImageView
+                        android:layout_width="29dp"
+                        android:layout_height="29dp"
+                        android:background="@drawable/baseline_cloud_download_24"
+                        android:backgroundTint="@color/iconColor"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

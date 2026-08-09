@@ -2,12 +2,14 @@ package br.com.listennow.fragments
 
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
 import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -24,9 +26,11 @@ import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.adapter.SearchYoutubeSongsAdapter
 import br.com.listennow.databinding.FragmentSearchYoutubeSongsBinding
 import br.com.listennow.databinding.FragmentSearchYoutubeSongsItemBinding
+import br.com.listennow.utils.NetworkUtil
 import br.com.listennow.utils.NotificationUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.SearchYoutubeSongsViewModel
+import br.com.listennow.viewmodel.SearchYoutubeSongsViewModel.Companion.YOUTUBE_BASE_URL
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -184,6 +188,24 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel, F
     ) {
         item as SearchYTSongResponse
         dataBinding as FragmentSearchYoutubeSongsItemBinding
+
+        dataBinding.listSongsSearchYoutube.setOnClickListener {
+            if (NetworkUtil.isInternetAvailable(requireContext())) {
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW).apply {
+                        data = (YOUTUBE_BASE_URL + item.videoId).toUri()
+                    }
+
+                    startActivity(intent)
+
+                    viewModel.updateExceptionMessage()
+                } catch (e: Exception) {
+                    viewModel.updateExceptionResMessage(R.string.failed_to_open_song)
+                }
+            } else {
+                viewModel.updateExceptionResMessage(R.string.check_internet_connection)
+            }
+        }
 
         dataBinding.listSongsSearchSync.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
