@@ -27,6 +27,7 @@ import br.com.listennow.fragments.NewPlaylistFragment.Companion.NEW_PLAYLIST_FRA
 import br.com.listennow.fragments.NewPlaylistFragment.Companion.NEW_PLAYLIST_FRAGMENT_RESULT
 import br.com.listennow.fragments.NewPlaylistFragment.Companion.TAG
 import br.com.listennow.navparams.PlaylistSongsNavParams
+import br.com.listennow.utils.NetworkUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.PlaylistsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -137,7 +138,12 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
         }
 
         binding.playlistsRefresh.setOnRefreshListener {
-            viewModel.refreshPlaylists()
+            if (NetworkUtil.isInternetAvailable(requireContext())) {
+                viewModel.refreshPlaylists()
+            } else {
+                viewModel.updateSyncingState(false)
+                viewModel.updateExceptionMessage(getString(R.string.check_internet_connection))
+            }
         }
     }
 
@@ -156,6 +162,10 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
                 }
                 else -> {}
             }
+        }
+
+        viewModel.syncing.observe(viewLifecycleOwner) { isSyncing ->
+            binding.playlistsRefresh.isRefreshing = isSyncing.get()
         }
     }
 

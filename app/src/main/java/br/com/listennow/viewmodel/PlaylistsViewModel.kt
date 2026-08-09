@@ -3,7 +3,7 @@ package br.com.listennow.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import br.com.listennow.database.dao.PlaylistDao
+import androidx.room.concurrent.AtomicBoolean
 import br.com.listennow.decorator.PlaylistItemDecorator
 import br.com.listennow.enums.EnumPlaylistActionStatus
 import br.com.listennow.repository.PlaylistRepository
@@ -23,6 +23,9 @@ class PlaylistsViewModel @Inject constructor(
     private var _statusCallback: MutableLiveData<EnumPlaylistActionStatus> = MutableLiveData()
     val statusCallback: LiveData<EnumPlaylistActionStatus> get() = _statusCallback
 
+    private var _syncing: MutableLiveData<AtomicBoolean> = MutableLiveData(AtomicBoolean(false))
+    val syncing: LiveData<AtomicBoolean> get() = _syncing
+
     var queryFilter: String = ""
 
     fun loadData() = viewModelScope.launch {
@@ -39,5 +42,9 @@ class PlaylistsViewModel @Inject constructor(
             playlistRepository.syncUserPlaylists(user!!.id)
             loadData()
         }
+    }
+
+    fun updateSyncingState(isSyncing: Boolean) {
+        _syncing.postValue(AtomicBoolean(isSyncing))
     }
 }
