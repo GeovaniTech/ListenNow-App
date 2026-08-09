@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import br.com.listennow.R
 import br.com.listennow.databinding.FragmentPlaylistsNewPlaylistBinding
 import br.com.listennow.enums.EnumPlaylistActionStatus
+import br.com.listennow.utils.NetworkUtil
 import br.com.listennow.viewmodel.NewPlaylistViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,8 +27,11 @@ class NewPlaylistFragment : CommonFragment<NewPlaylistViewModel, FragmentPlaylis
 
     override fun setViewListeners() {
         binding.playlistsNewPlaylistSave.setOnClickListener {
-            onCreateNewPlaylist()
+            if (NetworkUtil.isInternetAvailable(requireContext())) {
+                onCreateNewPlaylist()
+            }
         }
+
         binding.playlistsNewPlaylistCancel.setOnClickListener {
             dismiss()
         }

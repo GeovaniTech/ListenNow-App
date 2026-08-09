@@ -125,12 +125,16 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
         }
 
         binding.playlistsNewPlaylist.setOnClickListener {
-            setFragmentResultListener(NEW_PLAYLIST_FRAGMENT_KEY) { _, bundle ->
-                val playlist = bundle.getSerializableValue(NEW_PLAYLIST_FRAGMENT_RESULT, PlaylistDecorator::class.java)!!
-                viewModel.loadData()
-                showSnackBar(getString(R.string.playlists_new_playlist_msg_playlist_saved, playlist.title))
+            if (NetworkUtil.isInternetAvailable(requireContext())) {
+                setFragmentResultListener(NEW_PLAYLIST_FRAGMENT_KEY) { _, bundle ->
+                    val playlist = bundle.getSerializableValue(NEW_PLAYLIST_FRAGMENT_RESULT, PlaylistDecorator::class.java)!!
+                    viewModel.loadData()
+                    showSnackBar(getString(R.string.playlists_new_playlist_msg_playlist_saved, playlist.title))
+                }
+                NewPlaylistFragment.newInstance().show(parentFragmentManager, TAG)
+            } else {
+                viewModel.updateExceptionMessage(getString(R.string.check_internet_connection))
             }
-            NewPlaylistFragment.newInstance().show(parentFragmentManager, TAG)
         }
 
         binding.playlistsSeeAlbums.setOnClickListener {
