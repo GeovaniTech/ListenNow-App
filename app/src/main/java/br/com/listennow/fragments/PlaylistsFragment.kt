@@ -228,13 +228,17 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
         }
 
         dataBinding.playlistsItemDelete.setOnClickListener {
-            showAlertDialog(
-                title = getString(R.string.are_you_sure),
-                message = getString(R.string.are_you_sure_about_delete_playlist, item.title),
-                positiveClick = {
-                    viewModel.deletePlaylist(item.playlistId)
-                }
-            )
+            if (NetworkUtil.isInternetAvailable(requireContext())) {
+                showAlertDialog(
+                    title = getString(R.string.are_you_sure),
+                    message = getString(R.string.are_you_sure_about_delete_playlist, item.title),
+                    positiveClick = {
+                        viewModel.deletePlaylist(item.playlistId)
+                    }
+                )
+            } else {
+                viewModel.updateExceptionMessage(getString(R.string.check_internet_connection))
+            }
         }
     }
 

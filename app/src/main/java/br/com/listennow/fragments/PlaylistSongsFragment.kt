@@ -23,6 +23,7 @@ import br.com.listennow.databinding.FragmentSongItemBinding
 import br.com.listennow.foreground.Actions
 import br.com.listennow.model.Song
 import br.com.listennow.navparams.SelectSongsNavParams
+import br.com.listennow.utils.NetworkUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.PlaylistSongsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -216,7 +217,11 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
         }
 
         dataBinding.deleteSongButton.setOnClickListener {
-            viewModel.deleteSong(item)
+            if (NetworkUtil.isInternetAvailable(requireContext())) {
+                viewModel.deleteSong(item)
+            } else {
+                viewModel.updateExceptionMessage(getString(R.string.check_internet_connection))
+            }
         }
     }
 
