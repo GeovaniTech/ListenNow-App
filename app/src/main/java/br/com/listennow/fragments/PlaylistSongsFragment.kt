@@ -145,19 +145,26 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
         binding.playlistSongsAddSong.setOnClickListener {
             viewModel.viewModelScope.launch {
                 setFragmentResultListener(SelectSongsFragment.SELECT_SONGS_FRAGMENT_KEY) { _, bundle ->
-                    val songsIds = bundle.getStringArrayList(SelectSongsFragment.SELECT_SONGS_FRAGMENT_RESULT)
-                    viewModel.addSongsToPlaylist(songsIds)
+                    if (NetworkUtil.isInternetAvailable(requireContext())) {
+                        val songsIds = bundle.getStringArrayList(SelectSongsFragment.SELECT_SONGS_FRAGMENT_RESULT)
+                        viewModel.addSongsToPlaylist(songsIds)
+                    } else {
+                        viewModel.updateExceptionMessage(getString(R.string.check_internet_connection))
+                    }
                 }
 
-                val songsIdsToIgnore = viewModel.getSongsIdsFromPlaylist()
+                if (NetworkUtil.isInternetAvailable(requireContext())) {
+                    val songsIdsToIgnore = viewModel.getSongsIdsFromPlaylist()
 
-                findNavController().navigate(PlaylistSongsFragmentDirections.actionPlaylistSongsFragmentToSelectSongsFragment(
-                    SelectSongsNavParams(
-                        songsIdsToIgnore
-                    )
-                ))
+                    findNavController().navigate(PlaylistSongsFragmentDirections.actionPlaylistSongsFragmentToSelectSongsFragment(
+                        SelectSongsNavParams(
+                            songsIdsToIgnore
+                        )
+                    ))
+                } else {
+                    viewModel.updateExceptionMessage(getString(R.string.check_internet_connection))
+                }
             }
-
         }
     }
 
