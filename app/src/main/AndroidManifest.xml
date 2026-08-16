@@ -37,6 +37,7 @@
         android:name=".hilt.ListenNowApplication">
 
         <service android:name=".foreground.SongPlayerService" android:foregroundServiceType="mediaPlayback" android:exported="false" />
+        <service android:name=".foreground.DownloadYoutubeSongService" android:foregroundServiceType="dataSync" android:exported="false" />
 
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"

@@ -134,4 +134,8 @@
     <string name="check_internet_connection">To use this feature you need internet connection. Check your (Wifi/4g).</string>
     <string name="invalid_device_id">The provided id is not valid. You need to copy the exact same value from another device.</string>
     <string name="failed_to_open_song">Ops... Something went wrong when opening the song.</string>
+    <string name="lable_close">Close</string>
+    <string name="download_has_failed">Something went wrong. Please, try again later.</string>
+    <string name="label_retry">Retry</string>
+    <string name="downloading_songs">Almost there! We are downloading the songs you requested...</string>
 </resources>

@@ -57,7 +57,13 @@ class SongWebClient(
     }
 
     suspend fun findSongById(videoId: String, userId: String): SongResponse? {
-        return songService.findSongById(SongDownloadRequest(videoId, userId))
+        val result = songService.findSongById(SongDownloadRequest(videoId, userId))
+
+        return if (result.isSuccessful) {
+            result.body()
+        } else {
+            null;
+        }
     }
 
     suspend fun getSongIdsByUser(userReceiver: String, userWithSongs: String): List<String>? {

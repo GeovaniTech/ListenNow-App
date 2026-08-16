@@ -1,21 +1,17 @@
 package br.com.listennow.fragments
 
-import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
 import androidx.appcompat.widget.SearchView
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,17 +22,15 @@ import br.com.listennow.adapter.IControllerItemsAdapter
 import br.com.listennow.adapter.SearchYoutubeSongsAdapter
 import br.com.listennow.databinding.FragmentSearchYoutubeSongsBinding
 import br.com.listennow.databinding.FragmentSearchYoutubeSongsItemBinding
+import br.com.listennow.foreground.DownloadYoutubeSongService
+import br.com.listennow.foreground.DownloadYoutubeSongsActions
 import br.com.listennow.utils.NetworkUtil
-import br.com.listennow.utils.NotificationUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.SearchYoutubeSongsViewModel
 import br.com.listennow.viewmodel.SearchYoutubeSongsViewModel.Companion.YOUTUBE_BASE_URL
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel, FragmentSearchYoutubeSongsBinding>(), IControllerItemsAdapter {
@@ -101,17 +95,6 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel, F
             }
         }
     }
-
-    private fun getNotificationBuilder(song: SearchYTSongResponse) =
-        NotificationCompat.Builder(
-            requireContext(),
-            MainActivity.DOWNLOAD_SONG_NOTIFICATION_CHANNEl
-        )
-            .setSmallIcon(R.drawable.ic_notification_icon)
-            .setContentTitle("${song.title} - ${song.artist}")
-            .setContentText(getString(R.string.download_resquest_has_started))
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setAutoCancel(true)
 
     private fun configSearchSongs() {
         val handlerThread = HandlerThread("Song Delay")
@@ -208,53 +191,20 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel, F
         }
 
         dataBinding.listSongsSearchSync.setOnClickListener {
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.downloadSong(item.videoId)
-            }
+            startDownloadYoutubeSongService(item)
+        }
+    }
 
-            showSnackBar(
-                anchorView = mainActivity.binding.playBackButtons,
-                messageId = R.string.download_started
-            )
+    private fun startDownloadYoutubeSongService(item: SearchYTSongResponse) {
+        Intent().also {
+            it.setClass(requireActivity(), DownloadYoutubeSongService::class.java)
+            it.action = DownloadYoutubeSongsActions.DOWNLOAD_SONG.toString()
+            it.putExtra(DownloadYoutubeSongService.VIDEO_ID, item.videoId)
+            it.putExtra(DownloadYoutubeSongService.USER_ID, viewModel.user!!.id)
+            it.putExtra(DownloadYoutubeSongService.SONG_NAME, item.title)
+            it.putExtra(DownloadYoutubeSongService.ARTIST, item.artist)
 
-            var notificationBuilder = getNotificationBuilder(item)
-
-            notificationBuilder.setProgress(0,  0, true)
-
-            NotificationManagerCompat.from(requireContext()).apply {
-                val manager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-                val notificationId = NotificationUtil.getUniqueNotificationId()
-
-                manager.notify(notificationId, notificationBuilder.build())
-
-                Thread {
-                    val retries = 10
-                    var attempts = 0
-
-                    viewModel.viewModelScope.launch {
-                        withContext(Dispatchers.IO) {
-                            while (attempts < retries) {
-                                if (viewModel.songSynchronizedSuccessfully(item.videoId)) {
-                                    notificationBuilder = getNotificationBuilder(item)
-                                    notificationBuilder.setContentText(getString(R.string.download_completed))
-                                    manager.notify(notificationId, notificationBuilder.build())
-                                    break
-                                }
-
-                                attempts += 1
-                                delay(5000)
-                            }
-
-                            if (attempts == retries) {
-                                notificationBuilder = getNotificationBuilder(item)
-                                notificationBuilder.setContentText(getString(R.string.download_failed))
-                                manager.notify(notificationId, notificationBuilder.build())
-                            }
-                        }
-                    }
-                }.start()
-            }
+            ContextCompat.startForegroundService(requireContext(), it)
         }
     }
 
