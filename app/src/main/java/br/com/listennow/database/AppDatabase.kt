@@ -9,12 +9,13 @@ import br.com.listennow.database.dao.SongDao
 import br.com.listennow.database.dao.UserDao
 import br.com.listennow.migrations.MIGRATION_5_6
 import br.com.listennow.migrations.MIGRATION_6_7
+import br.com.listennow.migrations.MIGRATION_7_8
 import br.com.listennow.model.Playlist
 import br.com.listennow.model.PlaylistSong
 import br.com.listennow.model.Song
 import br.com.listennow.model.User
 
-@Database(entities = [Song::class, User::class, Playlist::class, PlaylistSong::class], version = 7, exportSchema = true)
+@Database(entities = [Song::class, User::class, Playlist::class, PlaylistSong::class], version = 8, exportSchema = true)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun songDao(): SongDao
     abstract fun userDao(): UserDao
@@ -36,7 +37,7 @@ abstract class AppDatabase : RoomDatabase() {
                         AppDatabase::class.java,
                         DATABASE_NAME
                     )
-                    .addMigrations(MIGRATION_5_6, MIGRATION_6_7)
+                    .addMigrations(MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
                     .build()
 
                     INSTANCE = instance

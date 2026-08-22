@@ -4,8 +4,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import br.com.listennow.model.interfaces.IModelKey
 import java.io.Serializable
-import java.time.LocalDateTime
-import java.util.Date
 
 @Entity
 data class Song (
@@ -17,7 +15,7 @@ data class Song (
     val thumb: String,
     var path: String,
     val lyrics: String,
-    val requestDate: String? = null
+    val requestAt: Long? = null
 ): Serializable, IModelKey {
     override fun getModelKey(): String {
         return videoId

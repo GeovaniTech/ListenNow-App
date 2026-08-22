@@ -1,5 +1,6 @@
 package br.com.listennow.webclient.song.model
 
+import br.com.listennow.converters.DateConverter
 import br.com.listennow.model.Song
 
 class SongResponse(
@@ -19,6 +20,6 @@ class SongResponse(
         thumb = thumb,
         path = "",
         lyrics = lyrics,
-        requestDate = request_date
+        requestAt = DateConverter.toUnixTimestamp(request_date)
     )
 }
