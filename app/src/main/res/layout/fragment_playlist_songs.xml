@@ -50,97 +50,112 @@
                 app:layout_constraintTop_toBottomOf="@id/playlist_songs_search_bar"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/playlist_songs_recyclerview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:listitem="@layout/fragment_song_item"
-                    android:visibility="gone"
-                    android:layout_marginBottom="155dp" />
-
-                <br.com.listennow.components.EmptyState
-                    android:id="@+id/playlists_songs_empty_state"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:id="@+id/playlist_songs_refresh"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:message="@string/playlists_songs_not_found_empty_state"
-                    android:layout_marginBottom="155dp"
-                    android:visibility="gone" />
-
-                <com.facebook.shimmer.ShimmerFrameLayout
-                    android:id="@+id/shimmerList"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="155dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <LinearLayout
+                    app:layout_constraintBottom_toBottomOf="parent">
+                    
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
+                        android:layout_height="match_parent">
 
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/playlist_songs_recyclerview"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            tools:listitem="@layout/fragment_song_item"
+                            android:visibility="gone"
+                            android:layout_marginBottom="155dp" />
 
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
+                        <br.com.listennow.components.EmptyState
+                            android:id="@+id/playlists_songs_empty_state"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:message="@string/playlists_songs_not_found_empty_state"
+                            android:layout_marginBottom="155dp"
+                            android:visibility="gone" />
 
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
+                        <com.facebook.shimmer.ShimmerFrameLayout
+                            android:id="@+id/shimmerList"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="155dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
 
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
+                                <include
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    layout="@layout/fragment_song_item_skeleton"  />
 
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
+                                <include
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    layout="@layout/fragment_song_item_skeleton"  />
 
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
+                                <include
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    layout="@layout/fragment_song_item_skeleton"  />
 
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
+                                <include
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    layout="@layout/fragment_song_item_skeleton"  />
 
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
+                                <include
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    layout="@layout/fragment_song_item_skeleton"  />
 
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
-                    </LinearLayout>
-                </com.facebook.shimmer.ShimmerFrameLayout>
+                                <include
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    layout="@layout/fragment_song_item_skeleton"  />
 
+                                <include
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    layout="@layout/fragment_song_item_skeleton"  />
+
+                                <include
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    layout="@layout/fragment_song_item_skeleton"  />
+
+                                <include
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    layout="@layout/fragment_song_item_skeleton"  />
+
+                                <include
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    layout="@layout/fragment_song_item_skeleton"  />
+                            </LinearLayout>
+                        </com.facebook.shimmer.ShimmerFrameLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                     android:id="@+id/playlist_songs_add_song"
                     android:layout_width="wrap_content"

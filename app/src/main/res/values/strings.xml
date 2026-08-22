@@ -138,4 +138,7 @@
     <string name="download_has_failed">Something went wrong. Please, try again later.</string>
     <string name="label_retry">Retry</string>
     <string name="downloading_songs">Almost there! We are downloading the songs you requested...</string>
+    <string name="no_songs_found_to_import">No new songs found to import :)</string>
+    <string name="your_songs_are_being_imported">We find a few new songs, they\'re being import...</string>
+    <string name="playlist_songs_import_finished">You\'re all set. We finished importing the new songs.</string>
 </resources>

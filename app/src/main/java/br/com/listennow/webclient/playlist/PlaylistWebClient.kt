@@ -9,7 +9,9 @@ import br.com.listennow.webclient.playlist.model.PlaylistDeleteRequest
 import br.com.listennow.webclient.playlist.model.PlaylistDeleteSongsRequest
 import br.com.listennow.webclient.playlist.model.PlaylistGetRequest
 import br.com.listennow.webclient.playlist.model.PlaylistGetResponse
+import br.com.listennow.webclient.playlist.model.PlaylistGetSongsRequest
 import br.com.listennow.webclient.playlist.model.PlaylistInsertSongsRequest
+import br.com.listennow.webclient.playlist.model.SongPlaylistResponse
 
 class PlaylistWebClient(
     private val playlistService: PlaylistService
@@ -65,5 +67,20 @@ class PlaylistWebClient(
         }
 
         throw PlaylistRestException("Error trying to count playlists to import")
+    }
+
+    suspend fun getPlaylistSongs(playlistId: String, ignoreIds: List<String>): List<SongPlaylistResponse>? {
+        val response = playlistService.getPlaylistSongs(
+            playlistSongsRequest = PlaylistGetSongsRequest(
+                playlistId = playlistId,
+                ignoreIds = ignoreIds
+            )
+        )
+
+        if (response.isSuccessful) {
+            return response.body()!!.songs
+        }
+
+        throw PlaylistRestException("Error trying to fetch songs from playlist")
     }
 }

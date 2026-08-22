@@ -1,9 +1,12 @@
 package br.com.listennow.fragments
 
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -21,17 +24,24 @@ import br.com.listennow.adapter.SongsAdapter
 import br.com.listennow.databinding.FragmentPlaylistSongsBinding
 import br.com.listennow.databinding.FragmentSongItemBinding
 import br.com.listennow.foreground.Actions
+import br.com.listennow.foreground.DownloadYoutubeSongService
+import br.com.listennow.foreground.DownloadYoutubeSongsActions
 import br.com.listennow.model.Song
 import br.com.listennow.navparams.SelectSongsNavParams
+import br.com.listennow.receiver.ImportPlaylistSongsFinishedReceiver
+import br.com.listennow.receiver.enums.IntentEnums
 import br.com.listennow.utils.NetworkUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.PlaylistSongsViewModel
+import br.com.listennow.webclient.playlist.model.SongPlaylistResponse
+import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPlaylistSongsBinding>(), IControllerItemsAdapter {
     private lateinit var _adapter: SongsAdapter
+    private var playlistSongsSyncedBroadcastReceiver: ImportPlaylistSongsFinishedReceiver? = null
 
     override val viewModel: PlaylistSongsViewModel by viewModels()
 
@@ -166,6 +176,15 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
                 }
             }
         }
+
+        binding.playlistSongsRefresh.setOnRefreshListener {
+            if (NetworkUtil.isInternetAvailable(requireContext())) {
+                viewModel.refreshPlaylistSongs()
+            } else {
+                viewModel.updateSyncingState(false)
+                viewModel.updateExceptionMessage(getString(R.string.check_internet_connection))
+            }
+        }
     }
 
     override fun setViewModelObservers() {
@@ -193,6 +212,18 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
                 showSnackBar(R.string.playlist_songs_song_deleted_message)
             }
         }
+
+        viewModel.songToImport.observe(viewLifecycleOwner) { songs ->
+            songs?.forEach { song ->
+                song?.let {
+                    startDownloadYoutubeSongService(song)
+                }
+            }
+        }
+
+        viewModel.syncing.observe(viewLifecycleOwner) { isSyncing ->
+            binding.playlistSongsRefresh.isRefreshing = isSyncing.get()
+        }
     }
 
     private fun setViewState(songs: List<Song>) {
@@ -206,6 +237,20 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
     override fun loadData() {
         binding.shimmerList.startShimmer()
         viewModel.loadData()
+    }
+
+    private fun startDownloadYoutubeSongService(song: SongPlaylistResponse) {
+        Intent().also {
+            it.setClass(requireActivity(), DownloadYoutubeSongService::class.java)
+            it.action = DownloadYoutubeSongsActions.DOWNLOAD_SONG.toString()
+            it.putExtra(DownloadYoutubeSongService.VIDEO_ID, song.videoId)
+            it.putExtra(DownloadYoutubeSongService.SONG_NAME, song.name)
+            it.putExtra(DownloadYoutubeSongService.ARTIST, song.artist)
+            it.putExtra(DownloadYoutubeSongService.USER_ID, viewModel.user!!.id)
+            it.putExtra(DownloadYoutubeSongService.PLAYLIST_ID, viewModel.navParams.playlistId)
+
+            ContextCompat.startForegroundService(requireContext(), it)
+        }
     }
 
     override fun onViewItemClickListener(
@@ -242,5 +287,30 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
         dataBinding as FragmentSongItemBinding
 
         dataBinding.deleteSongButton.visibility = View.VISIBLE
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val receiver = ImportPlaylistSongsFinishedReceiver(
+            onSyncComplete = {
+                viewModel.loadData()
+                showSnackBar(R.string.playlist_songs_import_finished)
+            }
+        )
+
+        playlistSongsSyncedBroadcastReceiver = receiver
+
+        val filter = IntentFilter(IntentEnums.INTENT_IMPORT_PLAYLIST_SONGS_FINISHED.toString())
+
+        ContextCompat.registerReceiver(requireContext(), receiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        playlistSongsSyncedBroadcastReceiver?.let {
+            requireContext().unregisterReceiver(it)
+        }
     }
 }

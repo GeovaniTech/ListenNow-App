@@ -10,6 +10,8 @@ import androidx.core.app.NotificationCompat
 import br.com.listennow.R
 import br.com.listennow.fragments.MainActivity
 import br.com.listennow.model.Song
+import br.com.listennow.receiver.enums.IntentEnums
+import br.com.listennow.repository.PlaylistRepository
 import br.com.listennow.repository.SongRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +30,9 @@ import javax.inject.Inject
 class DownloadYoutubeSongService : Service() {
     @Inject
     lateinit var songRepository: SongRepository
+
+    @Inject
+    lateinit var playlistRepository: PlaylistRepository
 
     private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -52,6 +57,8 @@ class DownloadYoutubeSongService : Service() {
         intent?.let {
             val videoId = intent.getStringExtra(VIDEO_ID) ?: return@let
             val userId = intent.getStringExtra(USER_ID) ?: return@let
+            val playlistId = intent.getStringExtra(PLAYLIST_ID) ?: ""
+
             val songName = intent.getStringExtra(SONG_NAME) ?: ""
             val artist = intent.getStringExtra(ARTIST) ?: ""
             val notificationId = videoId.hashCode()
@@ -87,6 +94,10 @@ class DownloadYoutubeSongService : Service() {
                             if (song != null) {
                                 songRepository.handleSongFromServer(song)
                                 songRepository.saveSong(song)
+
+                                if (playlistId.isNotEmpty()) {
+                                    playlistRepository.insertSongsIntoPlaylist(playlistId, listOf(song.videoId))
+                                }
 
                                 val finishIntent = createActionIntent(videoId, userId, songName, artist, DownloadYoutubeSongsActions.FINISH_SERVICE)
                                 val pendingFinishIntent = PendingIntent.getService(
@@ -157,6 +168,12 @@ class DownloadYoutubeSongService : Service() {
 
     private fun checkAndStopService() {
         if (activeDownloads.isEmpty()) {
+            val intent = Intent(IntentEnums.INTENT_IMPORT_PLAYLIST_SONGS_FINISHED.toString()).apply {
+                setPackage(packageName)
+            }
+
+            sendBroadcast(intent)
+
             stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
         }
@@ -166,6 +183,7 @@ class DownloadYoutubeSongService : Service() {
         const val RUNNING_NOTIFICATION_ID = 9999
         const val VIDEO_ID: String = "VIDEO_ID"
         const val USER_ID: String = "USER_ID"
+        const val PLAYLIST_ID: String = "PLAYLIST_ID"
         const val SONG_NAME: String = "SONG_NAME"
         const val ARTIST: String = "ARTIST"
         const val TAG = "DownloadYoutubeSongService"

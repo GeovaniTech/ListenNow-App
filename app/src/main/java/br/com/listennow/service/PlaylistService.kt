@@ -9,6 +9,8 @@ import br.com.listennow.webclient.playlist.model.PlaylistDeleteRequest
 import br.com.listennow.webclient.playlist.model.PlaylistDeleteSongsRequest
 import br.com.listennow.webclient.playlist.model.PlaylistGetRequest
 import br.com.listennow.webclient.playlist.model.PlaylistGetResponse
+import br.com.listennow.webclient.playlist.model.PlaylistGetSongsRequest
+import br.com.listennow.webclient.playlist.model.PlaylistGetSongsResponse
 import br.com.listennow.webclient.playlist.model.PlaylistInsertSongsRequest
 import retrofit2.Response
 import retrofit2.http.Body
@@ -37,4 +39,7 @@ interface PlaylistService {
 
     @POST(value = "playlist/count")
     suspend fun getCountPlaylistsToImport(@Body countRequest: PlaylistCountRequest): Response<PlaylistCountResponse>
+
+    @POST(value = "playlist/songs/get")
+    suspend fun getPlaylistSongs(@Body playlistSongsRequest: PlaylistGetSongsRequest): Response<PlaylistGetSongsResponse>
 }

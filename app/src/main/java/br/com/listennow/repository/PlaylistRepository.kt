@@ -12,6 +12,7 @@ import br.com.listennow.webclient.playlist.model.PlaylistDeleteRequest
 import br.com.listennow.webclient.playlist.model.PlaylistDeleteSongsRequest
 import br.com.listennow.webclient.playlist.model.PlaylistGetRequest
 import br.com.listennow.webclient.playlist.model.PlaylistInsertSongsRequest
+import br.com.listennow.webclient.playlist.model.SongPlaylistResponse
 
 class PlaylistRepository(
     val playlistDao: PlaylistDao,
@@ -135,5 +136,9 @@ class PlaylistRepository(
 
     suspend fun getCountPlaylistsToImport(countRequest: PlaylistCountRequest): Int {
         return playlistWebClient.countPlaylistsToImport(countRequest)
+    }
+
+    suspend fun getPlaylistSongsOnServer(playlistId: String, ignoreIds: List<String>): List<SongPlaylistResponse>? {
+        return playlistWebClient.getPlaylistSongs(playlistId, ignoreIds)
     }
 }
