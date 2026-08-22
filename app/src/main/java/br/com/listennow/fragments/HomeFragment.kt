@@ -1,5 +1,7 @@
 package br.com.listennow.fragments
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
@@ -7,6 +9,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -246,15 +249,23 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         binding.songs.setHasFixedSize(true)
         binding.songs.adapter = adapter
 
-        binding.songs.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy < 0 && !binding.carModeButton.isShown) {
-                    binding.carModeButton.show()
-                } else if (dy > 0 && binding.carModeButton.isShown) {
-                    binding.carModeButton.hide()
+        val recordPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO)
+
+        val isPermissionGranted = recordPermission == PackageManager.PERMISSION_GRANTED
+
+        binding.carModeButton.isVisible = isPermissionGranted
+
+        if (isPermissionGranted) {
+            binding.songs.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (dy < 0 && !binding.carModeButton.isShown) {
+                        binding.carModeButton.show()
+                    } else if (dy > 0 && binding.carModeButton.isShown) {
+                        binding.carModeButton.hide()
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     private fun createAdapter() {
