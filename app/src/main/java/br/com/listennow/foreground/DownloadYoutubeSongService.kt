@@ -85,7 +85,7 @@ class DownloadYoutubeSongService : Service() {
                                 val songResponse = songRepository.findSongByIdOnServer(videoId, userId)
                                 if (songResponse == null) {
                                     attempts++
-                                    delay(5000)
+                                    delay(10000)
                                 } else {
                                     song = songResponse.song
                                 }
