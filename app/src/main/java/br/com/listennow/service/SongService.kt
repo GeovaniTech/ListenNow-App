@@ -2,6 +2,7 @@ package br.com.listennow.service
 
 import br.com.listennow.webclient.common.model.CommonResponse
 import br.com.listennow.webclient.song.model.DeleteSongRequest
+import br.com.listennow.webclient.song.model.IncreaseSongTimesPlayedRequest
 import br.com.listennow.webclient.song.model.SearchDownloadSongRequest
 import br.com.listennow.webclient.song.model.SearchYTSongRequest
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
@@ -41,4 +42,7 @@ interface SongService {
 
     @POST("user/songs/delete")
     suspend fun deleteSongFromUserAccount(@Body deleteSongRequest: DeleteSongRequest): CommonResponse
+
+    @POST("user/songs/increase")
+    suspend fun increaseSongTimesPlayed(@Body increaseSongTimesPlayedRequest: IncreaseSongTimesPlayedRequest): Response<Void>
 }

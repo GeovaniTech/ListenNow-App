@@ -8,6 +8,7 @@ import androidx.room.Query
 import br.com.listennow.decorator.AlbumItemDecorator
 import br.com.listennow.model.PlaylistWithSongs
 import br.com.listennow.model.Song
+import br.com.listennow.webclient.song.model.SongTimesPlayedRestModel
 
 @Dao
 interface SongDao {
@@ -61,4 +62,19 @@ interface SongDao {
         FROM Song
     """)
     suspend fun getUserSongsIds(): List<String>
+
+    @Query("""
+        UPDATE Song SET pendingTimesPlayed = pendingTimesPlayed + 1 WHERE videoId = :videoId
+    """)
+    suspend fun increasePendingTimesPlayed(videoId: String)
+
+    @Query("""
+        UPDATE Song SET timesPlayed = timesPlayed + :timesToIncrease, pendingTimesPlayed = pendingTimesPlayed - :timesToIncrease WHERE videoId = :videoId
+    """)
+    suspend fun increaseTimesPlayed(videoId: String, timesToIncrease: Int)
+
+    @Query("""
+        SELECT videoId, pendingTimesPlayed as timesToIncrease FROM Song WHERE pendingTimesPlayed > 0
+    """)
+    suspend fun getPendingSyncTimesPlayedSongs(): List<SongTimesPlayedRestModel>?
 }

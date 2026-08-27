@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.navigation.NavDeepLinkBuilder
+import androidx.work.WorkManager
 import br.com.listennow.R
 import br.com.listennow.fragments.MainActivity
 import br.com.listennow.receiver.enums.IntentEnums
@@ -24,6 +25,9 @@ import javax.inject.Inject
 class SongPlayerService: Service() {
     @Inject
     lateinit var songRepository: SongRepository
+
+    @Inject
+    lateinit var workManager: WorkManager
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -213,6 +217,8 @@ class SongPlayerService: Service() {
                 )
                 .setLargeIcon(thumb ?: BitmapFactory.decodeResource(resources, R.drawable.icon))
                 .build()
+
+            songRepository.increasePendingTimesPlayed(SongUtil.actualSong!!.videoId)
 
             startForeground(1, notification)
             callUpdateSongReceiver()

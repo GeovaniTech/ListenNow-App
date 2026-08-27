@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 8,
-    "identityHash": "7a35c117a1f9faf3f3938149eaa679dc",
+    "identityHash": "8e4f59bf7b5e3d946c4d5ce6d41622af",
     "entities": [
       {
         "tableName": "Song",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`videoId` TEXT NOT NULL, `name` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT NOT NULL, `thumb` TEXT NOT NULL, `path` TEXT NOT NULL, `lyrics` TEXT NOT NULL, `requestAt` INTEGER, PRIMARY KEY(`videoId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`videoId` TEXT NOT NULL, `name` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT NOT NULL, `thumb` TEXT NOT NULL, `path` TEXT NOT NULL, `lyrics` TEXT NOT NULL, `requestAt` INTEGER, `timesPlayed` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`videoId`))",
         "fields": [
           {
             "fieldPath": "videoId",
@@ -54,6 +54,13 @@
             "fieldPath": "requestAt",
             "columnName": "requestAt",
             "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "timesPlayed",
+            "columnName": "timesPlayed",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -133,7 +140,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7a35c117a1f9faf3f3938149eaa679dc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8e4f59bf7b5e3d946c4d5ce6d41622af')"
     ]
   }
 }

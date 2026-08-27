@@ -24,5 +24,7 @@ val MIGRATION_7_8 = object : Migration(7, 8) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE `Song` DROP COLUMN `requestDate`")
         db.execSQL("ALTER TABLE `Song` ADD COLUMN `requestAt` INTEGER")
+        db.execSQL("ALTER TABLE `Song` ADD COLUMN `timesPlayed` INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE `Song` ADD COLUMN `pendingTimesPlayed` INTEGER NOT NULL DEFAULT 0")
     }
 }

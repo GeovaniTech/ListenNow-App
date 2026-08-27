@@ -1,6 +1,11 @@
 package br.com.listennow.repository
 
 import android.util.Log
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.decorator.AlbumItemDecorator
 import br.com.listennow.model.Song
@@ -8,13 +13,15 @@ import br.com.listennow.utils.MediaStoreUtil
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
 import br.com.listennow.webclient.song.model.SongResponse
 import br.com.listennow.webclient.song.service.SongWebClient
+import br.com.listennow.workmanager.IncreaseSongTimesPlayedWorker
 import java.util.Base64
 import javax.inject.Inject
 
 class SongRepository @Inject constructor (
     private val songDao: SongDao,
     private val songWebClient: SongWebClient,
-    private val mediaStore: MediaStoreUtil
+    private val mediaStore: MediaStoreUtil,
+    private val workerManager: WorkManager
 ) {
     suspend fun getAll(): List<Song> {
         return songDao.getSongs()
@@ -152,6 +159,49 @@ class SongRepository @Inject constructor (
         }
 
         return false
+    }
+
+    /**
+     * Increase the count of how many times the song was played by
+     * the user. Sends it to server and then save it locals.
+     */
+    suspend fun increasePendingTimesPlayed(videoId: String) {
+        songDao.increasePendingTimesPlayed(videoId)
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val syncWorkRequest = OneTimeWorkRequestBuilder<IncreaseSongTimesPlayedWorker>()
+            .setConstraints(constraints)
+            .build()
+
+        workerManager.enqueueUniqueWork(
+            IncreaseSongTimesPlayedWorker.WORK_NAME,
+            ExistingWorkPolicy.KEEP,
+            syncWorkRequest
+        )
+    }
+
+    /**
+     * Return all songs where pendingTimesPlayed > 0
+     * to sync on server using the worker.
+     */
+    suspend fun syncPendingTimesPlayedSongs(clientId: String) {
+        val pendingSongs = songDao.getPendingSyncTimesPlayedSongs()
+
+        pendingSongs?.let { songs ->
+            val success = songWebClient.increaseSongTimesPlayed(
+                clientId = clientId,
+                songs = songs
+            )
+
+            if (success) {
+                songs.forEach { song ->
+                    songDao.increaseTimesPlayed(song.videoId, song.timesToIncrease)
+                }
+            }
+        }
     }
 
     companion object {

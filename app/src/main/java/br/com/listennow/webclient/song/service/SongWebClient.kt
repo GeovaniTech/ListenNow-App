@@ -5,6 +5,7 @@ import br.com.listennow.model.Song
 import br.com.listennow.service.SongService
 import br.com.listennow.webclient.enums.StatusMessage
 import br.com.listennow.webclient.song.model.DeleteSongRequest
+import br.com.listennow.webclient.song.model.IncreaseSongTimesPlayedRequest
 import br.com.listennow.webclient.song.model.SearchDownloadSongRequest
 import br.com.listennow.webclient.song.model.SearchYTSongRequest
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
@@ -14,6 +15,7 @@ import br.com.listennow.webclient.song.model.SongDownloadResponse
 import br.com.listennow.webclient.song.model.SongIdsRequest
 import br.com.listennow.webclient.song.model.SongRequest
 import br.com.listennow.webclient.song.model.SongResponse
+import br.com.listennow.webclient.song.model.SongTimesPlayedRestModel
 
 class SongWebClient(
     private val songService: SongService
@@ -96,5 +98,16 @@ class SongWebClient(
         }
 
         return false
+    }
+
+    suspend fun increaseSongTimesPlayed(clientId: String, songs: List<SongTimesPlayedRestModel>): Boolean {
+        val response = songService.increaseSongTimesPlayed(
+            IncreaseSongTimesPlayedRequest(
+                clientId = clientId,
+                songs = songs
+            )
+        )
+
+        return response.isSuccessful
     }
 }

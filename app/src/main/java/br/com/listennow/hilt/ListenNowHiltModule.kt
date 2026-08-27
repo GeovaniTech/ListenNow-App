@@ -1,6 +1,7 @@
 package br.com.listennow.hilt
 
 import android.content.Context
+import androidx.work.WorkManager
 import br.com.listennow.BuildConfig
 import br.com.listennow.database.AppDatabase
 import br.com.listennow.database.dao.PlaylistDao
@@ -39,12 +40,14 @@ object ListenNowHiltModule {
     fun provideSongRepository(
         songDao: SongDao,
         songWebClient: SongWebClient,
-        mediaStore: MediaStoreUtil
+        mediaStore: MediaStoreUtil,
+        workManager: WorkManager
     ): SongRepository {
         return SongRepository(
             songDao,
             songWebClient,
-            mediaStore
+            mediaStore,
+            workManager
         )
     }
 
@@ -158,5 +161,12 @@ object ListenNowHiltModule {
         @ApplicationContext context: Context
     ): MediaStoreUtil {
         return MediaStoreUtil(context.contentResolver)
+    }
+
+    @Provides
+    fun provideWorkManager(
+        @ApplicationContext context: Context
+    ): WorkManager {
+        return WorkManager.getInstance(context)
     }
 }

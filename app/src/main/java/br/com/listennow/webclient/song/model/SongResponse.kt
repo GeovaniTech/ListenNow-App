@@ -10,7 +10,8 @@ class SongResponse(
     private val album: String,
     private val lyrics: String,
     private val thumb: String,
-    private val request_date: String
+    private val request_date: String,
+    private val timesPlayed: Int
 ) {
     val song: Song get() = Song(
         videoId = video_id,
@@ -20,6 +21,7 @@ class SongResponse(
         thumb = thumb,
         path = "",
         lyrics = lyrics,
-        requestAt = DateConverter.toUnixTimestamp(request_date)
+        requestAt = DateConverter.toUnixTimestamp(request_date),
+        timesPlayed = timesPlayed
     )
 }
