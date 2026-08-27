@@ -55,7 +55,7 @@
     <string name="message_error_creating_user">We apologize for the inconvenience. A problem occurred while creating your device ID on our servers. Please check your internet connection and try again.</string>
     <string name="message_failed_to_save_user">Failed to save device ID</string>
     <string name="fragment_device_infos_your_id">Your Device ID</string>
-    <string name="fragment_device_infos_title">Device Infos\n</string>
+    <string name="fragment_device_infos_title">Device Infos</string>
     <string name="copied_text">Copied Text</string>
     <string name="fragment_device_infos_id_copied_successfully">Device ID copied!</string>
     <string name="app_version">App Version: %s</string>
