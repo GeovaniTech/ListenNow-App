@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -26,6 +27,7 @@ import br.com.listennow.utils.NetworkUtil
 import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.DeviceInfosViewModel
 import br.com.listennow.workmanager.DataSyncFromUserWorker
+import br.com.listennow.workmanager.IncreaseSongTimesPlayedWorker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -97,7 +99,11 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
             .build()
 
         val workManager = WorkManager.getInstance(requireContext())
-        workManager.enqueue(request)
+
+        workManager.enqueueUniqueWork(
+            DataSyncFromUserWorker.WORK_NAME,
+            ExistingWorkPolicy.KEEP,
+            request)
 
         showSnackBar(getString(R.string.importing_all_songs_from_another_device))
     }

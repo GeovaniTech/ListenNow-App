@@ -161,6 +161,7 @@ class DataSyncFromUserWorker @AssistedInject constructor(
     }
 
     companion object {
+        const val WORK_NAME: String = "DataSyncFromUserWorker"
         const val ID_USER_RECEIVER = "ID_USER_RECEIVER"
         const val ID_USER_WITH_DATA = "ID_USER_WITH_DATA"
         const val SONGS_IDS = "SONGS_IDS"
