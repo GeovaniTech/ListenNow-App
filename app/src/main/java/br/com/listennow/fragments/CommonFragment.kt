@@ -108,11 +108,17 @@ abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBindi
         WindowCompat.getInsetsController(activity?.window!!, view).show(WindowInsetsCompat.Type.ime())
     }
 
+    fun hideSoftKeyboard() {
+        WindowCompat.getInsetsController(activity?.window!!, requireView()).hide(WindowInsetsCompat.Type.ime())
+    }
+
     fun showSnackBar (
         messageId: Int,
         anchorView: View? = mainActivity.binding.playBackButtons,
         duration: Int = Snackbar.LENGTH_SHORT
     ) {
+        hideSoftKeyboard()
+
         Snackbar.make(requireView(), messageId, duration)
             .setAnchorView(anchorView)
             .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
@@ -125,6 +131,8 @@ abstract class CommonFragment<ViewModel: CommonViewModel, DataBinding: ViewBindi
         anchorView: View? = mainActivity.binding.playBackButtons,
         duration: Int = Snackbar.LENGTH_SHORT
     ) {
+        hideSoftKeyboard()
+
         Snackbar.make(requireView(), message, duration)
             .setAnchorView(anchorView)
             .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
