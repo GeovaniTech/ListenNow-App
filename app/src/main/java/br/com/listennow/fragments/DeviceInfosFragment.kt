@@ -85,8 +85,7 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
             .setInputData(
                 workDataOf(
                     DataSyncFromUserWorker.ID_USER_RECEIVER to userReceiver,
-                    DataSyncFromUserWorker.ID_USER_WITH_DATA to userWithData,
-                    DataSyncFromUserWorker.SONGS_IDS to songsIds.toTypedArray()
+                    DataSyncFromUserWorker.ID_USER_WITH_DATA to userWithData
                 )
             )
             .setConstraints(

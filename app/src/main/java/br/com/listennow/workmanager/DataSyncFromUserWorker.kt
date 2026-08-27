@@ -41,8 +41,8 @@ class DataSyncFromUserWorker @AssistedInject constructor(
             workDataOf(INVALID_VALUE_FOR_PARAMETER to "userWithData is null")
         )
 
-        val arraySongsIds = inputData.getStringArray(SONGS_IDS) ?: return Result.failure(
-            workDataOf(INVALID_VALUE_FOR_PARAMETER to "songsIds is null")
+        val arraySongsIds = songRepository.getIdsSongsFromAnotherUser(userReceiver = idUserReceiver, userWithSongs = idUserWithData) ?: return Result.failure(
+            workDataOf(INVALID_VALUE_FOR_PARAMETER to "arraySongsIds is null")
         )
 
         val songsIds = arraySongsIds.toList()
