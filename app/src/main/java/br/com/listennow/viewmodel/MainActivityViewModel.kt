@@ -15,7 +15,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 @HiltViewModel
-class MainActivityViewModel @Inject constructor(
+class
+MainActivityViewModel @Inject constructor(
     userRepository: UserRepository,
     private val appVersionWebClient: AppVersionWebClient
 ) : CommonViewModel(userRepository) {

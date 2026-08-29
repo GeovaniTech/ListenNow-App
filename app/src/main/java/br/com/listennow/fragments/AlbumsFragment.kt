@@ -78,15 +78,7 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
         binding.albumsEmptyState.hideAction()
     }
 
-    override fun setViewListeners() {
-        mainActivity.binding.playBackButtons.setOnClickListener {
-            if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
-                findNavController().navigate(AlbumsFragmentDirections.actionAlbumsFragmentToSongDetailsFragment(
-                    SongUtil.actualSong!!.videoId
-                ))
-            }
-        }
-    }
+    override fun setViewListeners() = Unit
 
     private fun configSearchView() {
         val handlerThread = HandlerThread("Song Delay")

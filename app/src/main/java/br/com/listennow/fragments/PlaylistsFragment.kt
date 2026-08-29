@@ -116,14 +116,6 @@ class PlaylistsFragment : CommonFragment<PlaylistsViewModel, FragmentPlaylistsBi
     }
 
     override fun setViewListeners() {
-        mainActivity.binding.playBackButtons.setOnClickListener {
-            if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
-                findNavController().navigate(PlaylistsFragmentDirections.actionPlaylistsFragmentToSongDetailsFragment(
-                    SongUtil.actualSong!!.videoId
-                ))
-            }
-        }
-
         binding.playlistsNewPlaylist.setOnClickListener {
             if (NetworkUtil.isInternetAvailable(requireContext())) {
                 setFragmentResultListener(NEW_PLAYLIST_FRAGMENT_KEY) { _, bundle ->

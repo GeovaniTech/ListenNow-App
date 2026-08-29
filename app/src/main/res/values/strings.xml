@@ -141,4 +141,9 @@
     <string name="no_songs_found_to_import">No new songs found to import :)</string>
     <string name="your_songs_are_being_imported">We find a few new songs, they\'re being import...</string>
     <string name="playlist_songs_import_finished">You\'re all set. We finished importing the new songs.</string>
+    <string name="most_played">Most Played</string>
+    <string name="times_played_label">%1$d plays</string>
+    <string name="car_mode">Car Mode</string>
+    <string name="recently_added">Recently Added</string>
+    <string name="by_artist">By Artist</string>
 </resources>

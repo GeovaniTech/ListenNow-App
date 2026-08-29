@@ -23,8 +23,8 @@ class SongRepository @Inject constructor (
     private val mediaStore: MediaStoreUtil,
     private val workerManager: WorkManager
 ) {
-    suspend fun getAll(): List<Song> {
-        return songDao.getSongs()
+    suspend fun getAll(orderByTopPlayed: Boolean, orderByRecentlyAdded: Boolean, orderByArtist: Boolean): List<Song> {
+        return songDao.getSongs(orderByTopPlayed, orderByRecentlyAdded, orderByArtist)
     }
 
     suspend fun findSongById(id: String): Song {
@@ -35,8 +35,8 @@ class SongRepository @Inject constructor (
         return songWebClient.findSongById(id, userId)
     }
 
-    suspend fun getAllFiltering(searchFor: String, ignoreIds: List<String> = emptyList()): List<Song> {
-        return songDao.listByFilters(searchFor, ignoreIds)
+    suspend fun getAllFiltering(searchFor: String, ignoreIds: List<String> = emptyList(), orderByTopPlayed: Boolean = false, orderByRecentlyAdded: Boolean = false, orderByArtist: Boolean = false): List<Song> {
+        return songDao.listByFilters(searchFor, ignoreIds, orderByTopPlayed, orderByRecentlyAdded, orderByArtist)
     }
 
     suspend fun updateAll(userId: String?) {

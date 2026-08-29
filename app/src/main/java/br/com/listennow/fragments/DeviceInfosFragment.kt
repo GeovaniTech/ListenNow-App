@@ -11,7 +11,6 @@ import android.os.Build
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.fragment.findNavController
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
@@ -24,10 +23,8 @@ import br.com.listennow.databinding.FragmentDeviceInfosBinding
 import br.com.listennow.receiver.ImportDataFinishedReceiver
 import br.com.listennow.receiver.enums.IntentEnums
 import br.com.listennow.utils.NetworkUtil
-import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.DeviceInfosViewModel
 import br.com.listennow.workmanager.DataSyncFromUserWorker
-import br.com.listennow.workmanager.IncreaseSongTimesPlayedWorker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -40,14 +37,6 @@ class DeviceInfosFragment : CommonFragment<DeviceInfosViewModel, FragmentDeviceI
     override fun loadNavParams() {}
 
     override fun setViewListeners() {
-        mainActivity.binding.playBackButtons.setOnClickListener {
-            if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
-                findNavController().navigate(DeviceInfosFragmentDirections.actionDeviceInfosFragmentToSongDetailsFragment(
-                    SongUtil.actualSong!!.videoId
-                ))
-            }
-        }
-
         binding.fragmentDeviceInfosCopyImageview.setOnClickListener {
             val clipboardManager = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clipData = ClipData.newPlainText(getString(R.string.copied_text), viewModel.userId.value)

@@ -18,8 +18,14 @@ interface SongDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(song: List<Song>)
 
-    @Query("SELECT * FROM Song ORDER BY requestAt DESC")
-    suspend fun getSongs(): List<Song>
+    @Query("""
+    SELECT * FROM Song 
+    ORDER BY 
+        CASE WHEN :orderByTopPlayed = 1 THEN timesPlayed + pendingTimesPlayed END DESC,
+        CASE WHEN :orderByRecentlyAdded = 1 THEN requestAt END DESC,
+        CASE WHEN :orderByArtist = 1 THEN artist END
+    """)
+    suspend fun getSongs(orderByTopPlayed: Boolean, orderByRecentlyAdded: Boolean, orderByArtist: Boolean): List<Song>
 
     @Delete
     suspend fun delete(song: Song)
@@ -27,8 +33,16 @@ interface SongDao {
     @Query("SELECT * FROM Song WHERE videoId = :id")
     suspend fun findById(id: String): Song
 
-    @Query("SELECT * FROM Song WHERE videoId NOT IN (:ignoreIds) AND (LOWER(name) LIKE  '%' || LOWER(:text) || '%' OR artist LIKE '%' || LOWER(:text) || '%') ORDER BY requestAt DESC")
-    suspend fun listByFilters(text: String, ignoreIds: List<String> = emptyList()): List<Song>
+    @Query("""
+    SELECT * FROM Song 
+    WHERE videoId NOT IN (:ignoreIds) 
+      AND (LOWER(name) LIKE '%' || LOWER(:text) || '%' OR artist LIKE '%' || LOWER(:text) || '%') 
+    ORDER BY 
+        CASE WHEN :orderByTopPlayed = 1 THEN timesPlayed + pendingTimesPlayed END DESC,
+        CASE WHEN :orderByRecentlyAdded = 1 THEN requestAt END DESC,
+        CASE WHEN :orderByArtist = 1 THEN artist END
+    """)
+    suspend fun listByFilters(text: String, ignoreIds: List<String> = emptyList(), orderByTopPlayed: Boolean, orderByRecentlyAdded: Boolean, orderByArtist: Boolean): List<Song>
 
     @Query("SELECT album as name, artist, thumb FROM Song GROUP BY album, artist")
     suspend fun getAlbums(): List<AlbumItemDecorator>

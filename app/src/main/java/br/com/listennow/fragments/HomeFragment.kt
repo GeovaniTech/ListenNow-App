@@ -41,22 +41,7 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
 
     override fun applyInsetsEdgeToEdge() {
         ViewCompat.setOnApplyWindowInsetsListener(
-            binding.cardSearchSongs
-        ) { v, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
-
-            v.setPadding(
-                v.paddingLeft,
-                statusBarInsets.top,
-                v.paddingRight,
-                v.paddingBottom
-            )
-
-            insets
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(
-            binding.refreshSongs
+            binding.containerHome
         ) { v, insets ->
             val systemBars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
@@ -64,9 +49,9 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
                         or WindowInsetsCompat.Type.ime()
             )
             v.setPadding(
-                v.paddingLeft,
-                v.paddingTop,
-                v.paddingRight,
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
                 systemBars.bottom
             )
             insets
@@ -80,12 +65,7 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         mainActivity.configToolbar()
         configSearchView()
         configCarMode()
-
-        mainActivity.binding.playBackButtons.setOnClickListener {
-            if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSongDetailsFragment(SongUtil.actualSong!!.videoId))
-            }
-        }
+        configFilterChips()
 
         binding.refreshSongs.setOnRefreshListener {
             if (NetworkUtil.isInternetAvailable(requireContext())) {
@@ -98,6 +78,30 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
 
         binding.fragmentHomeButtonFindNewSong.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchNewSongs())
+        }
+    }
+
+    private fun configFilterChips() {
+        binding.homeFilters.setOnCheckedStateChangeListener { _, checkedIds ->
+            when (checkedIds.firstOrNull()) {
+                R.id.chip_most_played -> {
+                    viewModel.orderByTopPlayed = true
+                    viewModel.orderByRecentlyAdded = false
+                    viewModel.orderByArtist = false
+                }
+                R.id.chip_recently_added -> {
+                    viewModel.orderByTopPlayed = false
+                    viewModel.orderByRecentlyAdded = true
+                    viewModel.orderByArtist = false
+                }
+                R.id.chip_by_artist -> {
+                    viewModel.orderByTopPlayed = false
+                    viewModel.orderByRecentlyAdded = false
+                    viewModel.orderByArtist = true
+                }
+            }
+
+            loadData()
         }
     }
 

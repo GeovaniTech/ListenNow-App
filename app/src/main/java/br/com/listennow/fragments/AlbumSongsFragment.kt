@@ -72,14 +72,6 @@ class AlbumSongsFragment : CommonFragment<AlbumSongsViewModel, FragmentAlbumSong
 
     override fun setViewListeners() {
         configSearchView()
-
-        mainActivity.binding.playBackButtons.setOnClickListener {
-            if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
-                findNavController().navigate(AlbumSongsFragmentDirections.actionAlbumSongsFragmentToSongDetailsFragment(
-                    SongUtil.actualSong!!.videoId
-                ))
-            }
-        }
     }
 
     private fun configSearchView() {

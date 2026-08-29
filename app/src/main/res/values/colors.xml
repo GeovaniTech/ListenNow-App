@@ -11,7 +11,9 @@
     <color name="gray">#A3A3AB</color>
     <color name="gold">#A8CF45</color>
     <color name="light_blue">#0098DA</color>
-    <color name="background">#001822</color>
+    <color name="background">#0b1014</color>
+    <color name="backgroundBottomSheet">#13181c</color>
+    <color name="backgroundItemMenu">#303030</color>
     <color name="container">#191921</color>
     <color name="iconColor">#FFFFFF</color>
     <color name="red">#E53935</color>

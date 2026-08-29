@@ -30,12 +30,23 @@ class HomeViewModel @Inject constructor (
     private var _songDeleted: MutableLiveData<Pair<Song, AtomicBoolean>?> = MutableLiveData()
     val songDeleted: LiveData<Pair<Song, AtomicBoolean>?> get() = _songDeleted
 
+    var orderByTopPlayed: Boolean = false
+    var orderByArtist: Boolean = false
+    var orderByRecentlyAdded: Boolean = true
+
     suspend fun loadSongs() {
-        _songs.postValue(songRepository.getAll())
+        _songs.postValue(songRepository.getAll(orderByTopPlayed, orderByRecentlyAdded, orderByArtist))
     }
 
     suspend fun loadSongsFiltering(filter: String) {
-        _filteredSongs.postValue(songRepository.getAllFiltering(filter))
+        _filteredSongs.postValue(
+            songRepository.getAllFiltering(
+                searchFor = filter,
+                orderByTopPlayed = orderByTopPlayed,
+                orderByRecentlyAdded = orderByRecentlyAdded,
+                orderByArtist = orderByArtist
+            )
+        )
     }
 
     suspend fun syncSongs() {

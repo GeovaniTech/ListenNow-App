@@ -20,12 +20,17 @@ import android.speech.SpeechRecognizer
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
+import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import br.com.listennow.BuildConfig
@@ -43,6 +48,9 @@ import br.com.listennow.utils.SongUtil
 import br.com.listennow.viewmodel.MainActivityViewModel
 import br.com.listennow.webclient.appversion.model.LastVersionAvailableAppResponse
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED
+import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -54,6 +62,8 @@ class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainActivityViewModel>()
     private lateinit var mediaSession: MediaSessionCompat
     var speechRecognizer: SpeechRecognizer? = null
+
+    var songDetailsFragment: SongDetailsFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +84,47 @@ class MainActivity : AppCompatActivity() {
         onLoadLastSong()
         checkForAppUpdate()
         createMediaSession()
+        configBottomSheetPlayer()
+    }
+
+    private fun getBottomSheetBehavior(): BottomSheetBehavior<FrameLayout> {
+        val standardBottomSheet = findViewById<FrameLayout>(R.id.bottom_sheet_player)
+        val standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
+
+        return standardBottomSheetBehavior
+    }
+
+    private fun configBottomSheetPlayer() {
+        val standardBottomSheetBehavior = getBottomSheetBehavior()
+        standardBottomSheetBehavior.state = STATE_COLLAPSED
+        standardBottomSheetBehavior.isDraggable = true
+
+        standardBottomSheetBehavior.isHideable = false
+        standardBottomSheetBehavior.expandedOffset = 0
+        standardBottomSheetBehavior.isDraggableOnNestedScroll = false
+        standardBottomSheetBehavior.skipCollapsed = true
+
+        standardBottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
+
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    STATE_EXPANDED -> {
+                        configSongDetails(SongUtil.actualSong)
+                        binding.playBackBottomNavigation.isVisible = false
+                        binding.playBackButtons.isVisible = false
+                    }
+                    STATE_COLLAPSED -> {
+                        configSongDetails(null)
+                        binding.playBackBottomNavigation.isVisible = true
+                        binding.playBackButtons.isVisible = true
+                    }
+                    else -> {}
+                }
+
+                ViewCompat.requestApplyInsets(binding.containerBottomSheet)
+            }
+        })
     }
 
     private fun createAttrsContext() {
@@ -137,6 +188,30 @@ class MainActivity : AppCompatActivity() {
                 showDialogInstallNewVersion(lastVersion)
             }
         }
+    }
+
+    private fun configSongDetails(song: Song?) {
+        if (song != null) {
+            songDetailsFragment = SongDetailsFragment().apply {
+                arguments = bundleOf(
+                    "songId" to song.videoId
+                )
+            }
+
+            supportFragmentManager.beginTransaction().replace(R.id.full_player_fragment_container, songDetailsFragment!!)
+                .commitNow()
+
+            binding.fullPlayerFragmentContainer.visibility = View.VISIBLE
+        } else {
+            if (songDetailsFragment != null) {
+                supportFragmentManager.beginTransaction().remove(songDetailsFragment!!)
+                    .commit()
+                songDetailsFragment = null
+            }
+        }
+
+
+
     }
 
     private fun showDialogInstallNewVersion(lastVersion: Pair<AtomicBoolean, LastVersionAvailableAppResponse?>) {
@@ -413,6 +488,19 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+
+        buttons.setOnClickListener {
+            val standardBottomSheet = findViewById<FrameLayout>(R.id.bottom_sheet_player)
+            val standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
+
+            if (songDetailsFragment == null) {
+                standardBottomSheetBehavior.state = STATE_EXPANDED
+            } else {
+                configSongDetails(null)
+                standardBottomSheetBehavior.state = STATE_COLLAPSED
+            }
+
+        }
     }
 
     fun showBottomMenuAndPlayButtons() {
@@ -518,6 +606,54 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun applyEdgeToEdge() {
+        val initialPaddingLeft = binding.containerBottomSheet.paddingLeft
+        val initialPaddingTop = binding.containerBottomSheet.paddingTop
+        val initialPaddingRight = binding.containerBottomSheet.paddingRight
+        val initialPaddingBottom = binding.containerBottomSheet.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.containerBottomSheet) { v, insets ->
+            val currentState = getBottomSheetBehavior().state
+
+            val sysInsets = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or
+                        WindowInsetsCompat.Type.displayCutout() or
+                        WindowInsetsCompat.Type.ime()
+            )
+
+            if (currentState == STATE_EXPANDED) {
+                v.setPadding(
+                    sysInsets.left,
+                    initialPaddingTop + sysInsets.top,
+                    sysInsets.right,
+                    v.paddingBottom
+                )
+            } else {
+                v.setPadding(
+                    initialPaddingLeft,
+                    initialPaddingTop,
+                    initialPaddingRight,
+                    initialPaddingBottom
+                )
+            }
+
+            insets
+        }
+
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.playBackBottomNavigation
+        ) { v, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
+
+            v.setPadding(statusBarInsets.left,
+                0,
+                statusBarInsets.right,
+                0
+            )
+
+            insets
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isNavigationBarContrastEnforced = false
         }

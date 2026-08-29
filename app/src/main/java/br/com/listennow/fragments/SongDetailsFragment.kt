@@ -1,5 +1,7 @@
 package br.com.listennow.fragments
 
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import br.com.listennow.R
@@ -39,6 +41,22 @@ class SongDetailsFragment : CommonFragment<SongDetailsViewModel, FragmentSongDet
     override fun loadData() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.loadSong()
+        }
+    }
+
+    override fun applyInsetsEdgeToEdge() {
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.lyricsSongDetail
+        ) { v, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
+
+            v.setPadding(statusBarInsets.left,
+                0,
+                statusBarInsets.right,
+                statusBarInsets.bottom
+            )
+
+            insets
         }
     }
 }

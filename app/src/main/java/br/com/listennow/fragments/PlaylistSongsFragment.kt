@@ -144,14 +144,6 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
     }
 
     override fun setViewListeners() {
-        mainActivity.binding.playBackButtons.setOnClickListener {
-            if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
-                findNavController().navigate(PlaylistSongsFragmentDirections.actionPlaylistSongsFragmentToSongDetailsFragment(
-                    SongUtil.actualSong!!.videoId
-                ))
-            }
-        }
-
         binding.playlistSongsAddSong.setOnClickListener {
             viewModel.viewModelScope.launch {
                 setFragmentResultListener(SelectSongsFragment.SELECT_SONGS_FRAGMENT_KEY) { _, bundle ->

@@ -88,12 +88,6 @@ class SearchYoutubeSongsFragment : CommonFragment<SearchYoutubeSongsViewModel, F
     override fun setViewListeners() {
         configSearchSongs()
         binding.fragmentSearchYoutubeSongsEmptyState.hideAction()
-
-        mainActivity.binding.playBackButtons.setOnClickListener {
-            if(SongUtil.actualSong != null && SongUtil.actualSong!!.videoId.isNotEmpty()) {
-                findNavController().navigate(SearchYoutubeSongsFragmentDirections.actionSearchNewSongsFragmentSongDetailsFragment(SongUtil.actualSong!!.videoId))
-            }
-        }
     }
 
     private fun configSearchSongs() {

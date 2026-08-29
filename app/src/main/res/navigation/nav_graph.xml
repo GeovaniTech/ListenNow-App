@@ -10,10 +10,6 @@
             android:id="@+id/action_global_to_errorFragment"
             app:destination="@id/errorFragment" />
 
-        <action
-            android:id="@+id/action_global_to_songDetails"
-            app:destination="@id/songDetailsFragment" />
-
         <!-- Fragments-->
         <fragment
             android:id="@+id/homeFragment"
@@ -23,14 +19,6 @@
                 <action
                     android:id="@+id/action_homeFragment_to_searchNewSongs"
                     app:destination="@id/searchNewSongsFragment"
-                    app:enterAnim="@anim/to_right"
-                    app:exitAnim="@anim/to_left"
-                    app:popEnterAnim="@anim/from_left"
-                    app:popExitAnim="@anim/from_right" />
-
-                <action
-                    android:id="@+id/action_homeFragment_to_songDetailsFragment"
-                    app:destination="@id/songDetailsFragment"
                     app:enterAnim="@anim/to_right"
                     app:exitAnim="@anim/to_left"
                     app:popEnterAnim="@anim/from_left"
@@ -58,14 +46,6 @@
             android:name="br.com.listennow.fragments.SearchYoutubeSongsFragment"
             android:label="@string/search_new_songs"
             tools:layout="@layout/fragment_search_youtube_songs">
-
-                <action
-                    android:id="@+id/action_searchNewSongsFragment_songDetailsFragment"
-                    app:destination="@id/songDetailsFragment"
-                    app:enterAnim="@anim/to_right"
-                    app:exitAnim="@anim/to_left"
-                    app:popEnterAnim="@anim/from_left"
-                    app:popExitAnim="@anim/from_right" />
 
                 <action
                     android:id="@+id/action_searchNewSongsFragment_to_deviceInfosFragment"
@@ -107,29 +87,12 @@
         <fragment
             android:id="@+id/deviceInfosFragment"
             android:name="br.com.listennow.fragments.DeviceInfosFragment"
-            android:label="@string/fragment_device_infos_title">
-
-                <action
-                    android:id="@+id/action_deviceInfosFragment_to_songDetailsFragment"
-                    app:destination="@id/songDetailsFragment"
-                    app:enterAnim="@anim/to_right"
-                    app:exitAnim="@anim/to_left"
-                    app:popEnterAnim="@anim/from_left"
-                    app:popExitAnim="@anim/from_right" />
-        </fragment>
+            android:label="@string/fragment_device_infos_title" />
 
         <fragment
             android:id="@+id/albumsFragment"
             android:name="br.com.listennow.fragments.AlbumsFragment"
             android:label="@string/albums">
-
-                <action
-                    android:id="@+id/action_albumsFragment_to_songDetailsFragment"
-                    app:destination="@id/songDetailsFragment"
-                    app:enterAnim="@anim/to_right"
-                    app:exitAnim="@anim/to_left"
-                    app:popEnterAnim="@anim/from_left"
-                    app:popExitAnim="@anim/from_right" />
 
                 <action
                     android:id="@+id/action_albumsFragment_to_albumSongsFragment"
@@ -145,14 +108,6 @@
             android:name="br.com.listennow.fragments.AlbumSongsFragment"
             android:label="@string/album_songs">
 
-                <action
-                    android:id="@+id/action_albumSongsFragment_to_songDetailsFragment"
-                    app:destination="@id/songDetailsFragment"
-                    app:enterAnim="@anim/to_right"
-                    app:exitAnim="@anim/to_left"
-                    app:popEnterAnim="@anim/from_left"
-                    app:popExitAnim="@anim/from_right" />
-
                 <argument
                     android:name="navParams"
                     app:argType="br.com.listennow.navparams.AlbumSongsNavParams" />
@@ -166,14 +121,6 @@
                 <action
                     android:id="@+id/action_playlistsFragment_to_albumsFragment"
                     app:destination="@id/albumsFragment"
-                    app:enterAnim="@anim/to_right"
-                    app:exitAnim="@anim/to_left"
-                    app:popEnterAnim="@anim/from_left"
-                    app:popExitAnim="@anim/from_right" />
-
-                <action
-                    android:id="@+id/action_playlistsFragment_to_songDetailsFragment"
-                    app:destination="@id/songDetailsFragment"
                     app:enterAnim="@anim/to_right"
                     app:exitAnim="@anim/to_left"
                     app:popEnterAnim="@anim/from_left"
@@ -204,14 +151,6 @@
                     app:exitAnim="@anim/to_left"
                     app:popEnterAnim="@anim/from_left"
                     app:popExitAnim="@anim/from_right" />
-
-                <action
-                    android:id="@+id/action_playlistSongsFragment_to_songDetailsFragment"
-                    app:destination="@id/songDetailsFragment"
-                    app:enterAnim="@anim/to_right"
-                    app:exitAnim="@anim/to_left"
-                    app:popEnterAnim="@anim/from_left"
-                    app:popExitAnim="@anim/from_right" />
         </fragment>
 
         <fragment
@@ -226,14 +165,6 @@
                 <action
                     android:id="@+id/action_selectSongsFragment_to_searchNewSongsFragment"
                     app:destination="@id/searchNewSongsFragment"
-                    app:enterAnim="@anim/to_right"
-                    app:exitAnim="@anim/to_left"
-                    app:popEnterAnim="@anim/from_left"
-                    app:popExitAnim="@anim/from_right" />
-
-                <action
-                    android:id="@+id/action_selectSongsFragment_to_songDetailsFragment"
-                    app:destination="@id/songDetailsFragment"
                     app:enterAnim="@anim/to_right"
                     app:exitAnim="@anim/to_left"
                     app:popEnterAnim="@anim/from_left"
