@@ -22,19 +22,53 @@ class SongDetailsFragment : CommonFragment<SongDetailsViewModel, FragmentSongDet
     }
 
     override fun setViewListeners() {
-        mainActivity.binding.playBackButtons.setOnClickListener {
-            SongUtil.actualSong?.videoId?.let {
-                viewModel.songId = it
-                loadData()
-            }
+        binding.btnPlayNext.setOnClickListener {
+            SongUtil.playRandomSong()
+            loadActualSong()
         }
 
-        mainActivity.configToolbar()
+        binding.btnDeleteSong.setOnClickListener {
+            SongUtil.actualSong?.let { song ->
+                showAlertDialog(
+                    title = getString(R.string.are_you_sure),
+                    message = getString(R.string.home_are_you_sure_about_deleting_song, song.name),
+                    positiveClick = {
+                        viewModel.deleteSong(song)
+                    }
+                )
+            }
+        }
+    }
+
+    private fun loadActualSong() {
+        SongUtil.actualSong?.videoId?.let {
+            viewModel.songId = it
+            loadData()
+            mainActivity.configToolbar()
+        }
     }
 
     override fun setViewModelObservers() {
         viewModel.song.observe(viewLifecycleOwner) {
             binding.song = it
+        }
+
+        viewModel.songDeleted.observe(viewLifecycleOwner) { deleted ->
+            deleted?.let {
+                if (it.second.get()) {
+                    if (SongUtil.songs.isEmpty()) {
+                        mainActivity.stopNotificationService()
+                        mainActivity.configEmptyToolbar()
+                    }
+
+                    SongUtil.playRandomSong()
+                    loadActualSong()
+
+                    showSnackBar(getString(R.string.song_deleted_successfully, it.first.name))
+                } else {
+                    showSnackBar(getString(R.string.failed_to_delete_song, it.first.name))
+                }
+            }
         }
     }
 

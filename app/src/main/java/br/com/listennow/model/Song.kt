@@ -27,4 +27,8 @@ data class Song (
     override fun getModelKey(): String {
         return videoId
     }
+
+    fun hasLyrics(): Boolean {
+        return lyrics != "Lyrics Not Found"
+    }
 }

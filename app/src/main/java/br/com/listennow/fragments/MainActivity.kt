@@ -499,8 +499,9 @@ class MainActivity : AppCompatActivity() {
                 configSongDetails(null)
                 standardBottomSheetBehavior.state = STATE_COLLAPSED
             }
-
         }
+
+        ViewCompat.requestApplyInsets(binding.containerBottomSheet)
     }
 
     fun showBottomMenuAndPlayButtons() {
@@ -620,7 +621,7 @@ class MainActivity : AppCompatActivity() {
                         WindowInsetsCompat.Type.ime()
             )
 
-            if (currentState == STATE_EXPANDED) {
+            if (currentState == STATE_EXPANDED && SongUtil.actualSong?.hasLyrics() == true) {
                 v.setPadding(
                     sysInsets.left,
                     initialPaddingTop + sysInsets.top,
