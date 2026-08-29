@@ -18,7 +18,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="12dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -38,8 +38,8 @@
 
                 <ImageView
                     android:id="@+id/list_songs_thumb"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     app:bindImage="@{songItem.thumb}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -52,19 +52,19 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="7dp"
-                android:layout_marginTop="4dp"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toStartOf="@id/delete_song_button"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toEndOf="@+id/list_songs_cardView_thumb"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="@id/list_songs_cardView_thumb"
+                app:layout_constraintBottom_toBottomOf="@id/list_songs_cardView_thumb">
 
                 <TextView
                     android:id="@+id/list_songs_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:maxLines="2"
+                    android:maxLines="1"
                     android:text="@{songItem.name}"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -90,8 +90,8 @@
 
             <ImageView
                 android:id="@+id/delete_song_button"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:contentDescription="@string/delete_song_button"
                 android:background="@drawable/bg_red"
                 android:src="@drawable/ic_delete"

@@ -297,16 +297,6 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
             SongUtil.readSong(requireContext(), item)
             mainActivity.startNotificationService(Actions.PLAY_SPECIFIC)
         }
-
-        dataBinding.deleteSongButton.setOnClickListener {
-            showAlertDialog(
-                title = getString(R.string.are_you_sure),
-                message = getString(R.string.home_are_you_sure_about_deleting_song, item.name),
-                positiveClick = {
-                    viewModel.deleteSong(item)
-                }
-            )
-        }
     }
 
     override fun onChangeViewItem(
@@ -319,6 +309,6 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         item as Song
         dataBinding as FragmentSongItemBinding
 
-        dataBinding.deleteSongButton.visibility = View.VISIBLE
+        dataBinding.deleteSongButton.visibility = View.GONE
     }
 }
