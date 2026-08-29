@@ -191,14 +191,16 @@ class SongRepository @Inject constructor (
         val pendingSongs = songDao.getPendingSyncTimesPlayedSongs()
 
         pendingSongs?.let { songs ->
-            val success = songWebClient.increaseSongTimesPlayed(
-                clientId = clientId,
-                songs = songs
-            )
+            songs.windowed(20, 20, partialWindows = true).forEachIndexed { _, chunk ->
+                val success = songWebClient.increaseSongTimesPlayed(
+                    clientId = clientId,
+                    songs = chunk
+                )
 
-            if (success) {
-                songs.forEach { song ->
-                    songDao.increaseTimesPlayed(song.videoId, song.timesToIncrease)
+                if (success) {
+                    chunk.forEach { song ->
+                        songDao.increaseTimesPlayed(song.videoId, song.timesToIncrease)
+                    }
                 }
             }
         }
