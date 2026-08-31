@@ -111,13 +111,18 @@ class MainActivity : AppCompatActivity() {
                 when (newState) {
                     STATE_EXPANDED -> {
                         configSongDetails(SongUtil.actualSong)
-                        binding.playBackBottomNavigation.isVisible = false
-                        binding.playBackButtons.isVisible = false
+
+                        SongUtil.actualSong?.let {
+                            binding.playBackBottomNavigation.isVisible = false
+                            binding.playBackButtons.isVisible = false
+                        }
                     }
                     STATE_COLLAPSED -> {
-                        configSongDetails(null)
-                        binding.playBackBottomNavigation.isVisible = true
-                        binding.playBackButtons.isVisible = true
+                        if (SongUtil.actualSong != null) {
+                            configSongDetails(null)
+                            binding.playBackBottomNavigation.isVisible = true
+                            binding.playBackButtons.isVisible = true
+                        }
                     }
                     else -> {}
                 }
@@ -493,11 +498,13 @@ class MainActivity : AppCompatActivity() {
             val standardBottomSheet = findViewById<FrameLayout>(R.id.bottom_sheet_player)
             val standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
 
-            if (songDetailsFragment == null) {
-                standardBottomSheetBehavior.state = STATE_EXPANDED
-            } else {
-                configSongDetails(null)
-                standardBottomSheetBehavior.state = STATE_COLLAPSED
+            SongUtil.actualSong?.let {
+                if (songDetailsFragment == null) {
+                    standardBottomSheetBehavior.state = STATE_EXPANDED
+                } else {
+                    configSongDetails(null)
+                    standardBottomSheetBehavior.state = STATE_COLLAPSED
+                }
             }
         }
 

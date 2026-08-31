@@ -150,4 +150,5 @@
     <string name="lyrics">Lyrics</string>
     <string name="delete">Delete</string>
     <string name="added_on_label">Added On %s</string>
+    <string name="no_songs_found">No Songs Found</string>
 </resources>

@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp">
+        android:layout_margin="12dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/list_songs_search_cardView_thumb"
@@ -27,8 +27,8 @@
 
             <ImageView
                 android:id="@+id/list_songs_search_thumb"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -50,7 +50,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="7dp"
-                android:layout_marginTop="4dp"
                 app:layout_constraintEnd_toStartOf="@+id/container_buttons_sync_youtube"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
                     android:ellipsize="end"
-                    android:maxLines="2"
+                    android:maxLines="1"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/list_songs_search_artist"
@@ -109,8 +108,8 @@
                     android:clipToOutline="true">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:background="@drawable/ic_youtube_24"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -134,8 +133,8 @@
                     android:clipToOutline="true">
 
                     <ImageView
-                        android:layout_width="29dp"
-                        android:layout_height="29dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:background="@drawable/baseline_cloud_download_24"
                         android:backgroundTint="@color/iconColor"
                         app:layout_constraintBottom_toBottomOf="parent"

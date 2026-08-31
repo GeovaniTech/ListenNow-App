@@ -17,6 +17,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Visibility
 import br.com.listennow.BR
 import br.com.listennow.R
 import br.com.listennow.adapter.IControllerItemsAdapter
@@ -67,16 +68,16 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         configCarMode()
         configFilterChips()
 
-        binding.refreshSongs.setOnRefreshListener {
-            if (NetworkUtil.isInternetAvailable(requireContext())) {
-                syncSongs()
-            } else {
-                viewModel.updateSyncingState(false)
-                viewModel.updateExceptionMessage(getString(R.string.check_internet_connection))
-            }
-        }
+//        binding.refreshSongs.setOnRefreshListener {
+//            if (NetworkUtil.isInternetAvailable(requireContext())) {
+//                syncSongs()
+//            } else {
+//                viewModel.updateSyncingState(false)
+//                viewModel.updateExceptionMessage(getString(R.string.check_internet_connection))
+//            }
+//        }
 
-        binding.fragmentHomeButtonFindNewSong.setOnClickListener {
+        binding.homeEmptyState.binding.emptyStateActionButton.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchNewSongs())
         }
     }
@@ -166,13 +167,13 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
             setViewState(songs)
         }
 
-        viewModel.syncing.observe(viewLifecycleOwner) {
-            binding.refreshSongs.isRefreshing = it.get()
-
-            if(!it.get()) {
-                loadData()
-            }
-        }
+//        viewModel.syncing.observe(viewLifecycleOwner) {
+//            binding.refreshSongs.isRefreshing = it.get()
+//
+//            if(!it.get()) {
+//                loadData()
+//            }
+//        }
 
         viewModel.songDeleted.observe(viewLifecycleOwner) { deleted ->
             deleted?.let {
@@ -206,16 +207,12 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
         binding.shimmerList.visibility = View.GONE
 
         if (songs.isEmpty()) {
-            binding.fragmentHomeEmptyImage.visibility = View.VISIBLE
-            binding.fragmentHomeEmptyText.visibility = View.VISIBLE
-            binding.fragmentHomeButtonFindNewSong.visibility = View.VISIBLE
+            binding.homeEmptyState.isVisible = true
             binding.songs.visibility = View.GONE
         } else {
             updateSongsOnScreen(songs)
 
-            binding.fragmentHomeEmptyImage.visibility = View.GONE
-            binding.fragmentHomeEmptyText.visibility = View.GONE
-            binding.fragmentHomeButtonFindNewSong.visibility = View.GONE
+            binding.homeEmptyState.isVisible = false
             binding.songs.visibility = View.VISIBLE
         }
     }
@@ -239,9 +236,7 @@ class HomeFragment : CommonFragment<HomeViewModel, FragmentHomeBinding>(), ICont
 
     private fun startShimmer() {
         binding.songs.visibility = View.GONE
-        binding.fragmentHomeEmptyImage.visibility = View.GONE
-        binding.fragmentHomeEmptyText.visibility = View.GONE
-        binding.fragmentHomeButtonFindNewSong.visibility = View.GONE
+        binding.homeEmptyState.isVisible = false
         binding.shimmerList.visibility = View.VISIBLE
         binding.shimmerList.startShimmer()
     }
