@@ -1,159 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/container_select_songs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:isScrollContainer="true"
+        tools:context=".fragments.SelectSongsFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="177dp">
 
-            <LinearLayout
-                android:id="@+id/select_songs_search_bar"
-                android:layout_width="match_parent"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_search_select_songs"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_margin="12dp"
+                android:backgroundTint="#23282c"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/container_under_search_select_songs"
-                android:background="@color/container"
-                app:layout_constraintVertical_chainStyle="packed"
-                app:layout_constraintVertical_bias="0">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeWidth="0dp">
 
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/select_search_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="true"
                     app:iconifiedByDefault="false"
+                    app:queryBackground="@android:color/transparent"
                     app:queryHint="@string/title_artist_album"
                     app:searchHintIcon="@drawable/ic_search"
-                    app:searchIcon="@drawable/ic_search"
-                    android:focusable="true"
-                    android:layout_margin="5dp"
-                    app:queryBackground="@android:color/transparent" />
-            </LinearLayout>
+                    app:searchIcon="@drawable/ic_search" />
+            </com.google.android.material.card.MaterialCardView>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/container_under_search_select_songs"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/select_songs_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:paddingBottom="5dp"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/select_songs_search_bar"
-                app:layout_constraintBottom_toBottomOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_search_select_songs"
+                tools:listitem="@layout/fragment_song_item" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/select_songs_recyclerview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:listitem="@layout/fragment_song_item"
-                    android:visibility="gone"
-                    android:layout_marginBottom="155dp" />
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerList"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                android:layout_marginTop="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_search_select_songs"
+                tools:visibility="visible">
 
-                <br.com.listennow.components.EmptyState
-                    android:id="@+id/select_songs_emptySate"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toTopOf="@+id/select_songs_save"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:message="@string/select_songs_empty_state" />
+                    android:orientation="vertical">
 
-                <com.facebook.shimmer.ShimmerFrameLayout
-                    android:id="@+id/shimmerList"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    <include layout="@layout/fragment_song_item_skeleton" />
+                    <include layout="@layout/fragment_song_item_skeleton" />
+                    <include layout="@layout/fragment_song_item_skeleton" />
+                    <include layout="@layout/fragment_song_item_skeleton" />
+                    <include layout="@layout/fragment_song_item_skeleton" />
+                    <include layout="@layout/fragment_song_item_skeleton" />
+                    <include layout="@layout/fragment_song_item_skeleton" />
+                    <include layout="@layout/fragment_song_item_skeleton" />
+                    <include layout="@layout/fragment_song_item_skeleton" />
+                    <include layout="@layout/fragment_song_item_skeleton" />
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
-
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
-
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
-
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
-
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
-
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
-
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
-
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
-
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
-
-                        <include
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            layout="@layout/fragment_song_item_skeleton"  />
-                    </LinearLayout>
-                </com.facebook.shimmer.ShimmerFrameLayout>
-
-                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                    android:id="@+id/select_songs_save"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginBottom="171dp"
-                    android:backgroundTint="@color/background"
-                    android:text="@string/select_amount_songs"
-                    android:textColor="@color/white"
-                    app:icon="@drawable/ic_check"
-                    app:iconTint="@color/white"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    tools:text="Select 13 Song(s)" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <br.com.listennow.components.EmptyState
+                android:id="@+id/select_songs_emptySate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/card_search_select_songs"
+                app:message="@string/select_songs_empty_state" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/select_songs_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="185dp"
+            android:backgroundTint="@color/background"
+            android:text="@string/select_amount_songs"
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_check"
+            app:iconTint="@color/white"
+            tools:text="Select 13 Song(s)" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

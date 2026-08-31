@@ -45,22 +45,7 @@ class SelectSongsFragment : CommonFragment<SelectSongsViewModel, FragmentSelectS
 
     override fun applyInsetsEdgeToEdge() {
         ViewCompat.setOnApplyWindowInsetsListener(
-            binding.selectSongsSearchBar
-        ) { v, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
-
-            v.setPadding(
-                v.paddingLeft,
-                statusBarInsets.top,
-                v.paddingRight,
-                v.paddingBottom
-            )
-
-            insets
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(
-            binding.containerUnderSearchSelectSongs
+            binding.containerSelectSongs
         ) { v, insets ->
             val systemBars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
@@ -68,9 +53,9 @@ class SelectSongsFragment : CommonFragment<SelectSongsViewModel, FragmentSelectS
                         or WindowInsetsCompat.Type.ime()
             )
             v.setPadding(
-                v.paddingLeft,
-                v.paddingTop,
-                v.paddingRight,
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
                 systemBars.bottom
             )
             insets
