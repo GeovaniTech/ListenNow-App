@@ -53,22 +53,7 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
 
     override fun applyInsetsEdgeToEdge() {
         ViewCompat.setOnApplyWindowInsetsListener(
-            binding.playlistSongsSearchBar
-        ) { v, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
-
-            v.setPadding(
-                v.paddingLeft,
-                statusBarInsets.top,
-                v.paddingRight,
-                v.paddingBottom
-            )
-
-            insets
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(
-            binding.containerUnderSearchSongsPlaylists
+            binding.containerPlaylistSongs
         ) { v, insets ->
             val systemBars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
@@ -76,9 +61,9 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
                         or WindowInsetsCompat.Type.ime()
             )
             v.setPadding(
-                v.paddingLeft,
-                v.paddingTop,
-                v.paddingRight,
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
                 systemBars.bottom
             )
             insets
@@ -169,14 +154,14 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
             }
         }
 
-        binding.playlistSongsRefresh.setOnRefreshListener {
-            if (NetworkUtil.isInternetAvailable(requireContext())) {
-                viewModel.refreshPlaylistSongs()
-            } else {
-                viewModel.updateSyncingState(false)
-                viewModel.updateExceptionMessage(getString(R.string.check_internet_connection))
-            }
-        }
+//        binding.playlistSongsRefresh.setOnRefreshListener {
+//            if (NetworkUtil.isInternetAvailable(requireContext())) {
+//                viewModel.refreshPlaylistSongs()
+//            } else {
+//                viewModel.updateSyncingState(false)
+//                viewModel.updateExceptionMessage(getString(R.string.check_internet_connection))
+//            }
+//        }
     }
 
     override fun setViewModelObservers() {
@@ -214,7 +199,7 @@ class PlaylistSongsFragment : CommonFragment<PlaylistSongsViewModel, FragmentPla
         }
 
         viewModel.syncing.observe(viewLifecycleOwner) { isSyncing ->
-            binding.playlistSongsRefresh.isRefreshing = isSyncing.get()
+            // binding.playlistSongsRefresh.isRefreshing = isSyncing.get()
         }
     }
 
