@@ -37,22 +37,7 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
 
     override fun applyInsetsEdgeToEdge() {
         ViewCompat.setOnApplyWindowInsetsListener(
-            binding.albumsSearchBar
-        ) { v, insets ->
-            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.displayCutout() or WindowInsetsCompat.Type.ime())
-
-            v.setPadding(
-                v.paddingLeft,
-                statusBarInsets.top,
-                v.paddingRight,
-                v.paddingBottom
-            )
-
-            insets
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(
-            binding.containerUnderSearchAlbums
+            binding.containerAlbums
         ) { v, insets ->
             val systemBars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
@@ -60,9 +45,9 @@ class AlbumsFragment : CommonFragment<AlbumsViewModel, FragmentAlbumsBinding>(),
                         or WindowInsetsCompat.Type.ime()
             )
             v.setPadding(
-                v.paddingLeft,
-                v.paddingTop,
-                v.paddingRight,
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
                 systemBars.bottom
             )
             insets
