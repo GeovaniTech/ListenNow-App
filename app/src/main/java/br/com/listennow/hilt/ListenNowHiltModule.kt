@@ -4,19 +4,23 @@ import android.content.Context
 import androidx.work.WorkManager
 import br.com.listennow.BuildConfig
 import br.com.listennow.database.AppDatabase
+import br.com.listennow.database.dao.LogDao
 import br.com.listennow.database.dao.PlaylistDao
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.database.dao.UserDao
+import br.com.listennow.repository.LogRepository
 import br.com.listennow.repository.PlaylistRepository
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
 import br.com.listennow.service.AppVersionService
+import br.com.listennow.service.LogService
 import br.com.listennow.service.PlaylistService
 import br.com.listennow.service.SongService
 import br.com.listennow.service.UserService
 import br.com.listennow.utils.MediaStoreUtil
 import br.com.listennow.webclient.appversion.service.AppVersionWebClient
 import br.com.listennow.webclient.client.service.UserWebClient
+import br.com.listennow.webclient.log.service.LogWebClient
 import br.com.listennow.webclient.playlist.PlaylistWebClient
 import br.com.listennow.webclient.song.service.SongWebClient
 import com.squareup.moshi.Moshi
@@ -41,13 +45,15 @@ object ListenNowHiltModule {
         songDao: SongDao,
         songWebClient: SongWebClient,
         mediaStore: MediaStoreUtil,
-        workManager: WorkManager
+        workManager: WorkManager,
+        logRepository: LogRepository
     ): SongRepository {
         return SongRepository(
             songDao,
             songWebClient,
             mediaStore,
-            workManager
+            workManager,
+            logRepository
         )
     }
 
@@ -122,11 +128,13 @@ object ListenNowHiltModule {
     @Provides
     fun providePlaylistRepository(
         playlistDao: PlaylistDao,
-        playlistWebClient: PlaylistWebClient
+        playlistWebClient: PlaylistWebClient,
+        logRepository: LogRepository
     ): PlaylistRepository {
         return PlaylistRepository(
             playlistDao,
-            playlistWebClient
+            playlistWebClient,
+            logRepository
         )
     }
 
@@ -168,5 +176,30 @@ object ListenNowHiltModule {
         @ApplicationContext context: Context
     ): WorkManager {
         return WorkManager.getInstance(context)
+    }
+
+    @Provides
+    fun provideLogDao(
+        @ApplicationContext context: Context
+    ): LogDao {
+        return AppDatabase.getInstance(context).logDao()
+    }
+
+    @Provides
+    fun provideLogWebClient(
+        retrofit: Retrofit
+    ): LogWebClient {
+        return LogWebClient(
+            logService = retrofit.create(LogService::class.java)
+        )
+    }
+
+    @Provides
+    fun provideLogRepository(
+        logDao: LogDao,
+        logWebClient: LogWebClient,
+        workManager: WorkManager
+    ): LogRepository  {
+        return LogRepository(logDao, logWebClient, workManager)
     }
 }

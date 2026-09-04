@@ -51,6 +51,9 @@ class NewPlaylistFragment : CommonFragment<NewPlaylistViewModel, FragmentPlaylis
                     setFragmentResult(NEW_PLAYLIST_FRAGMENT_KEY, bundleOf(NEW_PLAYLIST_FRAGMENT_RESULT to viewModel.playlist))
                     dismiss()
                 }
+                EnumPlaylistActionStatus.EXCEPTION_HAPPENED -> {
+                    Toast.makeText(requireContext(), R.string.something_went_wrong_while_executing_action, Toast.LENGTH_SHORT).show()
+                }
                 else -> {}
             }
         }

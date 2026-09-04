@@ -151,4 +151,5 @@
     <string name="delete">Delete</string>
     <string name="added_on_label">Added On %s</string>
     <string name="no_songs_found">No Songs Found</string>
+    <string name="something_went_wrong_while_executing_action">Something wait wrong while executing this action. Try again later.</string>
 </resources>

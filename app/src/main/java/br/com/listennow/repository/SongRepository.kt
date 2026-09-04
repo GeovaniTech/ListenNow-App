@@ -1,6 +1,7 @@
 package br.com.listennow.repository
 
 import android.util.Log
+import br.com.listennow.model.Log as LogModel
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
@@ -8,6 +9,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import br.com.listennow.database.dao.SongDao
 import br.com.listennow.decorator.AlbumItemDecorator
+import br.com.listennow.enums.EnumLevelLog
 import br.com.listennow.model.Song
 import br.com.listennow.utils.MediaStoreUtil
 import br.com.listennow.webclient.song.model.SearchYTSongResponse
@@ -21,7 +23,8 @@ class SongRepository @Inject constructor (
     private val songDao: SongDao,
     private val songWebClient: SongWebClient,
     private val mediaStore: MediaStoreUtil,
-    private val workerManager: WorkManager
+    private val workerManager: WorkManager,
+    private val logRepository: LogRepository
 ) {
     suspend fun getAll(orderByTopPlayed: Boolean, orderByRecentlyAdded: Boolean, orderByArtist: Boolean): List<Song> {
         return songDao.getSongs(orderByTopPlayed, orderByRecentlyAdded, orderByArtist)
@@ -97,8 +100,22 @@ class SongRepository @Inject constructor (
      * Returns the ids of the songs from another user that the receiver does not have. Songs that he already has were
      * ignored in the query api.
      */
-    suspend fun getIdsSongsFromAnotherUser(userReceiver: String, userWithSongs: String): List<String>? {
-        return songWebClient.getSongIdsByUser(userReceiver, userWithSongs)
+    suspend fun getIdsSongsFromAnotherUser(userReceiver: String, userWithSongs: String): Result<List<String>?> {
+        try {
+            return Result.success(
+                songWebClient.getSongIdsByUser(userReceiver, userWithSongs)
+            )
+        } catch (e: Exception) {
+            logRepository.upsertLog(
+                LogModel(
+                    level = EnumLevelLog.ERROR.name,
+                    tag = TAG,
+                    message = e.message ?: "Error trying to get song ids from user"
+                )
+            )
+
+            return Result.failure(e)
+        }
     }
 
     /**

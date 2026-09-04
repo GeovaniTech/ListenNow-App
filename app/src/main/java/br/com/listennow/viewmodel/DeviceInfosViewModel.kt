@@ -8,7 +8,6 @@ import br.com.listennow.extensions.isValidUUID
 import br.com.listennow.repository.PlaylistRepository
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
-import br.com.listennow.utils.NetworkUtil
 import br.com.listennow.webclient.playlist.model.PlaylistCountRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -36,19 +35,6 @@ class DeviceInfosViewModel @Inject constructor(
         _userId.postValue(userRepository.findUser()!!.id)
     }
 
-    suspend fun getSongIdsSongsByUser(userReceiver: String, userWithSongs: String): List<String>? {
-        return songRepository.getIdsSongsFromAnotherUser(userReceiver, userWithSongs)
-    }
-
-    suspend fun getCountPlaylistsToImport(userWithData: String): Int {
-        return playlistRepository.getCountPlaylistsToImport(
-            PlaylistCountRequest(
-                clientReceiverId = user!!.id,
-                clientWithPlaylistsId = userWithData
-            )
-        )
-    }
-
     suspend fun checkIsPossibleImportData() {
         try {
             if (idUserWithData.isNullOrEmpty()) {
@@ -66,7 +52,7 @@ class DeviceInfosViewModel @Inject constructor(
                 return
             }
 
-            val songsIds = songRepository.getIdsSongsFromAnotherUser(user?.id!!, idUserWithData!!)
+            val songsIds = songRepository.getIdsSongsFromAnotherUser(user?.id!!, idUserWithData!!).getOrNull()
 
             val countPlaylistToImport = playlistRepository.getCountPlaylistsToImport(
                 PlaylistCountRequest(

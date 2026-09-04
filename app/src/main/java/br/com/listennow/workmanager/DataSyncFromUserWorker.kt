@@ -11,7 +11,10 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import br.com.listennow.R
+import br.com.listennow.enums.EnumLevelLog
 import br.com.listennow.fragments.MainActivity
+import br.com.listennow.model.Log
+import br.com.listennow.repository.LogRepository
 import br.com.listennow.repository.PlaylistRepository
 import br.com.listennow.repository.SongRepository
 import br.com.listennow.utils.NotificationUtil
@@ -29,38 +32,51 @@ class DataSyncFromUserWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted params: WorkerParameters,
     private val songRepository: SongRepository,
-    private val playlistRepository: PlaylistRepository
+    private val playlistRepository: PlaylistRepository,
+    private val logRepository: LogRepository
 ): CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result {
-        val idUserReceiver = inputData.getString(ID_USER_RECEIVER) ?: return Result.failure(
-            workDataOf(INVALID_VALUE_FOR_PARAMETER to "userReceiver is null")
-        )
+        try {
+            val idUserReceiver = inputData.getString(ID_USER_RECEIVER) ?: return Result.failure(
+                workDataOf(INVALID_VALUE_FOR_PARAMETER to "userReceiver is null")
+            )
 
-        val idUserWithData = inputData.getString(ID_USER_WITH_DATA) ?: return Result.failure(
-            workDataOf(INVALID_VALUE_FOR_PARAMETER to "userWithData is null")
-        )
+            val idUserWithData = inputData.getString(ID_USER_WITH_DATA) ?: return Result.failure(
+                workDataOf(INVALID_VALUE_FOR_PARAMETER to "userWithData is null")
+            )
 
-        val arraySongsIds = songRepository.getIdsSongsFromAnotherUser(userReceiver = idUserReceiver, userWithSongs = idUserWithData) ?: return Result.failure(
-            workDataOf(INVALID_VALUE_FOR_PARAMETER to "arraySongsIds is null")
-        )
+            val arraySongsIds = songRepository.getIdsSongsFromAnotherUser(userReceiver = idUserReceiver, userWithSongs = idUserWithData).getOrNull() ?: return Result.failure(
+                workDataOf(INVALID_VALUE_FOR_PARAMETER to "arraySongsIds is null")
+            )
 
-        val songsIds = arraySongsIds.toList()
-        val notificationId = NotificationUtil.getUniqueNotificationId()
+            val songsIds = arraySongsIds.toList()
+            val notificationId = NotificationUtil.getUniqueNotificationId()
 
-        importSongs(
-            notificationId = notificationId,
-            idUserReceiver = idUserReceiver,
-            songsIds = songsIds
-        )
+            importSongs(
+                notificationId = notificationId,
+                idUserReceiver = idUserReceiver,
+                songsIds = songsIds
+            )
 
-        importPlaylists(
-            notificationId = notificationId,
-            idUserReceiver = idUserReceiver,
-            idUserWithData = idUserWithData
-        )
+            importPlaylists(
+                notificationId = notificationId,
+                idUserReceiver = idUserReceiver,
+                idUserWithData = idUserWithData
+            )
 
-        return Result.success()
+            return Result.success()
+        } catch (e: Exception) {
+            logRepository.upsertLog(
+                Log(
+                    level = EnumLevelLog.ERROR.name,
+                    tag = WORK_NAME,
+                    message = e.message ?: "Something happened while syncing data from another user"
+                )
+            )
+        }
+
+        return Result.failure()
     }
 
     private suspend fun importSongs(
@@ -164,7 +180,6 @@ class DataSyncFromUserWorker @AssistedInject constructor(
         const val WORK_NAME: String = "DataSyncFromUserWorker"
         const val ID_USER_RECEIVER = "ID_USER_RECEIVER"
         const val ID_USER_WITH_DATA = "ID_USER_WITH_DATA"
-        const val SONGS_IDS = "SONGS_IDS"
         const val INVALID_VALUE_FOR_PARAMETER = "INVALID_VALUE_FOR_PARAMETER"
     }
 }

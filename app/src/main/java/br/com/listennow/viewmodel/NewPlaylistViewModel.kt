@@ -3,15 +3,12 @@ package br.com.listennow.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import br.com.listennow.database.dao.PlaylistDao
 import br.com.listennow.decorator.PlaylistDecorator
 import br.com.listennow.enums.EnumPlaylistActionStatus
-import br.com.listennow.model.Playlist
 import br.com.listennow.repository.PlaylistRepository
 import br.com.listennow.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,12 +28,16 @@ class NewPlaylistViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            playlistRepository.create(
+            val result = playlistRepository.create(
                 playlistName = playlist.title!!,
                 clientId = user!!.id
             )
 
-            _statusCallback.postValue(EnumPlaylistActionStatus.PLAYLIST_SAVED_SUCCESSFULLY)
+            if (result.isFailure) {
+                _statusCallback.postValue(EnumPlaylistActionStatus.EXCEPTION_HAPPENED)
+            } else {
+                _statusCallback.postValue(EnumPlaylistActionStatus.PLAYLIST_SAVED_SUCCESSFULLY)
+            }
         }
     }
 }

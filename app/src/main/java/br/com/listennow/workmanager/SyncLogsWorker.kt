@@ -7,33 +7,33 @@ import androidx.work.WorkerParameters
 import br.com.listennow.enums.EnumLevelLog
 import br.com.listennow.model.Log
 import br.com.listennow.repository.LogRepository
-import br.com.listennow.repository.SongRepository
 import br.com.listennow.repository.UserRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
 @HiltWorker
-class IncreaseSongTimesPlayedWorker @AssistedInject constructor(
+class SyncLogsWorker  @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted params: WorkerParameters,
-    private val songRepository: SongRepository,
-    private val userRepository: UserRepository,
-    private val logRepository: LogRepository
+    private val logRepository: LogRepository,
+    private val userRepository: UserRepository
 ): CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result {
         try {
             val user = userRepository.findUser()
 
-            songRepository.syncPendingTimesPlayedSongs(user!!.id)
-
+            logRepository.syncPendingLogs(
+                deviceId = user!!.id
+            )
             return Result.success()
-        } catch (e: Exception) {
+
+        }  catch (e: Exception) {
             logRepository.upsertLog(
                 Log(
                     level = EnumLevelLog.ERROR.name,
                     tag = WORK_NAME,
-                    message = e.message ?: "Something happened while increasing song times played."
+                    message = e.message ?: "Something happened while sending logs to server."
                 )
             )
         }
@@ -42,6 +42,6 @@ class IncreaseSongTimesPlayedWorker @AssistedInject constructor(
     }
 
     companion object {
-        const val WORK_NAME: String = "IncreaseSongTimesPlayedWorker"
+        const val WORK_NAME: String = "SyncLogsWorker"
     }
 }

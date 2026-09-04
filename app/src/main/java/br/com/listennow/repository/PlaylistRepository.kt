@@ -2,6 +2,8 @@ package br.com.listennow.repository
 
 import br.com.listennow.database.dao.PlaylistDao
 import br.com.listennow.decorator.PlaylistItemDecorator
+import br.com.listennow.enums.EnumLevelLog
+import br.com.listennow.model.Log
 import br.com.listennow.model.Playlist
 import br.com.listennow.model.PlaylistSong
 import br.com.listennow.webclient.playlist.PlaylistWebClient
@@ -16,22 +18,37 @@ import br.com.listennow.webclient.playlist.model.SongPlaylistResponse
 
 class PlaylistRepository(
     val playlistDao: PlaylistDao,
-    val playlistWebClient: PlaylistWebClient
+    val playlistWebClient: PlaylistWebClient,
+    val logRepository: LogRepository
 ) {
-    suspend fun create(playlistName: String, clientId: String) {
-        val playlistId = playlistWebClient.create(
-            PlaylistCreateRequest(
-                playlistName = playlistName,
-                clientId = clientId
+    suspend fun create(playlistName: String, clientId: String): Result<Unit> {
+        try {
+            val playlistId = playlistWebClient.create(
+                PlaylistCreateRequest(
+                    playlistName = playlistName,
+                    clientId = clientId
+                )
             )
-        )
 
-        playlistDao.save(
-            Playlist(
-                playlistId = playlistId,
-                name = playlistName
+            playlistDao.save(
+                Playlist(
+                    playlistId = playlistId,
+                    name = playlistName
+                )
             )
-        )
+
+            return Result.success(Unit)
+        } catch (e: Exception) {
+            logRepository.upsertLog(
+                Log(
+                    level = EnumLevelLog.ERROR.name,
+                    tag = TAG,
+                    message = e.message ?: "Error while creating playlist"
+                )
+            )
+
+            return Result.failure(e)
+        }
     }
 
     suspend fun insertSongsIntoPlaylist(playlistId: String, songs: List<String>) {
@@ -140,5 +157,9 @@ class PlaylistRepository(
 
     suspend fun getPlaylistSongsOnServer(playlistId: String, ignoreIds: List<String>): List<SongPlaylistResponse>? {
         return playlistWebClient.getPlaylistSongs(playlistId, ignoreIds)
+    }
+
+    companion object {
+        const val TAG = "PlaylistRepository"
     }
 }
